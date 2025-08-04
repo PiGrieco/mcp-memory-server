@@ -17,6 +17,10 @@ pydantic>=2.0.0
 numpy>=1.24.0
 python-dotenv>=1.0.0
 
+# Web API for GPT integration
+fastapi>=0.100.0
+uvicorn>=0.23.0
+
 # Development & Testing
 pytest>=7.4.0
 pytest-asyncio>=0.21.0
@@ -26,5 +30,4 @@ flake8>=6.0.0
 mypy>=1.5.0
 
 # Production
-uvicorn>=0.23.0
 gunicorn>=21.2.0 
