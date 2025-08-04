@@ -1,0 +1,213 @@
+{
+  "smart_automation": {
+    "version": "2.0.0",
+    "enabled": true,
+    "global_settings": {
+      "mongodb_url": "mongodb://admin:securepassword@localhost:27017/memory_db?authSource=admin",
+      "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+      "api_base_url": "http://localhost:8000",
+      "confidence_threshold": 0.7,
+      "anti_spam_interval": 30,
+      "max_context_items": 5,
+      "auto_save_threshold": 0.8
+    }
+  },
+
+  "claude_desktop": {
+    "enabled": true,
+    "file": "examples/claude_smart_auto.py",
+    "features": [
+      "smart_triggers",
+      "context_enhancement", 
+      "proactive_suggestions",
+      "conversation_analysis",
+      "learning_patterns"
+    ],
+    "mcp_config": {
+      "mcpServers": {
+        "claude-smart-auto": {
+          "command": "python",
+          "args": ["examples/claude_smart_auto.py"],
+          "env": {
+            "MONGODB_URL": "mongodb://admin:securepassword@localhost:27017/memory_db?authSource=admin",
+            "EMBEDDING_MODEL": "sentence-transformers/all-MiniLM-L6-v2",
+            "AUTO_MEMORY": "advanced",
+            "SMART_TRIGGERS": "true"
+          }
+        }
+      }
+    }
+  },
+
+  "gpt_chatgpt": {
+    "enabled": true,
+    "file": "examples/gpt_smart_auto.py", 
+    "api_port": 8000,
+    "features": [
+      "smart_api",
+      "user_profiling",
+      "predictive_suggestions",
+      "conversation_analytics",
+      "background_optimization"
+    ],
+    "endpoints": {
+      "chat": "/chat",
+      "save": "/save", 
+      "search": "/search",
+      "user_profile": "/user/{user_id}/profile",
+      "analytics": "/analytics/conversation/{session_id}"
+    }
+  },
+
+  "cursor": {
+    "enabled": true,
+    "file": "examples/cursor_smart_auto.py",
+    "features": [
+      "code_awareness",
+      "workspace_analysis",
+      "pattern_detection",
+      "productivity_tracking",
+      "code_suggestions"
+    ],
+    "config": {
+      "mcp.servers": {
+        "cursor-smart-auto": {
+          "command": "python",
+          "args": ["examples/cursor_smart_auto.py"],
+          "cwd": ".",
+          "env": {
+            "MONGODB_URL": "mongodb://admin:securepassword@localhost:27017/memory_db?authSource=admin",
+            "EMBEDDING_MODEL": "sentence-transformers/all-MiniLM-L6-v2",
+            "AUTO_MEMORY": "advanced",
+            "CODE_AWARE": "true"
+          }
+        }
+      }
+    }
+  },
+
+  "lovable": {
+    "enabled": true,
+    "file": "examples/lovable_smart_auto.js",
+    "features": [
+      "component_tracking",
+      "ui_pattern_analysis", 
+      "ai_prompt_enhancement",
+      "architectural_suggestions",
+      "development_learning"
+    ],
+    "integration": {
+      "type": "javascript_plugin",
+      "api_dependency": "examples/gpt_smart_auto.py",
+      "auto_hooks": [
+        "onFileChange",
+        "onComponentCreate", 
+        "onBugFix"
+      ]
+    }
+  },
+
+  "replit": {
+    "enabled": true,
+    "file": "examples/replit_smart_auto.py",
+    "features": [
+      "cloud_environment_detection",
+      "replit_db_support",
+      "collaboration_monitoring",
+      "deployment_analytics",
+      "team_intelligence"
+    ],
+    "modes": {
+      "mcp_mode": {
+        "requires_mongodb": true,
+        "full_features": true
+      },
+      "replit_db_mode": {
+        "requires_mongodb": false,
+        "simplified_features": true,
+        "auto_detect": true
+      }
+    }
+  },
+
+  "smart_triggers": {
+    "categories": {
+      "preferences": {
+        "patterns": [
+          "(preferisco|mi piace|odio|detesto)\\s+(.+)",
+          "(il mio .+ preferito è|la mia .+ preferita è)\\s+(.+)",
+          "(uso sempre|uso spesso|non uso mai)\\s+(.+)"
+        ],
+        "confidence": 0.9,
+        "importance": 0.8
+      },
+      "project_info": {
+        "patterns": [
+          "(sto lavorando su|il progetto si chiama|questo progetto)\\s+(.+)",
+          "(il cliente vuole|il requisito è|dobbiamo)\\s+(.+)",
+          "(la deadline è|entro il|dobbiamo finire)\\s+(.+)"
+        ],
+        "confidence": 0.8,
+        "importance": 0.7
+      },
+      "solutions": {
+        "patterns": [
+          "(la soluzione è|risolto con|ho risolto usando)\\s+(.+)",
+          "(il problema era|l'errore era causato da)\\s+(.+)",
+          "(funziona meglio se|migliora se|ottimizzato con)\\s+(.+)"
+        ],
+        "confidence": 0.9,
+        "importance": 0.9
+      },
+      "code_patterns": {
+        "patterns": [
+          "(questo pattern|this pattern|questo approccio)\\s+(.+)",
+          "(implemento sempre|I always implement)\\s+(.+)",
+          "(migliore pratica|best practice)\\s*:\\s*(.+)"
+        ],
+        "confidence": 0.8,
+        "importance": 0.8
+      },
+      "debugging": {
+        "patterns": [
+          "(risolto|fixed|solved)\\s+(bug|error|issue|problema)\\s*:\\s*(.+)",
+          "(la causa era|the cause was)\\s+(.+)",
+          "(workaround|soluzione temporanea)\\s*:\\s*(.+)"
+        ],
+        "confidence": 0.9,
+        "importance": 0.9
+      }
+    }
+  },
+
+  "analytics": {
+    "metrics": [
+      "productivity_score",
+      "automation_efficiency", 
+      "learning_rate",
+      "context_relevance",
+      "pattern_accuracy"
+    ],
+    "tracking": {
+      "conversation_count": true,
+      "auto_saves": true,
+      "context_retrievals": true,
+      "session_duration": true,
+      "trigger_frequency": true
+    }
+  },
+
+  "quick_start": {
+    "setup_commands": [
+      "docker compose up -d",
+      "python examples/claude_smart_auto.py demo",
+      "python examples/gpt_smart_auto.py &",
+      "python examples/cursor_smart_auto.py demo",
+      "python examples/replit_smart_auto.py demo"
+    ],
+    "test_commands": [
+      "curl -X POST http://localhost:8000/chat -H 'Content-Type: application/json' -d '{\"message\":\"Test automation\",\"user_id\":\"demo\"}'",
+      "curl -X POST http://localhost:8000/search -H 'Content-Type: application/json' -d '{\"query\":\"typescript react\",\"include_analysis\":true}'"
+    ]
+  }
+} 

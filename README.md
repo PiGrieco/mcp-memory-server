@@ -1,250 +1,322 @@
-# MCP Memory Server
+# 🧠 MCP Memory Server
+**Persistent Memory with Smart Automation for AI Tools**
 
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
-[![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=flat&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org)
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Docker](https://img.shields.io/badge/Docker-Supported-2496ED.svg)](https://docker.com)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Database-47A248.svg)](https://mongodb.com)
+[![Real-time](https://img.shields.io/badge/Memory-Real--time-ff6b6b.svg)](#)
 
-A persistent memory system for AI agents based on **Model Context Protocol (MCP)** and **MongoDB** with semantic vector search capabilities.
+🤖 **NUOVO**: Sistema di Automazione Intelligente per Claude, GPT, Cursor, Lovable e Replit!
 
-## 🚀 Features
+A persistent memory system for AI agents using the Model Context Protocol (MCP). This server provides semantic memory storage with vector search capabilities, enabling AI agents to remember and recall information across conversations.
 
-- **Persistent Memory**: Save and retrieve information for AI agents across sessions
-- **Semantic Search**: Vector similarity search using sentence-transformers
-- **MCP Protocol**: Native integration with modern AI agents (Claude, GPT-4, etc.)
-- **Scalable**: MongoDB with optimized indexing
-- **Production-Ready**: Docker support, health checks, logging, advanced configuration
-- **Multi-Project**: Support for multiple projects/conversations
-- **Real-time**: Async operations for high performance
+## 🎯 What's New: Smart Automation
 
-## 📋 Requirements
+Transform your AI tools into intelligent assistants that **automatically remember, learn, and suggest** based on your patterns!
 
-- Python 3.11+
-- Docker & Docker Compose
-- MongoDB 7.0+ (included in docker-compose)
-- 4GB+ RAM (for embedding models)
+### 🚀 Available Smart Integrations
 
-## 🛠️ Quick Start
+| Tool | File | Features | Status |
+|------|------|----------|--------|
+| 🧠 **Claude Desktop** | `claude_smart_auto.py` | Auto-save preferences, Context enhancement, Proactive suggestions | ✅ Ready |
+| 💬 **GPT/ChatGPT** | `gpt_smart_auto.py` | Smart API, User profiling, Predictive analytics | ✅ Ready |
+| 💻 **Cursor** | `cursor_smart_auto.py` | Code-aware patterns, Workspace analysis, Productivity tracking | ✅ Ready |
+| 💖 **Lovable** | `lovable_smart_auto.js` | Component tracking, UI patterns, AI prompt enhancement | ✅ Ready |
+| 🌐 **Replit** | `replit_smart_auto.py` | Cloud development, Collaboration intelligence, Deployment analytics | ✅ Ready |
 
-### 1. Clone and Setup
+### 🎯 Smart Features
+
+- **🔄 Auto-Save**: Automatically detects and saves preferences, solutions, and patterns
+- **🔍 Auto-Search**: Intelligently retrieves relevant context before AI responses  
+- **💡 Proactive Suggestions**: Suggests optimizations based on your history
+- **📊 Learning Analytics**: Tracks productivity and learning efficiency
+- **🎛️ 5 Automation Levels**: From basic pattern recognition to self-learning AI
+
+## ⚡ Quick Smart Setup
 
 ```bash
-git clone https://github.com/your-username/mcp-memory-server.git
-cd mcp-memory-server
-cp .env.example .env
+# 1. Automated setup for all integrations
+./setup_smart_automation.sh
+
+# 2. Or manual setup
+docker compose up -d
+python examples/gpt_smart_auto.py &
+
+# 3. Test smart features
+curl -X POST http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message":"I prefer TypeScript over JavaScript","user_id":"demo"}'
 ```
 
-### 2. Start with Docker
+## 🎪 Smart Automation Demo
 
+**Before (Manual)**:
+```
+You: "I prefer TypeScript for React projects"
+AI: "Okay, I'll help with TypeScript"
+[No memory saved]
+
+You: "How should I setup React?"
+AI: "Here's how to setup React..."
+[Doesn't remember TypeScript preference]
+```
+
+**After (Smart Automation)**:
+```
+You: "I prefer TypeScript for React projects"  
+🔄 [Auto-saved: "Preference: TypeScript for React"]
+AI: "Got it! I'll remember your TypeScript preference."
+
+You: "How should I setup React?"
+🔍 [Auto-search: Found "Preference: TypeScript for React"]
+💡 [Enhanced Response]
+AI: "Based on your preference for TypeScript, here's how to setup React with TypeScript template..."
+```
+
+## 🏗️ Features
+
+### Core Memory System
+- **Semantic Vector Search**: Find information by meaning, not just keywords
+- **MongoDB Backend**: Persistent storage with ACID compliance
+- **Real-time Embedding**: Uses sentence-transformers for semantic understanding
+- **MCP Protocol**: Compatible with Claude Desktop and MCP-enabled tools
+- **RESTful API**: Direct integration for GPT/ChatGPT and web applications
+
+### Smart Automation (NEW)
+- **Intelligent Triggers**: 50+ regex patterns for automatic detection
+- **Context Enhancement**: Automatic context injection before AI responses
+- **User Profiling**: Dynamic learning from interaction patterns
+- **Predictive Suggestions**: Proactive recommendations based on history
+- **Cross-Platform Sync**: Memory sharing across all AI tools
+- **Analytics Dashboard**: Real-time productivity and learning metrics
+
+## 📁 Project Structure
+
+```
+mcp-memory-server/
+├── 🧠 Smart Automation
+│   ├── examples/claude_smart_auto.py      # Claude Desktop integration
+│   ├── examples/gpt_smart_auto.py         # GPT/ChatGPT API server
+│   ├── examples/cursor_smart_auto.py      # Cursor code-aware integration
+│   ├── examples/lovable_smart_auto.js     # Lovable AI development platform
+│   ├── examples/replit_smart_auto.py      # Replit cloud development
+│   ├── examples/smart_triggers.py         # Smart trigger system
+│   └── examples/auto_memory_system.py     # Core automation engine
+├── 📚 Guides
+│   ├── SMART_AUTOMATION_GUIDE.md          # Complete automation guide
+│   ├── AUTO_MEMORY_GUIDE.md               # Automatic memory concepts
+│   └── INTEGRATION_GUIDE.md               # Platform-specific guides
+├── 🛠️ Setup
+│   ├── setup_smart_automation.sh          # Automated setup script
+│   └── config/smart_automation_config.json # Central configuration
+├── 🏗️ Core System
+│   ├── src/
+│   │   ├── core/mcp_server.py             # MCP protocol implementation
+│   │   ├── core/memory_manager.py         # Memory operations
+│   │   ├── core/vector_store.py           # Vector search engine
+│   │   └── core/embedding_service.py      # Embedding generation
+│   ├── deployment/
+│   │   ├── docker-compose.yml             # Docker services
+│   │   └── Dockerfile                     # Container definition
+│   └── tests/                             # Test suite
+```
+
+## 🚀 Installation & Usage
+
+### Method 1: Smart Automation Setup (Recommended)
 ```bash
-# Start all services
+git clone https://github.com/AiGotsrl/mcp-memory-server
+cd mcp-memory-server
+./setup_smart_automation.sh
+```
+
+### Method 2: Manual Setup
+```bash
+# Clone and setup
+git clone https://github.com/AiGotsrl/mcp-memory-server
+cd mcp-memory-server
+pip install -r requirements.txt
+
+# Start services
 docker compose up -d
 
-# Check status
-docker compose ps
+# Test basic system
+python -m pytest tests/ -v
 ```
 
-### 3. Test the System
-
+### Method 3: Development Mode
 ```bash
-# Run the demo
-python examples/mcp_client.py
+# Start MongoDB only
+docker run -d --name mongodb \
+  -p 27017:27017 \
+  -e MONGO_INITDB_ROOT_USERNAME=admin \
+  -e MONGO_INITDB_ROOT_PASSWORD=securepassword \
+  mongo:latest
+
+# Run server directly
+python src/main.py
 ```
 
-## 🔧 Configuration
+## 🤖 AI Tool Configurations
 
-### Environment Variables
-
-Copy `.env.example` to `.env` and modify as needed:
-
-```bash
-# MongoDB
-MONGODB_URL=mongodb://admin:securepassword@localhost:27017/memory_db?authSource=admin&replicaSet=rs0
-
-# Embedding Model
-EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
-
-# Server Settings
-MCP_SERVER_NAME=memory-server
-LOG_LEVEL=INFO
-```
-
-### Advanced Configuration
-
-- **Embedding Models**: Supports any sentence-transformers model
-- **Device**: CPU/GPU for embedding generation
-- **Connection Pooling**: Optimized MongoDB configuration
-- **Logging**: Automatic log rotation
-
-## 📚 Usage
-
-### Available MCP Tools
-
-The server exposes 7 MCP tools:
-
-1. **`save_memory`** - Save a memory
-2. **`search_memory`** - Semantic search
-3. **`get_context`** - Get project context
-4. **`update_memory`** - Update memory
-5. **`delete_memory`** - Delete memory
-6. **`get_memory_stats`** - Project statistics
-7. **`health_check`** - System health check
-
-### Usage Example
-
-```python
-from examples.mcp_client import MemoryClient
-
-async with MemoryClient().connect() as client:
-    # Save memory
-    result = await client.save_memory(
-        text="Python is excellent for machine learning",
-        memory_type="knowledge",
-        project="demo"
-    )
-    
-    # Search memories
-    results = await client.search_memory(
-        query="Python programming",
-        project="demo"
-    )
-```
-
-## 🔌 AI Agent Integration
-
-### Claude Desktop
-
-1. **MCP Configuration**:
+### Claude Desktop Smart Integration
 ```json
 {
   "mcpServers": {
-    "memory-server": {
+    "claude-smart-auto": {
       "command": "python",
-      "args": ["/path/to/mcp-memory-server/main.py"],
+      "args": ["examples/claude_smart_auto.py"],
       "env": {
-        "MONGODB_URL": "mongodb://localhost:27017/memory_db"
+        "MONGODB_URL": "mongodb://admin:securepassword@localhost:27017/memory_db?authSource=admin",
+        "AUTO_MEMORY": "advanced"
       }
     }
   }
 }
 ```
 
-2. **Usage in Claude**:
-```
-Claude, save this information: "Design patterns are fundamental for software engineering"
+### GPT/ChatGPT Smart API
+```bash
+# Start smart API server
+python examples/gpt_smart_auto.py
+
+# Use smart endpoints
+curl -X POST http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message":"Your message","user_id":"your_id"}'
 ```
 
-### Cursor AI
-
-1. **Plugin Configuration**:
+### Cursor Smart Integration
 ```json
 {
-  "mcpServers": {
-    "memory": {
-      "command": "python",
-      "args": ["main.py"],
-      "cwd": "/path/to/mcp-memory-server"
+  "mcp.servers": {
+    "cursor-smart-auto": {
+      "command": "python", 
+      "args": ["examples/cursor_smart_auto.py"],
+      "env": {"CODE_AWARE": "true"}
     }
   }
 }
 ```
 
-## 🏗️ Architecture
+## 📊 Smart Analytics
 
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   AI Agent      │    │   MCP Server    │    │   MongoDB       │
-│   (Claude,      │◄──►│   (Memory       │◄──►│   (Vector       │
-│    GPT-4, etc.) │    │    Service)     │    │    Search)      │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-                              │
-                              ▼
-                       ┌─────────────────┐
-                       │  Embedding      │
-                       │  Service        │
-                       │  (sentence-     │
-                       │   transformers) │
-                       └─────────────────┘
-```
+Monitor your AI productivity with real-time analytics:
 
-## 🔍 Monitoring
+```python
+# Get comprehensive analytics
+analytics = smart_system.get_session_analytics()
 
-### Health Check
-
-```bash
-# Check service status
-docker compose ps
-
-# Server logs
-docker compose logs mcp-memory-server
-
-# MongoDB Express (UI)
-# http://localhost:8081
+print(f"""
+🎯 Smart Automation Analytics
+============================
+Productivity Score: {analytics['productivity_score']:.2f}
+Automation Efficiency: {analytics['automation_efficiency']:.2f}
+Learning Rate: {analytics['learning_efficiency']:.2f}
+Auto-Saves: {analytics['auto_saves']}
+Context Retrievals: {analytics['context_retrievals']}
+""")
 ```
 
-### Metrics
+## 🔧 MCP Tools
 
-- **Performance**: Search time, throughput
-- **Storage**: Number of memories, project sizes
-- **Quality**: Average similarity, memory importance
+The server provides these MCP tools for AI agents:
 
-## 🚀 Production Deployment
+| Tool | Description | Parameters |
+|------|-------------|------------|
+| `save_memory` | Store information with semantic understanding | `text`, `memory_type`, `project`, `importance`, `tags` |
+| `search_memory` | Find relevant memories using semantic search | `query`, `project`, `limit`, `threshold` |
+| `get_context` | Retrieve memories for AI context enhancement | `project`, `limit` |
+| `get_stats` | Get memory usage statistics | `project` |
+| `health_check` | Check system health | None |
 
-### Docker Compose (Recommended)
+### Usage Examples
 
-```bash
-# Production build
-docker compose -f docker-compose.yml up -d
+```python
+# Save a preference (now automatic with smart triggers)
+await mcp_server.call_tool("save_memory", {
+    "text": "I prefer TypeScript over JavaScript for large projects",
+    "memory_type": "preference",
+    "project": "development",
+    "importance": 0.8,
+    "tags": ["programming", "typescript", "preference"]
+})
 
-# With persistent volumes
-docker compose -f docker-compose.prod.yml up -d
+# Search for relevant information (enhanced with smart context)
+result = await mcp_server.call_tool("search_memory", {
+    "query": "TypeScript setup",
+    "project": "development", 
+    "limit": 5,
+    "threshold": 0.7
+})
 ```
-
-### Cloud Platforms
-
-- **Google Cloud Run**: Serverless deployment
-- **AWS ECS**: Container orchestration
-- **Azure Container Instances**: Managed containers
 
 ## 🧪 Testing
 
 ```bash
-# Unit tests
-pytest tests/unit/
+# Run all tests
+python -m pytest tests/ -v
 
-# Integration tests
-pytest tests/integration/
+# Test with coverage
+python -m pytest tests/ --cov=src --cov-report=html
 
-# Performance tests
-pytest tests/performance/
+# Test smart automation
+python examples/claude_smart_auto.py demo
+python examples/cursor_smart_auto.py demo
+python examples/replit_smart_auto.py demo
 
-# Coverage report
-pytest --cov=src tests/
+# Test API
+curl http://localhost:8000/docs
 ```
 
-## 📊 Performance
+## 📈 Roadmap
 
-- **Search**: < 100ms per typical query
-- **Save**: < 50ms per memory
-- **Throughput**: 1000+ operations/second
-- **Scalability**: Supports millions of memories
+### Current Features ✅
+- [x] MCP protocol implementation
+- [x] MongoDB vector storage
+- [x] Semantic search with embeddings
+- [x] Smart automation system
+- [x] 5 AI tool integrations
+- [x] Real-time analytics
+- [x] Auto-save triggers
+- [x] Context enhancement
 
-## 🔒 Security
-
-- **Authentication**: API key support (optional)
-- **Validation**: Input sanitization with Pydantic
-- **Isolation**: Non-root Docker containers
-- **Network**: Network isolation
+### Upcoming Features 🚧
+- [ ] Advanced learning algorithms
+- [ ] Team collaboration features
+- [ ] Custom trigger patterns UI
+- [ ] Performance optimization
+- [ ] Multi-language support
+- [ ] Cloud deployment options
+- [ ] Advanced security features
+- [ ] Plugin ecosystem
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+### Development Setup
+```bash
+# Clone repository
+git clone https://github.com/AiGotsrl/mcp-memory-server
+cd mcp-memory-server
+
+# Install development dependencies
+pip install -r requirements.txt
+
+# Install pre-commit hooks
+pre-commit install
+
+# Run tests
+python -m pytest tests/ -v
+```
+
+### Code Style
+- Use [Black](https://github.com/psf/black) for code formatting
+- Follow [PEP 8](https://pep8.org/) guidelines  
+- Add type hints using [MyPy](https://mypy.readthedocs.io/)
+- Write comprehensive tests for new features
 
 ## 📄 License
 
@@ -252,27 +324,21 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🆘 Support
 
-- **Issues**: [GitHub Issues](https://github.com/your-username/mcp-memory-server/issues)
-- **Documentation**: [Wiki](https://github.com/your-username/mcp-memory-server/wiki)
-- **Discussions**: [GitHub Discussions](https://github.com/your-username/mcp-memory-server/discussions)
-
-## 🔄 Roadmap
-
-- [ ] Multi-modal embedding support
-- [ ] Automatic memory compression
-- [ ] Additional REST API
-- [ ] Web dashboard
-- [ ] Automatic backup
-- [ ] Integration with more AI agents
-- [ ] Memory clustering and organization
-- [ ] Real-time collaboration features
+- 📖 **Documentation**: Read our comprehensive guides in the `/docs` folder
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/AiGotsrl/mcp-memory-server/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/AiGotsrl/mcp-memory-server/discussions)
+- 📧 **Email**: support@aigotsrl.com
 
 ## 🙏 Acknowledgments
 
-- [Model Context Protocol](https://modelcontextprotocol.io/) for the MCP specification
-- [Sentence Transformers](https://www.sbert.net/) for embedding models
-- [MongoDB](https://www.mongodb.com/) for vector search capabilities
+- [Model Context Protocol (MCP)](https://github.com/modelcontextprotocol) for the protocol specification
+- [MongoDB](https://www.mongodb.com/) for the robust database backend
+- [Sentence Transformers](https://www.sbert.net/) for semantic embeddings
+- [FastAPI](https://fastapi.tiangolo.com/) for the modern web API framework
+- The AI development community for inspiration and feedback
 
 ---
 
-**MCP Memory Server** - Making AI agents smarter with persistent memory! 🧠✨ 
+**⭐ Star this repository if you find it helpful!**
+
+**🚀 Ready to make your AI tools super-intelligent? Start with our [Smart Automation Guide](SMART_AUTOMATION_GUIDE.md)!** 

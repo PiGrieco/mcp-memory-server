@@ -1,33 +1,37 @@
-# MCP Protocol
-mcp>=1.0.0
-
-# Database
-motor>=3.3.0
-pymongo>=4.5.0
-
-# Embedding Models
+# Core MCP Memory Server Dependencies
+pymongo>=4.3.0
+motor>=3.2.0
 sentence-transformers>=2.2.0
-torch>=2.0.0
-transformers>=4.30.0
-
-# Data Validation
-pydantic>=2.0.0
-
-# Utilities
 numpy>=1.24.0
 python-dotenv>=1.0.0
+asyncio-mqtt>=0.13.0
+pydantic>=2.0.0
 
-# Web API for GPT integration
+# FastAPI dependencies for GPT integration
 fastapi>=0.100.0
 uvicorn>=0.23.0
 
-# Development & Testing
-pytest>=7.4.0
+# Smart Automation Features
+regex>=2023.6.3
+python-dateutil>=2.8.2
+aiofiles>=23.1.0
+
+# Advanced Analytics
+pandas>=2.0.0
+scikit-learn>=1.3.0
+
+# Development and Testing
+pytest>=7.0.0
 pytest-asyncio>=0.21.0
-pytest-cov>=4.1.0
+pytest-cov>=4.0.0
 black>=23.0.0
 flake8>=6.0.0
-mypy>=1.5.0
+mypy>=1.0.0
+bandit[toml]>=1.7.0
 
-# Production
-gunicorn>=21.2.0 
+# Optional Replit Integration
+replit>=3.2.0  # Only needed for Replit Database mode
+
+# Optional Performance Monitoring
+psutil>=5.9.0
+memory-profiler>=0.60.0 
