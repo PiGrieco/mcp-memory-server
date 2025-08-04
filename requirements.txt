@@ -1,0 +1,30 @@
+# MCP Protocol
+mcp>=1.0.0
+
+# Database
+motor>=3.3.0
+pymongo>=4.5.0
+
+# Embedding Models
+sentence-transformers>=2.2.0
+torch>=2.0.0
+transformers>=4.30.0
+
+# Data Validation
+pydantic>=2.0.0
+
+# Utilities
+numpy>=1.24.0
+python-dotenv>=1.0.0
+
+# Development & Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.5.0
+
+# Production
+uvicorn>=0.23.0
+gunicorn>=21.2.0 

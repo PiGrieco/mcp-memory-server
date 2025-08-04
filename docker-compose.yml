@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongodb/mongodb-community-server:7.0-ubuntu2204
+    container_name: mcp-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=admin
+      - MONGODB_INITDB_ROOT_PASSWORD=securepassword
+      - MONGODB_INITDB_DATABASE=memory_db
+    volumes:
+      - mongodb_data:/data/db
+      - ./scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    command: mongod --replSet rs0 --bind_ip_all
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  mongo-init:
+    image: mongodb/mongodb-community-server:7.0-ubuntu2204
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: "no"
+    command: >
+      bash -c "
+        sleep 10 &&
+        mongosh --host mongodb:27017 -u admin -p securepassword --authenticationDatabase admin --eval '
+          rs.initiate({
+            _id: \"rs0\",
+            members: [{_id: 0, host: \"mongodb:27017\"}]
+          })
+        '
+      "
+
+  mcp-memory-server:
+    build: .
+    container_name: mcp-memory-server
+    restart: unless-stopped
+    environment:
+      - MONGODB_URL=mongodb://admin:securepassword@mongodb:27017/memory_db?authSource=admin&replicaSet=rs0
+      - DATABASE_NAME=memory_db
+      - EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
+      - LOG_LEVEL=INFO
+      - ENVIRONMENT=production
+      - MCP_SERVER_NAME=memory-server
+      - MCP_SERVER_VERSION=1.0.0
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      mongo-init:
+        condition: service_completed_successfully
+    volumes:
+      - ./logs:/app/logs
+      - ./backups:/app/backups
+    healthcheck:
+      test: ["CMD", "python", "-c", "import asyncio; from src.services import memory_service; asyncio.run(memory_service.health_check())"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mcp-mongo-express
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=securepassword
+      - ME_CONFIG_MONGODB_URL=mongodb://admin:securepassword@mongodb:27017/
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=admin123
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+volumes:
+  mongodb_data:
+    driver: local 

@@ -1,0 +1,71 @@
+{
+  "name": "mcp-memory-plugin",
+  "version": "1.0.0",
+  "description": "Automatic memory integration for Cursor AI",
+  "main": "memory_plugin.js",
+  "config": {
+    "mcpServer": {
+      "command": "python",
+      "args": ["main.py"],
+      "cwd": "/path/to/mcp-memory-server",
+      "env": {
+        "MONGODB_URL": "mongodb://localhost:27017/memory_db",
+        "AUTO_TRIGGER": "true",
+        "CURSOR_INTEGRATION": "true"
+      }
+    },
+    "autoTriggers": {
+      "onFileEdit": true,
+      "onCodeCompletion": true,
+      "onProjectChange": true,
+      "onUserQuery": true
+    },
+    "triggerEvents": {
+      "beforeCompletion": {
+        "searchRelevantCode": true,
+        "useProjectContext": true
+      },
+      "afterCompletion": {
+        "saveCodeSnippet": true,
+        "extractPatterns": true
+      },
+      "onError": {
+        "saveErrorContext": true,
+        "searchSolutions": true
+      },
+      "onSuccess": {
+        "saveSuccessPattern": true,
+        "updateKnowledge": true
+      }
+    },
+    "memoryTypes": {
+      "codeSnippets": {
+        "enabled": true,
+        "importance": 0.8
+      },
+      "errorSolutions": {
+        "enabled": true,
+        "importance": 0.9
+      },
+      "projectContext": {
+        "enabled": true,
+        "importance": 0.7
+      },
+      "userPreferences": {
+        "enabled": true,
+        "importance": 0.6
+      }
+    }
+  },
+  "triggers": {
+    "keywords": ["remember", "save", "note", "important", "TODO", "FIXME"],
+    "patterns": {
+      "functions": "function\\s+\\w+\\s*\\(",
+      "classes": "class\\s+\\w+",
+      "imports": "import\\s+.+",
+      "errors": "Error:|Exception:|Failed:"
+    },
+    "contextLength": 500,
+    "similarity": 0.7
+  }
+} 
