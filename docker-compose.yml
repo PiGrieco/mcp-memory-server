@@ -1,87 +1,112 @@
 version: '3.8'
 
 services:
-  mongodb:
-    image: mongodb/mongodb-community-server:7.0-ubuntu2204
-    container_name: mcp-mongodb
-    restart: unless-stopped
-    ports:
-      - "27017:27017"
-    environment:
-      - MONGODB_INITDB_ROOT_USERNAME=admin
-      - MONGODB_INITDB_ROOT_PASSWORD=securepassword
-      - MONGODB_INITDB_DATABASE=memory_db
-    volumes:
-      - mongodb_data:/data/db
-      - ./scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-    command: mongod --replSet rs0 --bind_ip_all
-    healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
-  mongo-init:
-    image: mongodb/mongodb-community-server:7.0-ubuntu2204
-    depends_on:
-      mongodb:
-        condition: service_healthy
-    restart: "no"
-    command: >
-      bash -c "
-        sleep 10 &&
-        mongosh --host mongodb:27017 -u admin -p securepassword --authenticationDatabase admin --eval '
-          rs.initiate({
-            _id: \"rs0\",
-            members: [{_id: 0, host: \"mongodb:27017\"}]
-          })
-        '
-      "
-
-  mcp-memory-server:
+  # Main API Gateway
+  api-gateway:
     build: .
-    container_name: mcp-memory-server
-    restart: unless-stopped
+    container_name: mcp-memory-api-gateway
+    ports:
+      - "8000:8000"
     environment:
-      - MONGODB_URL=mongodb://admin:securepassword@mongodb:27017/memory_db?authSource=admin&replicaSet=rs0
-      - DATABASE_NAME=memory_db
-      - EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
-      - LOG_LEVEL=INFO
-      - ENVIRONMENT=production
-      - MCP_SERVER_NAME=memory-server
-      - MCP_SERVER_VERSION=1.0.0
-    depends_on:
-      mongodb:
-        condition: service_healthy
-      mongo-init:
-        condition: service_completed_successfully
+      - SERVICE_TYPE=api-gateway
+      - MONGODB_MASTER_CONNECTION=${MONGODB_MASTER_CONNECTION}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+      - API_BASE_URL=${API_BASE_URL:-http://localhost:8000}
+    command: ["python", "cloud/api_gateway.py"]
     volumes:
       - ./logs:/app/logs
-      - ./backups:/app/backups
-    healthcheck:
-      test: ["CMD", "python", "-c", "import asyncio; from src.services import memory_service; asyncio.run(memory_service.health_check())"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-
-  mongo-express:
-    image: mongo-express:latest
-    container_name: mcp-mongo-express
-    restart: unless-stopped
-    ports:
-      - "8081:8081"
-    environment:
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=securepassword
-      - ME_CONFIG_MONGODB_URL=mongodb://admin:securepassword@mongodb:27017/
-      - ME_CONFIG_BASICAUTH_USERNAME=admin
-      - ME_CONFIG_BASICAUTH_PASSWORD=admin123
     depends_on:
-      mongodb:
-        condition: service_healthy
+      - redis
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # Billing Service
+  billing-service:
+    build: .
+    container_name: mcp-memory-billing
+    ports:
+      - "8001:8001"
+    environment:
+      - SERVICE_TYPE=billing
+      - MONGODB_MASTER_CONNECTION=${MONGODB_MASTER_CONNECTION}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+    command: ["python", "cloud/billing_system.py"]
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # Web Frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: mcp-memory-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=${API_BASE_URL:-http://localhost:8000}
+      - REACT_APP_STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # Redis for caching and session management
+  redis:
+    image: redis:7-alpine
+    container_name: mcp-memory-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: mcp-memory-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deployment/nginx.conf:/etc/nginx/nginx.conf
+      - ./deployment/ssl:/etc/nginx/ssl
+    depends_on:
+      - api-gateway
+      - frontend
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # Background Worker for heavy tasks
+  worker:
+    build: .
+    container_name: mcp-memory-worker
+    environment:
+      - SERVICE_TYPE=worker
+      - MONGODB_MASTER_CONNECTION=${MONGODB_MASTER_CONNECTION}
+      - REDIS_URL=redis://redis:6379
+    command: ["python", "cloud/background_worker.py"]
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - mcp-network
 
 volumes:
-  mongodb_data:
-    driver: local 
+  redis-data:
+
+networks:
+  mcp-network:
+    driver: bridge 

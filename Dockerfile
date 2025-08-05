@@ -1,56 +1,36 @@
-# Multi-stage build for production
-FROM python:3.11-slim as builder
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    gcc \
-    g++ \
+    curl \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
-WORKDIR /app
-
-# Copy requirements and install Python dependencies
+# Copy requirements first for better caching
 COPY requirements.txt .
-RUN pip install --no-cache-dir --user -r requirements.txt
 
-# Production stage
-FROM python:3.11-slim
-
-# Install runtime dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
-
-# Create non-root user
-RUN useradd --create-home --shell /bin/bash app
-
-# Set working directory
-WORKDIR /app
-
-# Copy Python packages from builder
-COPY --from=builder /root/.local /home/app/.local
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
-COPY --chown=app:app . .
+COPY . .
 
-# Set PATH for user packages
-ENV PATH=/home/app/.local/bin:$PATH
+# Create directories for logs and data
+RUN mkdir -p /app/logs /app/data
 
-# Switch to non-root user
-USER app
+# Expose ports
+EXPOSE 8000 8001 8002
+
+# Environment variables
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import asyncio; from src.services import memory_service; asyncio.run(memory_service.health_check())" || exit 1
+    CMD curl -f http://localhost:8000/health || exit 1
 
-# Expose port (if needed for HTTP API)
-EXPOSE 8000
-
-# Set environment variables
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONPATH=/app/src
-
-# Run the application
-ENTRYPOINT ["python", "main.py"] 
+# Default command
+CMD ["python", "cloud/api_gateway.py"] 
