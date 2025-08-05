@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>mcp-memory-server</id>
+    <version>1.0.0</version>
+    <packageSourceUrl>https://github.com/AiGotsrl/mcp-memory-server</packageSourceUrl>
+    <owners>AiGot Srl</owners>
+    <title>MCP Memory Server</title>
+    <authors>AiGot Srl</authors>
+    <projectUrl>https://github.com/AiGotsrl/mcp-memory-server</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/AiGotsrl/mcp-memory-server/main/assets/logo.png</iconUrl>
+    <copyright>2024 AiGot Srl</copyright>
+    <licenseUrl>https://raw.githubusercontent.com/AiGotsrl/mcp-memory-server/main/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/AiGotsrl/mcp-memory-server</projectSourceUrl>
+    <docsUrl>https://github.com/AiGotsrl/mcp-memory-server/blob/main/README.md</docsUrl>
+    <bugTrackerUrl>https://github.com/AiGotsrl/mcp-memory-server/issues</bugTrackerUrl>
+    <tags>ai artificial-intelligence memory mcp chatgpt claude cursor lovable replit automation machine-learning embedding vector-search smart-assistant persistent-memory semantic-search mongodb docker fastapi anthropic openai</tags>
+    <summary>The Redis for AI Agents - Persistent memory system for any AI assistant</summary>
+    <description><![CDATA[
+# 🧠 MCP Memory Server - The Redis for AI Agents
+
+Transform your AI tools into super-intelligent assistants with persistent memory that remembers everything and gets smarter over time.
+
+## 🚀 What You Get
+
+**Universal AI Memory**: Works with Claude Desktop, ChatGPT, Cursor IDE, Lovable AI, and Replit
+**Smart Auto-Memory**: Automatically saves and retrieves relevant context
+**Semantic Search**: Find information by meaning, not just keywords  
+**Beautiful Setup**: Interactive wizard guides you through everything
+**Zero Technical Knowledge Required**: Just install and go!
+
+## ⚡ Quick Start
+
+After installation, simply run:
+```
+mcp-memory-setup
+```
+
+The interactive wizard will:
+- 🔍 Auto-detect your AI tools
+- ⚙️ Configure everything automatically  
+- 🧪 Test all connections
+- 🎉 Give you super-intelligent AI assistants!
+
+## 🎯 Supported AI Tools
+
+- **🧠 Claude Desktop**: Native MCP integration with smart triggers
+- **💬 ChatGPT**: Browser extension + API wrapper  
+- **💻 Cursor IDE**: Code-aware memory for development
+- **💖 Lovable AI**: UI/UX pattern learning and suggestions
+- **🌐 Replit**: Cloud development with shared team memory
+
+## 🌟 Features
+
+- **Auto-Save**: Automatically detects and saves important information
+- **Auto-Search**: Intelligently retrieves relevant context
+- **Auto-Enhance**: Enriches AI responses with past knowledge
+- **Learning Analytics**: Tracks patterns and improves over time
+- **Cross-Platform Memory**: Share knowledge across all your AI tools
+- **Beautiful UI**: Floating memory panels and smart notifications
+- **Privacy-First**: All data stays local by default
+
+## 🔧 System Requirements
+
+- Windows 10/11
+- Python 3.11+ (automatically installed if missing)
+- 4GB RAM minimum, 8GB recommended
+- Internet connection for setup
+
+Optional but recommended:
+- Docker Desktop (for MongoDB)
+- Chrome or Firefox (for ChatGPT extension)
+
+## 📚 Documentation
+
+Complete guides available at:
+- Setup Guide: https://github.com/AiGotsrl/mcp-memory-server/blob/main/PLUGIN_ECOSYSTEM.md
+- User Manual: https://github.com/AiGotsrl/mcp-memory-server/blob/main/SMART_AUTOMATION_GUIDE.md
+- Integration Docs: https://github.com/AiGotsrl/mcp-memory-server/blob/main/INTEGRATION_GUIDE.md
+
+## 🆘 Support
+
+- GitHub Issues: https://github.com/AiGotsrl/mcp-memory-server/issues
+- Email: support@mcp-memory.ai
+- Documentation: Complete guides and examples included
+
+Transform your AI tools into super-intelligent assistants today! 🧠✨
+    ]]></description>
+    <releaseNotes>
+# Version 1.0.0 - Initial Release
+
+## 🎉 Major Features
+- Complete MCP Memory Server implementation
+- Smart automation for 5 AI tools (Claude, ChatGPT, Cursor, Lovable, Replit)
+- Interactive setup wizard with beautiful UI
+- Browser extension for ChatGPT
+- Cross-platform universal installer
+- AI-powered setup assistant
+
+## 🔧 Installation Methods
+- One-click Windows installer
+- Interactive setup wizard  
+- Package manager support (pip, npm, brew, choco)
+- Manual installation for experts
+
+## 🚀 Smart Memory Features
+- Auto-save important information
+- Auto-search relevant context
+- Auto-enhance AI responses
+- Learning analytics and patterns
+- Proactive suggestions
+- Cross-tool memory synchronization
+
+## 📊 Supported Platforms
+- Windows 10/11 (full support)
+- macOS (Homebrew)
+- Linux (snap/apt)
+- Python 3.11+ environments
+
+See full changelog: https://github.com/AiGotsrl/mcp-memory-server/blob/main/CHANGELOG.md
+    </releaseNotes>
+    <dependencies>
+      <dependency id="python3" version="3.11.0" />
+      <dependency id="chocolatey-core.extension" version="1.3.3" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+    <file src="src\**" target="src" />
+    <file src="config\**" target="config" />
+    <file src="examples\**" target="examples" />
+    <file src="scripts\**" target="scripts" />
+    <file src="browser-extension\**" target="browser-extension" />
+    <file src="installer\**" target="installer" />
+    <file src="*.md" target="" />
+    <file src="*.txt" target="" />
+    <file src="*.json" target="" />
+    <file src="*.yml" target="" />
+    <file src="LICENSE" target="" />
+  </files>
+</package> 
