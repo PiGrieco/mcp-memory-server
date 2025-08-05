@@ -1,18 +1,26 @@
 #!/usr/bin/env python3
 """
-Billing and Monetization System for MCP Memory Server
-Usage-based billing with Stripe integration and automatic tier management
+Billing System for MCP Memory Cloud
+Handles subscriptions, usage tracking, and invoicing with Stripe
 """
 
 import os
+import json
 import asyncio
 import stripe
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional
-from dataclasses import dataclass
-from cloud.mongodb_provisioner import MongoDBCloudProvisioner
-import httpx
-import json
+from decimal import Decimal
+from dataclasses import dataclass, asdict
+from typing import Dict, List, Optional, Any
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
+import uvicorn
+
+# Load environment variables
+from dotenv import load_dotenv
+load_dotenv()
+
+from mongodb_provisioner import MongoDBCloudProvisioner
 
 @dataclass
 class BillingPlan:
@@ -53,14 +61,28 @@ class BillingSystem:
             "free": BillingPlan(
                 name="Free",
                 monthly_cost=0.0,
-                memory_limit_mb=1000,  # 1GB
-                api_calls_limit=10000,
-                overage_cost_per_mb=0.0,  # No overage for free
+                memory_limit_mb=500,  # 500MB
+                api_calls_limit=5000,  # 5K
+                overage_cost_per_mb=0.0,
                 features=[
-                    "1GB Memory Storage",
-                    "10,000 API calls/month",
+                    "500MB Memory Storage",
+                    "5,000 API calls/month",
                     "Basic search",
                     "Community support"
+                ]
+            ),
+            "starter": BillingPlan(
+                name="Starter",
+                monthly_cost=9.99,
+                memory_limit_mb=2000,  # 2GB
+                api_calls_limit=25000,  # 25K
+                overage_cost_per_mb=0.0008,
+                features=[
+                    "2GB Memory Storage",
+                    "25,000 API calls/month",
+                    "Advanced search",
+                    "Email support",
+                    "Basic analytics"
                 ]
             ),
             "pro": BillingPlan(
@@ -68,7 +90,7 @@ class BillingSystem:
                 monthly_cost=29.99,
                 memory_limit_mb=10000,  # 10GB
                 api_calls_limit=100000,
-                overage_cost_per_mb=0.001,  # $0.001 per MB
+                overage_cost_per_mb=0.0008,  # Optimized
                 features=[
                     "10GB Memory Storage",
                     "100,000 API calls/month",
@@ -83,7 +105,7 @@ class BillingSystem:
                 monthly_cost=99.99,
                 memory_limit_mb=-1,  # Unlimited
                 api_calls_limit=-1,  # Unlimited
-                overage_cost_per_mb=0.0005,  # $0.0005 per MB (for tracking)
+                overage_cost_per_mb=0.0005,
                 features=[
                     "Unlimited Memory Storage",
                     "Unlimited API calls",
@@ -98,10 +120,10 @@ class BillingSystem:
         
         # Usage tracking rates
         self.usage_rates = {
-            "memory_storage": 0.001,  # $0.001 per MB
-            "api_call": 0.0001,       # $0.0001 per API call
-            "search_operation": 0.0005, # $0.0005 per search
-            "vector_embedding": 0.001   # $0.001 per embedding generation
+            "memory_storage": 0.0008,   # $0.0008 per MB (optimized)
+            "api_call": 0.00008,        # $0.00008 per API call (optimized)
+            "search_operation": 0.0003, # $0.0003 per search (optimized)
+            "vector_embedding": 0.0008  # $0.0008 per embedding (optimized)
         }
     
     async def initialize(self):

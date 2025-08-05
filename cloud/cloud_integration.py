@@ -1,15 +1,26 @@
 #!/usr/bin/env python3
 """
-Cloud Integration for MCP Memory Server
-Automatic cloud setup integration with existing clients
+Cloud Integration Client for MCP Memory
+Handles automatic cloud setup and usage tracking
 """
 
 import os
-import asyncio
 import json
+import asyncio
 from pathlib import Path
-from typing import Dict, Optional
-from cloud.mongodb_provisioner import MongoDBCloudProvisioner
+from dataclasses import dataclass
+from typing import Dict, Any, Optional
+from mongodb_provisioner import MongoDBCloudProvisioner
+
+@dataclass
+class CloudConfig:
+    """Local cloud configuration"""
+    api_key: str
+    database_name: str
+    user_id: str
+    email: str
+    tier: str
+    connection_string: str
 
 class CloudMemoryClient:
     """Cloud-enabled MCP Memory Client with automatic provisioning"""

@@ -1,161 +1,224 @@
 #!/usr/bin/env python3
 """
-Complete Usage Example - MCP Memory Cloud System
-Shows real-world setup and usage patterns
+Complete demo of MCP Memory Cloud system
+Demonstrates automatic user setup and usage-based billing
 """
 
 import asyncio
-from cloud.cloud_integration import CloudMemoryClient
-from cloud.billing_system import BillingSystem
+from cloud_integration import CloudMemoryClient
+from billing_system import BillingSystem
+from datetime import datetime, timedelta
 
 async def demo_complete_flow():
-    """Dimostra il flow completo dal setup all'uso"""
+    """
+    Dimostra il flusso completo:
+    1. Setup automatico utente (first-time use)
+    2. Salvataggio memorie
+    3. Ricerche
+    4. Calcolo billing
+    """
     
-    print("🌩️ MCP Memory Cloud - Complete Demo")
+    print("🌩️ MCP MEMORY CLOUD - DEMO COMPLETO")
     print("=" * 50)
     
-    # STEP 1: Setup utente automatico
-    print("\n1️⃣ USER SETUP")
-    client = CloudMemoryClient(user_email="demo@example.com")
+    # 1. Setup automatico utente
+    print("\n1️⃣ SETUP AUTOMATICO UTENTE")
+    print("-" * 30)
     
-    # Questo crea automaticamente:
-    # ✅ Account utente unico
-    # ✅ Database MongoDB isolato  
-    # ✅ API key sicura
-    # ✅ Config locale
-    success = await client.initialize_cloud()
+    demo_email = "demo@mcpmemory.cloud"
+    client = CloudMemoryClient(demo_email)
     
-    if not success:
-        print("❌ Setup failed")
+    print(f"📧 Inizializzando per: {demo_email}")
+    
+    try:
+        await client.initialize_cloud()
+        print("✅ Utente inizializzato con successo!")
+        print(f"   🆔 User ID: {client.user_id}")
+        print(f"   🔑 API Key: {client.api_key[:20]}...")
+        print(f"   🗄️ Database: {client.database_name}")
+        
+    except Exception as e:
+        print(f"❌ Errore inizializzazione: {e}")
         return
     
-    # STEP 2: Uso normale (quello che faranno i plugin)
-    print("\n2️⃣ NORMAL USAGE")
+    # 2. Simulazione uso normale
+    print("\n2️⃣ SIMULAZIONE USO NORMALE")
+    print("-" * 30)
     
-    # Simula utilizzo di Claude/ChatGPT/Cursor
-    memories_saved = [
-        ("Come configurare FastAPI con async", "technical_solution", 0.5),
-        ("Preferenze utente per dark mode", "user_preference", 0.1), 
-        ("Bug fix per memory leak in Python", "debugging_solution", 0.8),
-        ("Setup MongoDB Atlas connection", "configuration", 0.3),
-        ("Stripe webhook implementation guide", "technical_solution", 1.2)
+    memories = [
+        {
+            "content": "L'utente preferisce Python per l'AI development",
+            "context": "conversation_preferences", 
+            "tags": ["python", "ai", "development"]
+        },
+        {
+            "content": "Il progetto MCP Memory è stato configurato con MongoDB Atlas",
+            "context": "project_setup",
+            "tags": ["mcp", "mongodb", "setup"]
+        },
+        {
+            "content": "Stripe configurato per billing automatico",
+            "context": "billing_setup", 
+            "tags": ["stripe", "billing", "payment"]
+        },
+        {
+            "content": "L'utente lavora su MacOS con VS Code",
+            "context": "environment_setup",
+            "tags": ["macos", "vscode", "environment"]
+        },
+        {
+            "content": "Preferisce interfacce CLI per automazione",
+            "context": "user_preferences",
+            "tags": ["cli", "automation", "preferences"]
+        }
     ]
     
-    total_memory_mb = 0
-    for i, (text, memory_type, size_mb) in enumerate(memories_saved, 1):
-        # Ogni volta che il plugin salva una memoria
-        await client.track_memory_operation("save", size_mb)
-        total_memory_mb += size_mb
-        print(f"   💾 Memory {i}: {text[:40]}... ({size_mb}MB)")
+    # Salva memorie
+    for i, memory in enumerate(memories, 1):
+        print(f"   💾 Salvando memoria {i}: {memory['content'][:40]}...")
+        
+        # Simula save tramite MCP (tracked automaticamente)
+        await client.track_memory_operation(
+            operation_type="save",
+            data_size_mb=len(memory['content']) / (1024 * 1024),  # ~KB
+            metadata=memory
+        )
     
-    # Simula ricerche (search operations)
+    # Simula ricerche
     searches = [
-        "Come configurare FastAPI?",
-        "Bug memory leak Python",
-        "Setup MongoDB", 
-        "Stripe webhook",
-        "Dark mode preferences"
+        "Python AI development",
+        "MongoDB setup",
+        "billing configuration", 
+        "user environment preferences",
+        "CLI automation tools"
     ]
     
     for i, search in enumerate(searches, 1):
-        await client.track_memory_operation("search", 0)  # Le ricerche non aggiungono memoria
-        print(f"   🔍 Search {i}: {search}")
+        print(f"   🔍 Ricerca {i}: {search}")
+        
+        # Simula search tramite MCP (tracked automaticamente)
+        await client.track_memory_operation(
+            operation_type="search",
+            query=search,
+            results_count=3  # Simula 3 risultati
+        )
     
-    # STEP 3: Mostra usage stats
-    print("\n3️⃣ USAGE STATS")
+    # 3. Real-time usage stats
+    print("\n3️⃣ STATISTICHE USO IN TEMPO REALE")
+    print("-" * 30)
+    
     stats = await client.get_usage_stats()
-    print(f"   💾 Memory Used: {stats['current_usage_mb']:.2f} MB / {stats['usage_limit_mb']} MB")
-    print(f"   📈 Usage: {stats['usage_percentage']:.1f}%")
-    print(f"   🏷️ Tier: {stats['tier'].title()}")
+    if stats:
+        print(f"   📊 API Calls: {stats.get('api_calls', 0)}")
+        print(f"   💾 Memory Used: {stats.get('memory_usage_mb', 0):.2f} MB")
+        print(f"   🔍 Searches: {stats.get('search_operations', 0)}")
+        print(f"   🧮 Embeddings: {stats.get('vector_embeddings', 0)}")
+        print(f"   💰 Current Tier: {stats.get('tier', 'free')}")
     
-    # STEP 4: Simula billing (fine mese)
-    print("\n4️⃣ BILLING CALCULATION")
+    # 4. Calcolo costi fine mese
+    print("\n4️⃣ CALCOLO COSTI FINE MESE")
+    print("-" * 30)
+    
     billing = BillingSystem()
     await billing.initialize()
     
-    # Calcola costi per questo utente
-    user_id = client.user_account["user_id"]
-    from datetime import datetime
-    now = datetime.utcnow()
+    # Simula billing dashboard per questo utente
+    dashboard_data = await billing.get_usage_dashboard_data(client.user_id)
     
-    dashboard_data = await billing.get_usage_dashboard_data(user_id)
-    current_costs = dashboard_data["current_costs"]
+    if dashboard_data:
+        print(f"   💳 Piano: {dashboard_data['user_tier']}")
+        print(f"   📈 Usage corrente:")
+        usage = dashboard_data['current_usage']
+        for key, value in usage.items():
+            print(f"      {key}: {value}")
+        
+        print(f"   💰 Costo stimato mese: ${dashboard_data.get('estimated_monthly_cost', 0):.2f}")
+        
+        if dashboard_data.get('overage_costs'):
+            print(f"   ⚠️ Costi extra: ${dashboard_data['overage_costs']:.2f}")
     
-    print(f"   💰 Base Cost: ${current_costs['base_subscription']:.2f}")
-    print(f"   💰 Memory Overage: ${current_costs['memory_overage']:.4f}")
-    print(f"   💰 Search Costs: ${current_costs['additional_usage']:.4f}")
-    print(f"   💰 Total: ${sum(current_costs.values()):.2f}")
-    
-    return {
-        "memories_saved": len(memories_saved),
-        "total_memory_mb": total_memory_mb,
-        "searches_performed": len(searches),
-        "total_cost": sum(current_costs.values()),
-        "user_stats": stats
-    }
+    print("\n✅ Demo completato con successo!")
 
-async def estimate_real_usage():
-    """Stima usage patterns realistici"""
+def estimate_real_usage():
+    """
+    Stima usage realistico per diverse tipologie di utenti
+    """
     
-    print("\n📊 REAL USAGE ESTIMATES")
-    print("=" * 30)
+    print("\n" + "=" * 60)
+    print("📊 STIME USAGE REALISTICO")
+    print("=" * 60)
     
-    # Patterns di utilizzo realistici
-    usage_patterns = {
-        "Light User (Claude Desktop)": {
-            "memories_per_day": 10,
-            "avg_memory_size_mb": 0.2,  # 200KB media
-            "searches_per_day": 5,
-            "days_per_month": 20
+    user_profiles = {
+        "Light User (Casual AI)": {
+            "monthly_memories": 100,
+            "monthly_searches": 200, 
+            "monthly_api_calls": 500,
+            "avg_memory_size_kb": 2  # 2KB per memoria
         },
-        "Power User (Cursor + ChatGPT)": {
-            "memories_per_day": 50,
-            "avg_memory_size_mb": 0.5,  # 500KB media
-            "searches_per_day": 25,
-            "days_per_month": 25
+        "Power User (AI Developer)": {
+            "monthly_memories": 1000,
+            "monthly_searches": 2000,
+            "monthly_api_calls": 5000,
+            "avg_memory_size_kb": 5  # 5KB per memoria
         },
         "Team/Enterprise": {
-            "memories_per_day": 200,
-            "avg_memory_size_mb": 0.8,  # 800KB media
-            "searches_per_day": 100,
-            "days_per_month": 30
+            "monthly_memories": 10000,
+            "monthly_searches": 20000,
+            "monthly_api_calls": 50000,
+            "avg_memory_size_kb": 10  # 10KB per memoria
         }
     }
     
-    for user_type, pattern in usage_patterns.items():
-        monthly_memories = pattern["memories_per_day"] * pattern["days_per_month"]
-        monthly_memory_mb = monthly_memories * pattern["avg_memory_size_mb"]
-        monthly_searches = pattern["searches_per_day"] * pattern["days_per_month"]
+    # Pricing corrente (da billing_system.py)
+    pricing = {
+        "memory_per_mb": 0.001,  # $0.001/MB
+        "api_call": 0.0001,      # $0.0001/call
+        "search": 0.0005,        # $0.0005/search  
+        "embedding": 0.001       # $0.001/embedding
+    }
+    
+    for profile, usage in user_profiles.items():
+        print(f"\n📋 {profile}")
+        print("-" * 40)
         
-        # Calcola costi con pricing attuale
-        memory_cost = monthly_memory_mb * 0.001  # $0.001 per MB
-        search_cost = monthly_searches * 0.0005   # $0.0005 per search
-        total_usage_cost = memory_cost + search_cost
+        # Calcoli
+        total_memory_mb = (usage["monthly_memories"] * usage["avg_memory_size_kb"]) / 1024
         
-        print(f"\n👤 {user_type}:")
-        print(f"   📝 Memories/month: {monthly_memories:,}")
-        print(f"   💾 Memory MB/month: {monthly_memory_mb:.1f} MB")
-        print(f"   🔍 Searches/month: {monthly_searches:,}")
-        print(f"   💰 Usage Cost: ${total_usage_cost:.2f}/month")
+        costs = {
+            "memory": total_memory_mb * pricing["memory_per_mb"],
+            "api_calls": usage["monthly_api_calls"] * pricing["api_call"],
+            "searches": usage["monthly_searches"] * pricing["search"],
+            "embeddings": usage["monthly_memories"] * pricing["embedding"]  # 1 embedding per memoria
+        }
         
-        # Proiezioni 1K calls e 1MB
-        memories_per_1k = 1000
-        cost_per_1k_memories = memories_per_1k * pattern["avg_memory_size_mb"] * 0.001
-        cost_per_1mb = 1.0 * 0.001  # $0.001 per MB
+        total_cost = sum(costs.values())
         
-        print(f"   📊 Cost per 1K memories: ${cost_per_1k_memories:.3f}")
-        print(f"   📊 Cost per 1MB: ${cost_per_1mb:.3f}")
+        print(f"   Memory usage: {total_memory_mb:.1f} MB → ${costs['memory']:.2f}")
+        print(f"   API calls: {usage['monthly_api_calls']} → ${costs['api_calls']:.2f}")
+        print(f"   Searches: {usage['monthly_searches']} → ${costs['searches']:.2f}")
+        print(f"   Embeddings: {usage['monthly_memories']} → ${costs['embeddings']:.2f}")
+        print(f"   🎯 TOTAL: ${total_cost:.2f}/month")
+    
+    # Proiezioni per 1K e 1MB
+    print(f"\n💡 UNIT COSTS:")
+    print(f"   1K memories (~5MB): ${(5 * pricing['memory_per_mb'] + 1000 * pricing['embedding']):.2f}")
+    print(f"   1MB storage: ${pricing['memory_per_mb']:.3f}")
+    print(f"   1K API calls: ${(1000 * pricing['api_call']):.2f}")
+    print(f"   1K searches: ${(1000 * pricing['search']):.2f}")
 
-if __name__ == "__main__":
-    async def main():
+async def main():
+    """Main demo function"""
+    try:
         # Demo completo
-        demo_results = await demo_complete_flow()
+        await demo_complete_flow()
         
         # Stime realistiche
-        await estimate_real_usage()
+        estimate_real_usage()
         
-        print(f"\n🎯 DEMO COMPLETED")
-        print(f"Demo saved {demo_results['memories_saved']} memories")
-        print(f"Total cost for demo: ${demo_results['total_cost']:.4f}")
-    
+    except Exception as e:
+        print(f"❌ Errore durante demo: {e}")
+        import traceback
+        traceback.print_exc()
+
+if __name__ == "__main__":
     asyncio.run(main()) 

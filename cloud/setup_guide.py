@@ -204,7 +204,7 @@ class InteractiveSetup:
             
             client = AsyncIOMotorClient(connection_string)
             await client.admin.command('ping')
-            await client.close()
+            client.close()  # Non è async
             
             print("✅ MongoDB Atlas API and connection validated")
             return True
