@@ -56,9 +56,10 @@ def analyze_costs():
     print("-" * 25)
     
     current_pricing = {
-        "memory_storage_per_mb": 0.001,    # $0.001 per MB
-        "search_operation": 0.0005,        # $0.0005 per search
-        "api_call": 0.0001                 # $0.0001 per API call
+        "memory_storage_per_mb": 0.0024,    # $0.0024 per MB (tripled from 0.0008)
+        "search_operation": 0.0009,         # $0.0009 per search (tripled from 0.0003)
+        "api_call": 0.00024,                # $0.00024 per API call (tripled from 0.00008)
+        "vector_embedding": 0.0024          # $0.0024 per embedding (tripled from 0.0008)
     }
     
     # Calcola margins
@@ -158,32 +159,33 @@ def pricing_recommendations():
     # Sweet spot pricing basato su analisi
     recommended_pricing = {
         "free_tier": {
-            "memory_limit_mb": 500,         # 500MB invece di 1GB
-            "api_calls_limit": 5000,        # 5K instead of 10K
+            "memory_limit_mb": 500,         # 500MB
+            "api_calls_limit": 5000,        # 5K
             "monthly_cost": 0
         },
-        "starter_tier": {
+        "light_user_tier": {
             "memory_limit_mb": 2000,        # 2GB
             "api_calls_limit": 25000,       # 25K
-            "monthly_cost": 9.99            # Nuovo tier!
+            "monthly_cost": 3.99            # Light User
         },
-        "pro_tier": {
+        "power_user_tier": {
             "memory_limit_mb": 10000,       # 10GB
             "api_calls_limit": 100000,      # 100K
-            "monthly_cost": 29.99
+            "monthly_cost": 9.99            # Power User
         },
         "enterprise_tier": {
             "memory_limit_mb": -1,          # Unlimited
             "api_calls_limit": -1,          # Unlimited
-            "monthly_cost": 99.99
+            "monthly_cost": 99.99           # Enterprise
         }
     }
     
+    # Usage-based pricing (tutti triplicati)
     usage_based_pricing = {
-        "memory_storage_per_mb": 0.0008,    # Slightly lower than current
-        "search_operation": 0.0003,         # More competitive  
-        "api_call": 0.00008,               # Slightly lower
-        "vector_embedding": 0.0008         # Competitive with market
+        "memory_storage": 0.0024,       # $0.0024/MB (tripled)
+        "search_operations": 0.0009,    # $0.0009/search (tripled)
+        "api_calls": 0.00024,           # $0.00024/call (tripled)
+        "vector_embeddings": 0.0024     # $0.0024/embedding (tripled)
     }
     
     print("💰 RECOMMENDED MONTHLY TIERS:")
@@ -199,9 +201,9 @@ def pricing_recommendations():
     
     # ROI Calculation
     print(f"\n📊 EXPECTED ROI:")
-    print(f"   1K Memory Operations: ${usage_based_pricing['memory_storage_per_mb'] * 500:.3f}")  # Assuming 500KB avg
-    print(f"   1K Search Operations: ${usage_based_pricing['search_operation'] * 1000:.3f}")
-    print(f"   1MB Storage: ${usage_based_pricing['memory_storage_per_mb']:.3f}")
+    print(f"   1K Memory Operations: ${usage_based_pricing['memory_storage'] * 500:.3f}")  # Assuming 500KB avg
+    print(f"   1K Search Operations: ${usage_based_pricing['search_operations'] * 1000:.3f}")
+    print(f"   1MB Storage: ${usage_based_pricing['memory_storage']:.3f}")
 
 if __name__ == "__main__":
     analyze_costs()

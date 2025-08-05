@@ -58,27 +58,27 @@ class MongoDBCloudProvisioner:
         # Pricing tiers
         self.pricing_tiers = {
             "free": {
-                "memory_limit_mb": 500,  # 500MB instead of 1GB
+                "memory_limit_mb": 500,  # 500MB
                 "monthly_cost": 0,
                 "cost_per_mb": 0,
-                "api_calls_limit": 5000  # 5K instead of 10K
+                "api_calls_limit": 5000  # 5K
             },
             "starter": {
-                "memory_limit_mb": 2000,  # 2GB - NEW TIER
-                "monthly_cost": 9.99,
-                "cost_per_mb": 0.0008,
+                "memory_limit_mb": 2000,  # 2GB - Light User
+                "monthly_cost": 3.99,
+                "cost_per_mb": 0.0024,  # Tripled from 0.0008
                 "api_calls_limit": 25000  # 25K
             },
             "pro": {
-                "memory_limit_mb": 10000,  # 10GB
-                "monthly_cost": 29.99,
-                "cost_per_mb": 0.0008,  # Optimized rate
+                "memory_limit_mb": 10000,  # 10GB - Power User
+                "monthly_cost": 9.99,
+                "cost_per_mb": 0.0024,  # Tripled from 0.0008
                 "api_calls_limit": 100000
             },
             "enterprise": {
                 "memory_limit_mb": -1,  # Unlimited
                 "monthly_cost": 99.99,
-                "cost_per_mb": 0.0005,
+                "cost_per_mb": 0.0015,  # Tripled from 0.0005
                 "api_calls_limit": -1  # Unlimited
             }
         }

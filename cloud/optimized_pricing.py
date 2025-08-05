@@ -8,8 +8,8 @@ OPTIMIZED_PRICING_TIERS = {
     "free": {
         "name": "Free",
         "monthly_cost": 0.0,
-        "memory_limit_mb": 500,  # Reduced from 1GB to 500MB
-        "api_calls_limit": 5000,  # Reduced from 10K to 5K
+        "memory_limit_mb": 500,  # 500MB
+        "api_calls_limit": 5000,  # 5K
         "overage_cost_per_mb": 0.0,  # No overage for free
         "features": [
             "500MB Memory Storage",
@@ -19,11 +19,11 @@ OPTIMIZED_PRICING_TIERS = {
         ]
     },
     "starter": {
-        "name": "Starter", 
-        "monthly_cost": 9.99,  # NEW TIER!
+        "name": "Light User", 
+        "monthly_cost": 3.99,  # Light User pricing
         "memory_limit_mb": 2000,  # 2GB
         "api_calls_limit": 25000,  # 25K
-        "overage_cost_per_mb": 0.0008,  # Competitive rate
+        "overage_cost_per_mb": 0.0024,  # Tripled from 0.0008
         "features": [
             "2GB Memory Storage",
             "25,000 API calls/month",
@@ -33,11 +33,11 @@ OPTIMIZED_PRICING_TIERS = {
         ]
     },
     "pro": {
-        "name": "Pro",
-        "monthly_cost": 29.99,
+        "name": "Power User",
+        "monthly_cost": 9.99,  # Power User pricing
         "memory_limit_mb": 10000,  # 10GB
         "api_calls_limit": 100000,  # 100K
-        "overage_cost_per_mb": 0.0008,  # Optimized rate
+        "overage_cost_per_mb": 0.0024,  # Tripled from 0.0008
         "features": [
             "10GB Memory Storage",
             "100,000 API calls/month",
@@ -50,10 +50,10 @@ OPTIMIZED_PRICING_TIERS = {
     },
     "enterprise": {
         "name": "Enterprise",
-        "monthly_cost": 99.99,
+        "monthly_cost": 99.99,  # Enterprise pricing
         "memory_limit_mb": -1,  # Unlimited
         "api_calls_limit": -1,  # Unlimited
-        "overage_cost_per_mb": 0.0005,  # Lower rate for enterprise
+        "overage_cost_per_mb": 0.0015,  # Tripled from 0.0005
         "features": [
             "Unlimited Memory Storage",
             "Unlimited API calls",
@@ -62,16 +62,17 @@ OPTIMIZED_PRICING_TIERS = {
             "Multi-tenant architecture",
             "Custom integrations",
             "SLA guarantees",
-            "White-label options"
+            "Dedicated support manager"
         ]
     }
 }
 
+# Usage-based rates (all tripled)
 OPTIMIZED_USAGE_RATES = {
-    "memory_storage": 0.0008,    # $0.0008 per MB (was $0.001)
-    "api_call": 0.00008,         # $0.00008 per API call (was $0.0001)
-    "search_operation": 0.0003,  # $0.0003 per search (was $0.0005)
-    "vector_embedding": 0.0008   # $0.0008 per embedding (was $0.001)
+    "memory_storage": 0.0024,   # $0.0024 per MB (tripled from 0.0008)
+    "api_call": 0.00024,        # $0.00024 per API call (tripled from 0.00008)
+    "search_operation": 0.0009, # $0.0009 per search (tripled from 0.0003)
+    "vector_embedding": 0.0024  # $0.0024 per embedding (tripled from 0.0008)
 }
 
 def update_billing_system_pricing():
@@ -166,11 +167,11 @@ def update_billing_system_pricing():
                 ]
             ),
             "starter": BillingPlan(
-                name="Starter",
-                monthly_cost=9.99,
+                name="Light User",
+                monthly_cost=3.99,
                 memory_limit_mb=2000,  # 2GB
                 api_calls_limit=25000,  # 25K
-                overage_cost_per_mb=0.0008,
+                overage_cost_per_mb=0.0024,  # Tripled
                 features=[
                     "2GB Memory Storage",
                     "25,000 API calls/month",
@@ -180,11 +181,11 @@ def update_billing_system_pricing():
                 ]
             ),
             "pro": BillingPlan(
-                name="Pro",
-                monthly_cost=29.99,
+                name="Power User",
+                monthly_cost=9.99,
                 memory_limit_mb=10000,  # 10GB
                 api_calls_limit=100000,
-                overage_cost_per_mb=0.0008,  # Optimized
+                overage_cost_per_mb=0.0024,  # Tripled
                 features=[
                     "10GB Memory Storage",
                     "100,000 API calls/month",
@@ -199,7 +200,7 @@ def update_billing_system_pricing():
                 monthly_cost=99.99,
                 memory_limit_mb=-1,  # Unlimited
                 api_calls_limit=-1,  # Unlimited
-                overage_cost_per_mb=0.0005,
+                overage_cost_per_mb=0.0015,  # Tripled
                 features=[
                     "Unlimited Memory Storage",
                     "Unlimited API calls",
@@ -239,28 +240,40 @@ def show_pricing_comparison():
             "impact": "Balanced for trial usage"
         },
         {
-            "metric": "New Starter Tier",
+            "metric": "Light User Tier",
             "old": "N/A",
-            "new": "$9.99/month (2GB, 25K calls)",
-            "impact": "Perfect for individual developers"
+            "new": "$3.99/month (2GB, 25K calls)",
+            "impact": "Affordable entry point for individual users"
+        },
+        {
+            "metric": "Power User Tier",
+            "old": "$29.99/month",
+            "new": "$9.99/month (10GB, 100K calls)",
+            "impact": "67% price reduction, more accessible"
         },
         {
             "metric": "Memory Storage Cost",
-            "old": "$0.001/MB",
-            "new": "$0.0008/MB",
-            "impact": "20% reduction, more competitive"
+            "old": "$0.0008/MB",
+            "new": "$0.0024/MB",
+            "impact": "3x increase for better margins"
         },
         {
             "metric": "Search Operations",
-            "old": "$0.0005/search",
-            "new": "$0.0003/search", 
-            "impact": "40% reduction, beats competitors"
+            "old": "$0.0003/search",
+            "new": "$0.0009/search", 
+            "impact": "3x increase for better unit economics"
         },
         {
             "metric": "API Calls",
-            "old": "$0.0001/call",
-            "new": "$0.00008/call",
-            "impact": "20% reduction for volume incentive"
+            "old": "$0.00008/call",
+            "new": "$0.00024/call",
+            "impact": "3x increase for sustainable pricing"
+        },
+        {
+            "metric": "Vector Embeddings",
+            "old": "$0.0008/embedding",
+            "new": "$0.0024/embedding",
+            "impact": "3x increase for AI processing costs"
         }
     ]
     

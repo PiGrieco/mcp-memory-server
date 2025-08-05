@@ -149,19 +149,19 @@ def estimate_real_usage():
     print("=" * 60)
     
     user_profiles = {
-        "Light User (Casual AI)": {
+        "Light User": {
             "monthly_memories": 100,
             "monthly_searches": 200, 
             "monthly_api_calls": 500,
             "avg_memory_size_kb": 2  # 2KB per memoria
         },
-        "Power User (AI Developer)": {
+        "Power User": {
             "monthly_memories": 1000,
             "monthly_searches": 2000,
             "monthly_api_calls": 5000,
             "avg_memory_size_kb": 5  # 5KB per memoria
         },
-        "Team/Enterprise": {
+        "Enterprise": {
             "monthly_memories": 10000,
             "monthly_searches": 20000,
             "monthly_api_calls": 50000,
@@ -169,12 +169,12 @@ def estimate_real_usage():
         }
     }
     
-    # Pricing corrente (da billing_system.py)
+    # Pricing corrente (da billing_system.py) - tutti triplicati
     pricing = {
-        "memory_per_mb": 0.001,  # $0.001/MB
-        "api_call": 0.0001,      # $0.0001/call
-        "search": 0.0005,        # $0.0005/search  
-        "embedding": 0.001       # $0.001/embedding
+        "memory_per_mb": 0.0024,  # $0.0024/MB (triplicato da 0.0008)
+        "api_call": 0.00024,      # $0.00024/call (triplicato da 0.00008)
+        "search": 0.0009,         # $0.0009/search (triplicato da 0.0003)
+        "embedding": 0.0024       # $0.0024/embedding (triplicato da 0.0008)
     }
     
     for profile, usage in user_profiles.items():

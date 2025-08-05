@@ -72,11 +72,11 @@ class BillingSystem:
                 ]
             ),
             "starter": BillingPlan(
-                name="Starter",
-                monthly_cost=9.99,
+                name="Light User",
+                monthly_cost=3.99,
                 memory_limit_mb=2000,  # 2GB
                 api_calls_limit=25000,  # 25K
-                overage_cost_per_mb=0.0008,
+                overage_cost_per_mb=0.0024,  # Tripled from 0.0008
                 features=[
                     "2GB Memory Storage",
                     "25,000 API calls/month",
@@ -86,11 +86,11 @@ class BillingSystem:
                 ]
             ),
             "pro": BillingPlan(
-                name="Pro",
-                monthly_cost=29.99,
+                name="Power User",
+                monthly_cost=9.99,
                 memory_limit_mb=10000,  # 10GB
                 api_calls_limit=100000,
-                overage_cost_per_mb=0.0008,  # Optimized
+                overage_cost_per_mb=0.0024,  # Tripled from 0.0008
                 features=[
                     "10GB Memory Storage",
                     "100,000 API calls/month",
@@ -105,7 +105,7 @@ class BillingSystem:
                 monthly_cost=99.99,
                 memory_limit_mb=-1,  # Unlimited
                 api_calls_limit=-1,  # Unlimited
-                overage_cost_per_mb=0.0005,
+                overage_cost_per_mb=0.0015,  # Tripled from 0.0005
                 features=[
                     "Unlimited Memory Storage",
                     "Unlimited API calls",
@@ -118,12 +118,12 @@ class BillingSystem:
             )
         }
         
-        # Usage tracking rates
+        # Usage tracking rates (all tripled)
         self.usage_rates = {
-            "memory_storage": 0.0008,   # $0.0008 per MB (optimized)
-            "api_call": 0.00008,        # $0.00008 per API call (optimized)
-            "search_operation": 0.0003, # $0.0003 per search (optimized)
-            "vector_embedding": 0.0008  # $0.0008 per embedding (optimized)
+            "memory_storage": 0.0024,   # $0.0024 per MB (tripled from 0.0008)
+            "api_call": 0.00024,        # $0.00024 per API call (tripled from 0.00008)
+            "search_operation": 0.0009, # $0.0009 per search (tripled from 0.0003)
+            "vector_embedding": 0.0024  # $0.0024 per embedding (tripled from 0.0008)
         }
     
     async def initialize(self):
