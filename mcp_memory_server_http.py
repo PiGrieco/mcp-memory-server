@@ -135,20 +135,20 @@ async def handle_mcp_request(request_data: Dict[str, Any]) -> Dict[str, Any]:
             elif tool_name == "search_memories":
                 result = await full_server._handle_search_memories(arguments)
             elif tool_name == "list_memories":
-                # Use the same method as the working search_memories with a broad query
+                # Use a common word that should match most memories
                 result = await full_server._handle_search_memories({
-                    "query": "*",
+                    "query": "memory",
                     "max_results": arguments.get("limit", 50),
-                    "similarity_threshold": 0.0
+                    "similarity_threshold": 0.1  # Very low threshold to get most memories
                 })
             elif tool_name == "memory_status":
                 # Get memory count using the working search method
                 try:
-                    # Get memory count by searching with wildcard query
+                    # Get memory count by searching with common word (max 100 results)
                     count_result = await full_server._handle_search_memories({
-                        "query": "*",
-                        "max_results": 1000,
-                        "similarity_threshold": 0.0
+                        "query": "memory",
+                        "max_results": 100,
+                        "similarity_threshold": 0.1
                     })
 
                     # Parse the result to get memory count
