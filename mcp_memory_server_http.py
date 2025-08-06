@@ -135,18 +135,54 @@ async def handle_mcp_request(request_data: Dict[str, Any]) -> Dict[str, Any]:
             elif tool_name == "search_memories":
                 result = await full_server._handle_search_memories(arguments)
             elif tool_name == "list_memories":
-                # Use the memory service directly for list_memories
+                # Use search with empty query to list all memories
                 from src.services.memory_service import memory_service
-                memories = await memory_service.list_memories(
-                    project=arguments.get("project", "cursor_project"),
-                    limit=arguments.get("limit", 20)
+                default_project = os.getenv("PROJECT_NAME", os.getenv("DEFAULT_PROJECT", "default"))
+                memories = await memory_service.search_memories(
+                    query="",
+                    project=arguments.get("project", default_project),
+                    max_results=arguments.get("limit", 50),
+                    similarity_threshold=0.0  # Get all memories
                 )
                 result = [type('Result', (), {'text': str(memories)})()]
             elif tool_name == "memory_status":
-                # Use the memory service directly for memory_status
+                # Get memory count and status
                 from src.services.memory_service import memory_service
-                status = await memory_service.get_memory_status()
-                result = [type('Result', (), {'text': str(status)})()]
+                from src.services.database_service import database_service
+                try:
+                    # Get memory count
+                    default_project = os.getenv("PROJECT_NAME", os.getenv("DEFAULT_PROJECT", "default"))
+                    count_result = await memory_service.search_memories(
+                        query="",
+                        project=default_project,
+                        max_results=1000,
+                        similarity_threshold=0.0
+                    )
+                    total_memories = len(count_result.get("data", {}).get("memories", []))
+
+                    # Create status response
+                    status = {
+                        "success": True,
+                        "message": "Memory system status",
+                        "data": {
+                            "total_memories": total_memories,
+                            "project": default_project,
+                            "database_connected": True,
+                            "embedding_model": os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2"),
+                            "server_mode": os.getenv("ENVIRONMENT", "production")
+                        }
+                    }
+                    result = [type('Result', (), {'text': str(status)})()]
+                except Exception as e:
+                    status = {
+                        "success": False,
+                        "message": f"Status check failed: {str(e)}",
+                        "data": {
+                            "total_memories": 0,
+                            "database_connected": False
+                        }
+                    }
+                    result = [type('Result', (), {'text': str(status)})()]
             else:
                 raise Exception(f"Unknown tool: {tool_name}")
             
@@ -216,8 +252,10 @@ async def info_handler(request):
             "health": "/health",
             "info": "/info"
         },
-        "project": os.getenv("PROJECT_NAME", "cursor_project"),
-        "database": os.getenv("DATABASE_NAME", "mcp_memory_production")
+        "project": os.getenv("PROJECT_NAME", os.getenv("DEFAULT_PROJECT", "default")),
+        "database": os.getenv("DATABASE_NAME", "mcp_memory_production"),
+        "environment": os.getenv("ENVIRONMENT", "production"),
+        "embedding_model": os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
     })
 
 @middleware
