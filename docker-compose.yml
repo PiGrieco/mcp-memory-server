@@ -1,0 +1,83 @@
+# =============================================================================
+# MCP Memory Server - Docker Compose Configuration
+# =============================================================================
+
+version: '3.8'
+
+services:
+  mcp-memory-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mcp-memory-server
+    restart: unless-stopped
+    
+    # Environment variables from .env file
+    env_file:
+      - .env
+    
+    # Additional environment variables
+    environment:
+      - ENVIRONMENT=production
+      - PYTHONPATH=/app
+    
+    # Volumes for persistent data and configuration
+    volumes:
+      - ./logs:/app/logs
+      - ./.env:/app/.env:ro
+    
+    # Network configuration
+    networks:
+      - mcp-network
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Optional: Local MongoDB for development
+  # Uncomment if you want to use local MongoDB instead of MongoDB Atlas
+  # mongodb:
+  #   image: mongo:7.0
+  #   container_name: mcp-mongodb
+  #   restart: unless-stopped
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: admin
+  #     MONGO_INITDB_ROOT_PASSWORD: password
+  #     MONGO_INITDB_DATABASE: mcp_memory_production
+  #   volumes:
+  #     - mongodb_data:/data/db
+  #     - ./mongo-init:/docker-entrypoint-initdb.d
+  #   ports:
+  #     - "27017:27017"
+  #   networks:
+  #     - mcp-network
+
+networks:
+  mcp-network:
+    driver: bridge
+
+volumes:
+  # Uncomment if using local MongoDB
+  # mongodb_data:
+  logs:
