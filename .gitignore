@@ -113,3 +113,4 @@ models/
 embeddings/
 *.pkl
 *.pickle 
+.myenv/*

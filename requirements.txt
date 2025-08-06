@@ -1,69 +1,45 @@
-# Core dependencies
-fastapi>=0.104.0
-uvicorn[standard]>=0.24.0
-pydantic>=2.5.0
-python-multipart>=0.0.6
+# =============================================================================
+# MCP Memory Server - Production Requirements
+# =============================================================================
 
-# Database
-pymongo>=4.6.0
-motor>=3.3.0
-redis[hiredis]>=5.0.0
+# Core MCP dependencies
+mcp>=1.0.0
 
-# Cloud and billing
-httpx>=0.25.0
-stripe>=7.0.0
+# Database (MongoDB)
+motor>=3.7.1
+pymongo>=4.13.2
+dnspython>=2.7.0
 
-# Authentication and security
-python-jose[cryptography]>=3.3.0
-passlib[bcrypt]>=1.7.4
+# Embedding and ML (Sentence Transformers)
+sentence-transformers>=5.0.0
+torch>=2.7.1
+transformers>=4.55.0
+numpy>=1.26.4
+scikit-learn>=1.3.0
+scipy>=1.11.4
+huggingface-hub>=0.34.3
+tokenizers>=0.21.4
+safetensors>=0.6.1
+
+# TensorFlow compatibility (required for transformers)
+tf-keras>=2.19.0
+tensorflow>=2.19.0
+
+# Configuration and environment
 python-dotenv>=1.0.0
 
-# Background tasks and queue
-celery>=5.3.0
-kombu>=5.3.0
+# Async support
+asyncio
 
-# Monitoring and logging
-structlog>=23.2.0
-sentry-sdk[fastapi]>=1.38.0
-
-# Testing
+# Development and testing (optional)
 pytest>=7.4.0
 pytest-asyncio>=0.21.0
-httpx>=0.25.0
-pytest-mock>=3.12.0
 
-# Development tools
-black>=23.0.0
-isort>=5.12.0
-mypy>=1.7.0
-flake8>=6.1.0
-bandit>=1.7.5
-
-# CLI and user interface
-click>=8.0.0
-rich>=13.0.0
-inquirer>=3.1.0
-colorama>=0.4.6
-
-# Data validation and processing
-marshmallow>=3.20.0
-numpy>=1.24.0
-scipy>=1.10.0
-
-# Optional integrations
-sendgrid>=6.10.0
-twilio>=8.10.0
-
-# Performance
-gunicorn>=21.2.0
-prometheus-client>=0.18.0
-
-# WebSocket support
-websockets>=12.0
-
-# Additional utilities
-python-dateutil>=2.8.2
-pytz>=2023.3
-requests>=2.31.0
-aiofiles>=23.2.0
-jinja2>=3.1.0 
+# =============================================================================
+# Installation Notes:
+# =============================================================================
+# 1. Create virtual environment: python -m venv .myenv
+# 2. Activate: source .myenv/bin/activate (macOS/Linux) or .myenv\Scripts\activate (Windows)
+# 3. Install: pip install -r requirements.txt
+# 4. Configure .env file with your MongoDB credentials
+# 5. Test with: python test_server.py

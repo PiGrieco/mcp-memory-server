@@ -2,15 +2,21 @@
 Services for MCP Memory Server
 """
 
-from .embedding_service import embedding_service, EmbeddingService
-from .database_service import database_service, DatabaseService
-from .memory_service import memory_service, MemoryService
+from .database_service import DatabaseService, database_service
+from .embedding_service import EmbeddingService, embedding_service
+from .memory_service import MemoryService, memory_service
+from .health_service import HealthService, health_service
+from .metrics_service import MetricsService, metrics_service
 
 __all__ = [
-    "embedding_service",
-    "EmbeddingService",
-    "database_service", 
     "DatabaseService",
+    "database_service",
+    "EmbeddingService", 
+    "embedding_service",
+    "MemoryService",
     "memory_service",
-    "MemoryService"
-] 
+    "HealthService",
+    "health_service",
+    "MetricsService",
+    "metrics_service"
+]

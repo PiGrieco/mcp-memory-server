@@ -1,0 +1,12 @@
+{
+  "mcp": {
+    "servers": {
+      "minimal-test": {
+        "command": "/usr/bin/python3",
+        "args": [
+          "/Users/awais/Desktop/Upworking/Grieco/mcp-memory-server/mcp-memory-production-clean/minimal_mcp.py"
+        ]
+      }
+    }
+  }
+}
