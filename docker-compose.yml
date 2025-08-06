@@ -5,30 +5,66 @@
 version: '3.8'
 
 services:
+  # Standard MCP server (stdio mode)
   mcp-memory-server:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: mcp-memory-server
     restart: unless-stopped
-    
+
     # Environment variables from .env file
     env_file:
       - .env
-    
+
     # Additional environment variables
     environment:
       - ENVIRONMENT=production
       - PYTHONPATH=/app
-    
+
     # Volumes for persistent data and configuration
     volumes:
       - ./logs:/app/logs
       - ./.env:/app/.env:ro
-    
+
     # Network configuration
     networks:
       - mcp-network
+
+  # HTTP MCP server (network mode)
+  mcp-memory-server-http:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mcp-memory-server-http
+    restart: unless-stopped
+
+    # Environment variables from .env file
+    env_file:
+      - .env
+
+    # Additional environment variables
+    environment:
+      - ENVIRONMENT=production
+      - PYTHONPATH=/app
+      - HOST=0.0.0.0
+      - PORT=8000
+
+    # Expose HTTP port
+    ports:
+      - "8000:8000"
+
+    # Volumes for persistent data and configuration
+    volumes:
+      - ./logs:/app/logs
+      - ./.env:/app/.env:ro
+
+    # Network configuration
+    networks:
+      - mcp-network
+
+    # Override command for HTTP mode
+    command: ["python", "mcp_memory_server_http.py"]
     
     # Resource limits
     deploy:

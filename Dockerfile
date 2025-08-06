@@ -35,12 +35,12 @@ RUN useradd --create-home --shell /bin/bash mcp && \
     chown -R mcp:mcp /app
 USER mcp
 
-# Expose port (if needed for HTTP mode)
+# Expose port for HTTP/network mode
 EXPOSE 8000
 
-# Health check
+# Health check for HTTP mode
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import sys; sys.exit(0)"
+    CMD curl -f http://localhost:8000/health || python -c "import sys; sys.exit(0)"
 
-# Default command
+# Default command - can be overridden for HTTP mode
 CMD ["python", "mcp_memory_server.py"]
