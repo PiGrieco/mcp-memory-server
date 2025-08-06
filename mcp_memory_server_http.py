@@ -67,7 +67,9 @@ async def handle_mcp_request(request_data: Dict[str, Any]) -> Dict[str, Any]:
                 "result": {
                     "protocolVersion": "2024-11-05",
                     "capabilities": {
-                        "tools": {},
+                        "tools": {
+                            "listChanged": True
+                        },
                         "resources": {},
                         "prompts": {}
                     },
@@ -78,7 +80,15 @@ async def handle_mcp_request(request_data: Dict[str, Any]) -> Dict[str, Any]:
                     }
                 }
             }
-        
+
+        elif method == "initialized":
+            # Cursor sends this after initialize - just acknowledge
+            return {
+                "jsonrpc": "2.0",
+                "id": request_id,
+                "result": {}
+            }
+
         elif method == "tools/list":
             return {
                 "jsonrpc": "2.0",
