@@ -34,9 +34,13 @@ RUN pip install --upgrade pip && \
 # Copy application code
 COPY . .
 
+# Create logs directory and set permissions
+RUN mkdir -p /app/logs
+
 # Create non-root user for security
 RUN useradd --create-home --shell /bin/bash mcp && \
-    chown -R mcp:mcp /app
+    chown -R mcp:mcp /app && \
+    chmod -R 755 /app/logs
 USER mcp
 
 # Expose port for HTTP/network mode
