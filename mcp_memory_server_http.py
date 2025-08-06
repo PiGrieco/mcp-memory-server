@@ -135,32 +135,33 @@ async def handle_mcp_request(request_data: Dict[str, Any]) -> Dict[str, Any]:
             elif tool_name == "search_memories":
                 result = await full_server._handle_search_memories(arguments)
             elif tool_name == "list_memories":
-                # Use search with empty query to list all memories
-                from src.services.memory_service import memory_service
-                default_project = os.getenv("PROJECT_NAME", os.getenv("DEFAULT_PROJECT", "default"))
-                memories = await memory_service.search_memories(
-                    query="",
-                    project=arguments.get("project", default_project),
-                    max_results=arguments.get("limit", 50),
-                    similarity_threshold=0.0  # Get all memories
-                )
-                result = [type('Result', (), {'text': str(memories)})()]
+                # Use the same method as the working search_memories
+                result = await full_server._handle_search_memories({
+                    "query": "",
+                    "max_results": arguments.get("limit", 50),
+                    "similarity_threshold": 0.0
+                })
             elif tool_name == "memory_status":
-                # Get memory count and status
-                from src.services.memory_service import memory_service
-                from src.services.database_service import database_service
+                # Get memory count using the working search method
                 try:
-                    # Get memory count
-                    default_project = os.getenv("PROJECT_NAME", os.getenv("DEFAULT_PROJECT", "default"))
-                    count_result = await memory_service.search_memories(
-                        query="",
-                        project=default_project,
-                        max_results=1000,
-                        similarity_threshold=0.0
-                    )
-                    total_memories = len(count_result.get("data", {}).get("memories", []))
+                    # Get memory count by searching with empty query
+                    count_result = await full_server._handle_search_memories({
+                        "query": "",
+                        "max_results": 1000,
+                        "similarity_threshold": 0.0
+                    })
+
+                    # Parse the result to get memory count
+                    if count_result and len(count_result) > 0:
+                        result_text = count_result[0].text
+                        import json
+                        result_data = json.loads(result_text)
+                        total_memories = len(result_data.get("data", {}).get("memories", []))
+                    else:
+                        total_memories = 0
 
                     # Create status response
+                    default_project = os.getenv("PROJECT_NAME", os.getenv("DEFAULT_PROJECT", "default"))
                     status = {
                         "success": True,
                         "message": "Memory system status",
