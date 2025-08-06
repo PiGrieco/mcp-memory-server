@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "memory-server": {
+      "transport": "http",
+      "url": "http://134.122.75.246:8000/mcp",
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
+  }
+}
