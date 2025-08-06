@@ -94,13 +94,18 @@ if [ -f "requirements.txt" ]; then
 
     # ML/AI dependencies
     if ! grep -q "sentence-transformers" requirements.txt; then
-        echo "sentence-transformers==2.2.2" >> requirements.txt
+        echo "sentence-transformers==3.0.1" >> requirements.txt
         print_success "Added sentence-transformers"
     fi
 
     if ! grep -q "torch" requirements.txt; then
-        echo "torch==2.0.1" >> requirements.txt
+        echo "torch==2.1.0" >> requirements.txt
         print_success "Added torch"
+    fi
+
+    if ! grep -q "transformers" requirements.txt; then
+        echo "transformers==4.36.0" >> requirements.txt
+        print_success "Added transformers"
     fi
 
     # Database dependencies
