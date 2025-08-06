@@ -51,7 +51,7 @@ services:
       - PORT=8000
       - PROJECT_NAME=cursor_project
       - DATABASE_NAME=mcp_memory_production
-      - MONGODB_URI=mongodb+srv://rjawaissaleem:tpQMJUV4cmknQqn3@cluster0.4ixuae0.mongodb.net/mcp_memory_production?retryWrites=true&w=majority&appName=Cluster0&ssl=true&tlsAllowInvalidCertificates=true&tlsInsecure=true
+      - MONGODB_URI=mongodb+srv://rjawaissaleem:tpQMJUV4cmknQqn3@cluster0.4ixuae0.mongodb.net/mcp_memory_production?retryWrites=true&w=majority&appName=Cluster0&ssl=true&tlsAllowInvalidCertificates=true
       - MONGODB_DATABASE=mcp_memory_production
       - MONGODB_COLLECTION=memories
       - EMBEDDING_MODEL=all-MiniLM-L6-v2
