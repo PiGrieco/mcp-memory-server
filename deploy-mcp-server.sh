@@ -39,35 +39,91 @@ print_info "Step 1: Cleaning up existing containers..."
 $DOCKER_COMPOSE down 2>/dev/null || true
 print_success "Cleanup completed"
 
-# Step 2: Generate requirements.txt from .myenv if available
+# Step 2: Generate requirements.txt and ensure dependencies
 print_info "Step 2: Generating requirements.txt..."
-if [ -d ".myenv" ]; then
+
+# Generate requirements.txt
+if [ -d ".myenv" ] && [ -f ".myenv/bin/python" ]; then
     print_info "Found .myenv, generating requirements from virtual environment..."
-    .myenv/bin/python -m pip freeze > requirements_temp.txt
-    
-    cat > requirements.txt << 'EOF'
+    if .myenv/bin/python -m pip freeze > requirements_temp.txt 2>/dev/null; then
+        cat > requirements.txt << 'EOF'
 # =============================================================================
 # MCP Memory Server - Docker Requirements (Generated from .myenv)
 # =============================================================================
 
 EOF
-    
-    grep -v "^-e " requirements_temp.txt | \
-    grep -v "^pkg-resources" | \
-    sort >> requirements.txt
-    
-    # Ensure aiohttp-cors is included
-    if ! grep -q "aiohttp-cors" requirements.txt; then
-        echo "aiohttp-cors==0.8.0" >> requirements.txt
+
+        grep -v "^-e " requirements_temp.txt | \
+        grep -v "^pkg-resources" | \
+        sort >> requirements.txt
+
+        rm requirements_temp.txt
+        print_success "Generated requirements.txt with $(grep -v "^#" requirements.txt | grep -v "^$" | wc -l) packages"
+    else
+        print_warning "Failed to generate from .myenv, using existing requirements.txt"
     fi
-    
-    rm requirements_temp.txt
-    print_success "Generated requirements.txt with $(grep -v "^#" requirements.txt | grep -v "^$" | wc -l) packages"
 else
-    print_warning ".myenv not found, ensuring aiohttp-cors is in requirements.txt"
+    print_warning ".myenv not found or invalid, using existing requirements.txt"
+fi
+
+# Ensure critical dependencies are included
+if [ -f "requirements.txt" ]; then
+    print_info "Adding missing critical dependencies..."
+
+    # Core HTTP server dependencies
+    if ! grep -q "aiohttp" requirements.txt; then
+        echo "aiohttp==3.12.15" >> requirements.txt
+        print_success "Added aiohttp"
+    fi
+
     if ! grep -q "aiohttp-cors" requirements.txt; then
         echo "aiohttp-cors==0.8.0" >> requirements.txt
+        print_success "Added aiohttp-cors"
     fi
+
+    # Core Python dependencies
+    if ! grep -q "pydantic" requirements.txt; then
+        echo "pydantic==2.5.0" >> requirements.txt
+        print_success "Added pydantic"
+    fi
+
+    if ! grep -q "numpy" requirements.txt; then
+        echo "numpy==1.24.3" >> requirements.txt
+        print_success "Added numpy"
+    fi
+
+    # ML/AI dependencies
+    if ! grep -q "sentence-transformers" requirements.txt; then
+        echo "sentence-transformers==2.2.2" >> requirements.txt
+        print_success "Added sentence-transformers"
+    fi
+
+    if ! grep -q "torch" requirements.txt; then
+        echo "torch==2.0.1" >> requirements.txt
+        print_success "Added torch"
+    fi
+
+    # Database dependencies
+    if ! grep -q "motor" requirements.txt; then
+        echo "motor==3.3.2" >> requirements.txt
+        print_success "Added motor (MongoDB async driver)"
+    fi
+
+    if ! grep -q "pymongo" requirements.txt; then
+        echo "pymongo==4.6.0" >> requirements.txt
+        print_success "Added pymongo"
+    fi
+
+    # MCP dependencies
+    if ! grep -q "mcp" requirements.txt; then
+        echo "mcp==1.0.0" >> requirements.txt
+        print_success "Added mcp"
+    fi
+
+    print_success "All critical dependencies ensured"
+else
+    print_error "No requirements.txt found and cannot generate from .myenv"
+    exit 1
 fi
 
 # Step 3: Create/update .env file
