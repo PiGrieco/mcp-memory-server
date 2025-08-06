@@ -135,9 +135,18 @@ async def handle_mcp_request(request_data: Dict[str, Any]) -> Dict[str, Any]:
             elif tool_name == "search_memories":
                 result = await full_server._handle_search_memories(arguments)
             elif tool_name == "list_memories":
-                result = await full_server._handle_list_memories(arguments)
+                # Use the memory service directly for list_memories
+                from src.services.memory_service import memory_service
+                memories = await memory_service.list_memories(
+                    project=arguments.get("project", "cursor_project"),
+                    limit=arguments.get("limit", 20)
+                )
+                result = [type('Result', (), {'text': str(memories)})()]
             elif tool_name == "memory_status":
-                result = await full_server._handle_memory_status(arguments)
+                # Use the memory service directly for memory_status
+                from src.services.memory_service import memory_service
+                status = await memory_service.get_memory_status()
+                result = [type('Result', (), {'text': str(status)})()]
             else:
                 raise Exception(f"Unknown tool: {tool_name}")
             
