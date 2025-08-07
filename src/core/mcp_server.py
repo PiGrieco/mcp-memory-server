@@ -50,7 +50,7 @@ class MCPServer:
                             "content": {"type": "string", "description": "Memory content"},
                             "project": {"type": "string", "description": "Project name", "default": "default"},
                             "memory_type": {"type": "string", "enum": [t.value for t in MemoryType], "default": "conversation"},
-                            "importance": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.5},
+                            "importance": {"type": "number", "minimum": 0, "maximum": 10, "default": 0.5},
                             "tags": {"type": "array", "items": {"type": "string"}, "default": []},
                             "metadata": {"type": "object", "default": {}},
                             "context": {"type": "object", "default": {}},
@@ -130,7 +130,7 @@ class MCPServer:
                             "memory_id": {"type": "string", "description": "Memory ID"},
                             "content": {"type": "string", "description": "New content"},
                             "memory_type": {"type": "string", "enum": [t.value for t in MemoryType]},
-                            "importance": {"type": "number", "minimum": 0, "maximum": 1},
+                            "importance": {"type": "number", "minimum": 0, "maximum": 10},
                             "tags": {"type": "array", "items": {"type": "string"}},
                             "metadata": {"type": "object"},
                             "context": {"type": "object"}
@@ -260,6 +260,11 @@ class MCPServer:
     async def _handle_save_memory(self, arguments: Dict[str, Any]) -> List[types.TextContent]:
         """Handle save memory tool call"""
         try:
+            # Log arguments for debugging
+            logger.info(f"💾 Save memory called with arguments: {arguments}")
+            logger.info(f"🔍 Content type: {type(arguments.get('content'))}")
+            logger.info(f"🔍 Content value: {repr(arguments.get('content'))}")
+            
             memory_create = MemoryCreate(
                 content=arguments["content"],
                 project=arguments.get("project", self.config.memory.default_project),
@@ -287,6 +292,9 @@ class MCPServer:
             return [types.TextContent(type="text", text=response.to_json())]
 
         except Exception as e:
+            logger.error(f"❌ Save memory error: {e}")
+            logger.error(f"❌ Error type: {type(e)}")
+            logger.error(f"❌ Arguments were: {arguments}")
             raise MCPMemoryError(f"Failed to save memory: {e}")
 
     async def _handle_search_memories(self, arguments: Dict[str, Any]) -> List[types.TextContent]:

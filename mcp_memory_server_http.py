@@ -163,9 +163,20 @@ async def handle_mcp_request(request_data: Dict[str, Any]) -> Dict[str, Any]:
             tool_name = params.get("name")
             arguments = params.get("arguments", {})
             
+            # Log arguments for debugging
+            logger.info(f"🔧 Tool call: {tool_name}")
+            logger.info(f"📋 Arguments: {arguments}")
+            
             # Handle tool calls using the full server
             if tool_name == "save_memory":
                 result = await full_server._handle_save_memory(arguments)
+                # Ensure result is in correct format for MCP
+                if result and len(result) > 0 and hasattr(result[0], 'text'):
+                    # Result is already in correct format
+                    pass
+                else:
+                    # Convert to proper MCP format
+                    result = [type('Result', (), {'text': str(result)})()]
             elif tool_name == "search_memories":
                 result = await full_server._handle_search_memories(arguments)
             elif tool_name == "list_memories":
@@ -221,11 +232,22 @@ async def handle_mcp_request(request_data: Dict[str, Any]) -> Dict[str, Any]:
             else:
                 raise Exception(f"Unknown tool: {tool_name}")
             
+            # Format response properly for MCP protocol
+            if result and len(result) > 0:
+                content = result[0].text if hasattr(result[0], 'text') else str(result[0])
+            else:
+                content = "Operation completed"
+
             return {
                 "jsonrpc": "2.0",
                 "id": request_id,
                 "result": {
-                    "content": result[0].text if result else "Operation completed"
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": content
+                        }
+                    ]
                 }
             }
         

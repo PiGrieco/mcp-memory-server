@@ -108,6 +108,10 @@ class MemoryCreate(BaseModel):
         validate_string_length(self.project, "project", min_length=1, max_length=100)
         validate_string_length(self.content, "content", min_length=1, max_length=50000)
         
+        # Normalize importance to 0-1 range if > 1.0
+        if self.importance > 1.0:
+            self.importance = min(self.importance / 10.0, 1.0)
+        
         validate_numeric_range(self.importance, "importance", min_value=0.0, max_value=1.0)
         
         if self.source:
@@ -130,6 +134,9 @@ class MemoryUpdate(BaseModel):
             validate_string_length(self.content, "content", min_length=1, max_length=50000)
         
         if self.importance is not None:
+            # Normalize importance to 0-1 range if > 1.0
+            if self.importance > 1.0:
+                self.importance = min(self.importance / 10.0, 1.0)
             validate_numeric_range(self.importance, "importance", min_value=0.0, max_value=1.0)
 
 
