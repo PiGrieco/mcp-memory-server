@@ -17,7 +17,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
 from aiohttp import web, web_request
 from aiohttp.web import middleware
-import aiohttp_cors
+# import aiohttp_cors  # Not needed since we're using custom CORS middleware
 
 # Import the original MCP server functionality
 from mcp_memory_server import async_main as mcp_main, initialize_full_memory_server
@@ -85,6 +85,33 @@ async def handle_mcp_request(request_data: Dict[str, Any]) -> Dict[str, Any]:
             # Cursor sends this after initialize - this is a notification, no response needed
             logger.info("🔄 Received initialized notification")
             return None  # No response for notifications
+        
+        elif method == "notifications/initialized":
+            # Client sending initialized notification - no response needed
+            logger.info("🔄 Received notifications/initialized")
+            return None
+        
+        elif method == "prompts/list":
+            # Client asking for prompts - we don't have any
+            logger.info("🔄 Received prompts/list request")
+            return {
+                "jsonrpc": "2.0",
+                "id": request_id,
+                "result": {
+                    "prompts": []
+                }
+            }
+        
+        elif method == "resources/list":
+            # Client asking for resources - we don't have any
+            logger.info("🔄 Received resources/list request")
+            return {
+                "jsonrpc": "2.0", 
+                "id": request_id,
+                "result": {
+                    "resources": []
+                }
+            }
 
         elif method == "tools/list":
             return {
