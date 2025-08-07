@@ -82,12 +82,9 @@ async def handle_mcp_request(request_data: Dict[str, Any]) -> Dict[str, Any]:
             }
 
         elif method == "initialized":
-            # Cursor sends this after initialize - just acknowledge
-            return {
-                "jsonrpc": "2.0",
-                "id": request_id,
-                "result": {}
-            }
+            # Cursor sends this after initialize - this is a notification, no response needed
+            logger.info("🔄 Received initialized notification")
+            return None  # No response for notifications
 
         elif method == "tools/list":
             return {
@@ -222,18 +219,34 @@ async def handle_mcp_request(request_data: Dict[str, Any]) -> Dict[str, Any]:
 async def mcp_handler(request):
     """HTTP handler for MCP requests"""
     try:
+        # Log request details for debugging
+        logger.info(f"📥 Request method: {request.method}")
+        logger.info(f"📥 Request headers: {dict(request.headers)}")
+        logger.info(f"📥 Request content type: {request.content_type}")
+        
         # Parse JSON request
         request_data = await request.json()
-        logger.info(f"📥 Received request: {request_data.get('method', 'unknown')}")
+        logger.info(f"📥 Received request: {request_data.get('method', 'unknown')} - {request_data}")
         
         # Process MCP request
         response = await handle_mcp_request(request_data)
         
-        # Return JSON response
-        return web.json_response(response)
+        logger.info(f"📤 Sending response: {response}")
+        
+        # Return JSON response (handle None for notifications)
+        if response is None:
+            return web.Response(status=204)  # No Content for notifications
+        
+        # Create response with proper headers for MCP
+        json_response = web.json_response(response)
+        json_response.headers['Content-Type'] = 'application/json'
+        json_response.headers['Cache-Control'] = 'no-cache'
+        return json_response
     
     except Exception as e:
         logger.error(f"❌ HTTP handler error: {e}")
+        import traceback
+        traceback.print_exc()
         return web.json_response({
             "jsonrpc": "2.0",
             "id": None,
@@ -269,13 +282,59 @@ async def info_handler(request):
         "embedding_model": os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
     })
 
+async def mcp_capabilities_handler(request):
+    """MCP capabilities endpoint for easier discovery"""
+    return web.json_response({
+        "protocolVersion": "2024-11-05",
+        "capabilities": {
+            "tools": {
+                "listChanged": True
+            },
+            "resources": {},
+            "prompts": {}
+        },
+        "serverInfo": {
+            "name": "memory-server-http", 
+            "version": "1.0.0",
+            "description": "Memory server for remote access (HTTP)"
+        },
+        "tools": [
+            {
+                "name": "save_memory",
+                "description": "Save important information to memory"
+            },
+            {
+                "name": "search_memories", 
+                "description": "Search for relevant memories"
+            },
+            {
+                "name": "list_memories",
+                "description": "List all saved memories"
+            },
+            {
+                "name": "memory_status",
+                "description": "Check memory system status"
+            }
+        ]
+    })
+
 @middleware
 async def cors_middleware(request, handler):
     """CORS middleware for cross-origin requests"""
+    # Handle preflight OPTIONS requests
+    if request.method == 'OPTIONS':
+        response = web.Response()
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, PUT, DELETE'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With, Accept, Origin'
+        response.headers['Access-Control-Max-Age'] = '86400'
+        return response
+    
     response = await handler(request)
     response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, PUT, DELETE'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With, Accept, Origin'
+    response.headers['Access-Control-Expose-Headers'] = 'Content-Type'
     return response
 
 async def create_app():
@@ -284,6 +343,7 @@ async def create_app():
     
     # Add routes
     app.router.add_post('/mcp', mcp_handler)
+    app.router.add_get('/mcp/capabilities', mcp_capabilities_handler)
     app.router.add_get('/health', health_handler)
     app.router.add_get('/info', info_handler)
     app.router.add_options('/mcp', lambda r: web.Response())
