@@ -3,7 +3,7 @@
  * Enhanced with error handling, retry logic, and cloud synchronization
  */
 
-// Configuration
+// Configuration with Auto-Trigger Support
 const CONFIG = {
   SERVER_URL: 'http://localhost:8000',
   CLOUD_SYNC_ENABLED: true,
@@ -19,7 +19,21 @@ const CONFIG = {
     'perplexity.ai',
     'bing.com',
     'bard.google.com'
-  ]
+  ],
+  // Auto-Trigger Configuration
+  AUTO_TRIGGER_ENABLED: true,
+  TRIGGER_KEYWORDS: ['ricorda', 'nota', 'importante', 'salva', 'memorizza', 'riferimento'],
+  SOLUTION_PATTERNS: [
+    /(?:risolto|solved|fixed|bug fix|solution)/i,
+    /(?:errore|error|bug).*(?:risolto|fixed|solved)/i,
+    /(?:come fare|how to|tutorial|step by step)/i,
+    /(?:funziona così|works like this|here's how)/i
+  ],
+  IMPORTANCE_KEYWORDS: ['critico', 'critical', 'importante', 'important', 'urgente', 'urgent'],
+  AUTO_SAVE_THRESHOLD: 0.7,
+  SEMANTIC_THRESHOLD: 0.8,
+  CONVERSATION_LENGTH_TRIGGER: 5,
+  TRIGGER_COOLDOWN: 30000 // 30 seconds
 };
 
 // State management
@@ -27,6 +41,11 @@ let memoryCache = new Map();
 let syncQueue = [];
 let isOnline = navigator.onLine;
 let lastSyncTime = 0;
+
+// Auto-trigger state
+let conversationBuffers = new Map(); // platform -> messages
+let lastTriggerTimes = new Map(); // platform -> timestamp
+let autoTriggerAnalyzing = false;
 
 /**
  * Error handling and logging
@@ -139,6 +158,151 @@ class HttpClient {
 /**
  * Memory management with caching and validation
  */
+/**
+ * Auto-Trigger Manager for Browser Extension
+ */
+class AutoTriggerManager {
+  static async analyzeConversation(platform, messages) {
+    if (!CONFIG.AUTO_TRIGGER_ENABLED || autoTriggerAnalyzing) {
+      return [];
+    }
+
+    autoTriggerAnalyzing = true;
+    const triggeredActions = [];
+
+    try {
+      // 1. Keyword-based triggers
+      const keywordTrigger = this.checkKeywordTrigger(messages);
+      if (keywordTrigger) {
+        triggeredActions.push(keywordTrigger);
+      }
+
+      // 2. Pattern recognition triggers  
+      const patternTrigger = this.checkPatternTrigger(messages);
+      if (patternTrigger) {
+        triggeredActions.push(patternTrigger);
+      }
+
+      // Execute triggered actions
+      for (const action of triggeredActions) {
+        await this.executeTriggeredAction(action);
+      }
+
+      return triggeredActions;
+
+    } catch (error) {
+      Logger.error('Auto-trigger analysis failed:', error);
+      return [];
+    } finally {
+      autoTriggerAnalyzing = false;
+    }
+  }
+
+  static checkKeywordTrigger(messages) {
+    const allContent = messages.map(m => m.content).join(' ').toLowerCase();
+    
+    const foundKeywords = CONFIG.TRIGGER_KEYWORDS.filter(keyword => 
+      allContent.includes(keyword.toLowerCase())
+    );
+
+    if (foundKeywords.length > 0) {
+      return {
+        type: 'save_memory',
+        params: {
+          content: messages.map(m => m.content).join('\n\n'),
+          importance: Math.min(0.9, 0.5 + (foundKeywords.length * 0.1)),
+          memory_type: 'explicit_request',
+          metadata: {
+            trigger_keywords: foundKeywords,
+            trigger_type: 'keyword_based',
+            auto_triggered: true,
+            platform: 'browser'
+          }
+        }
+      };
+    }
+    return null;
+  }
+
+  static checkPatternTrigger(messages) {
+    const allContent = messages.map(m => m.content).join(' ');
+    
+    const matchedPatterns = CONFIG.SOLUTION_PATTERNS.filter(pattern => 
+      pattern.test(allContent)
+    );
+
+    if (matchedPatterns.length > 0) {
+      return {
+        type: 'save_memory',
+        params: {
+          content: allContent,
+          importance: 0.8,
+          memory_type: 'solution',
+          metadata: {
+            matched_patterns: matchedPatterns.length,
+            trigger_type: 'pattern_recognition',
+            auto_triggered: true,
+            platform: 'browser'
+          }
+        }
+      };
+    }
+    return null;
+  }
+
+  static async executeTriggeredAction(action) {
+    try {
+      if (action.type === 'save_memory') {
+        const result = await MemoryManager.saveMemory(action.params);
+        if (result.success) {
+          Logger.log(`✅ Auto-triggered save: ${result.memory_id}`);
+          
+          // Show notification to user
+          this.showAutoTriggerNotification('Memory saved automatically', action.params.metadata.trigger_type);
+        }
+      }
+    } catch (error) {
+      Logger.error('Failed to execute triggered action:', error);
+    }
+  }
+
+  static showAutoTriggerNotification(message, triggerType) {
+    // Show subtle notification about auto-trigger
+    try {
+      chrome.notifications.create({
+        type: 'basic',
+        iconUrl: 'icon.png',
+        title: '🧠 MCP Memory',
+        message: `${message} (${triggerType})`,
+        silent: true
+      });
+    } catch (error) {
+      console.log(`🧠 ${message} (${triggerType})`);
+    }
+  }
+
+  static addMessage(platform, message) {
+    if (!conversationBuffers.has(platform)) {
+      conversationBuffers.set(platform, []);
+    }
+    
+    const buffer = conversationBuffers.get(platform);
+    buffer.push({
+      content: message,
+      timestamp: Date.now(),
+      platform: platform
+    });
+    
+    // Limit buffer size
+    if (buffer.length > 20) {
+      buffer.splice(0, buffer.length - 20);
+    }
+    
+    // Trigger analysis for every new message
+    this.analyzeConversation(platform, buffer);
+  }
+}
+
 class MemoryManager {
   static async saveMemory(memory) {
     try {
