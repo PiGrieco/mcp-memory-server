@@ -1,0 +1,41 @@
+# MongoDB Atlas API Configuration (Optional - for dedicated clusters)
+MONGODB_ATLAS_PUBLIC_KEY=your_atlas_public_key_here
+MONGODB_ATLAS_PRIVATE_KEY=your_atlas_private_key_here
+MONGODB_ATLAS_PROJECT_ID=your_atlas_project_id_here
+
+# Shared MongoDB Cluster (Required if not using Atlas API)
+MONGODB_SHARED_CLUSTER_URI=mongodb+srv://username:password@cluster.mongodb.net/
+
+# Cloud Configuration
+CLOUD_PROVIDER=aws
+CLOUD_REGION=us-east-1
+BACKUP_ENABLED=true
+ENCRYPTION_ENABLED=true
+
+# Billing and Limits
+FREE_TIER_LIMIT_MB=1000
+PRO_TIER_LIMIT_MB=10000
+ENTERPRISE_TIER_LIMIT_MB=100000
+
+# Storage Pricing (USD per MB per month)
+STORAGE_COST_PER_MB=0.001
+COMPUTE_COST_PER_OPERATION=0.0001
+
+# Rate Limiting
+FREE_TIER_REQUESTS_PER_HOUR=1000
+PRO_TIER_REQUESTS_PER_HOUR=10000
+ENTERPRISE_TIER_REQUESTS_PER_HOUR=100000
+
+# Security
+JWT_SECRET_KEY=your_jwt_secret_key_here
+API_KEY_PREFIX=mcp_
+ENCRYPTION_KEY=your_encryption_key_here
+
+# Monitoring and Logging
+LOG_LEVEL=INFO
+METRICS_ENABLED=true
+USAGE_TRACKING_ENABLED=true
+
+# Cleanup Configuration
+INACTIVE_ACCOUNT_CLEANUP_DAYS=90
+ARCHIVE_OLD_METRICS_DAYS=365
