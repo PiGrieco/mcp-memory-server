@@ -384,28 +384,6 @@ pip install -r requirements-dev.txt
 - ⚡ **FastAPI** - High-performance API framework
 - 🐍 **Python 3.8+** - Modern Python features
 
-### **Special Thanks:**
-- **Anthropic** - MCP protocol and Claude integration
-- **Cursor** - Excellent IDE and integration support
-- **OpenAI** - GPT integration capabilities
-- **Community** - Feature requests and feedback
-
----
-
-<div align="center">
-
-## 🎉 Ready to Transform Your AI?
-
-### **Your AI will never forget again!**
-
-[🚀 **Install Now**](#-one-click-installation) • [🎯 **See Demo**](#-auto-trigger-demo) • [⭐ **Star on GitHub**](https://github.com/your-repo/mcp-memory-server)
-
-### **Join thousands of developers using MCP Memory Server**
-
-*"Finally, an AI that remembers everything I teach it!"* - @developer2024  
-*"Auto-trigger changed my workflow completely"* - @aiuser123  
-*"Installation was literally one command"* - @coder_pro
-
 ---
 
 **Made with ❤️ for the AI community**
