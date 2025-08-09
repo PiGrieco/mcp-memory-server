@@ -105,11 +105,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
+models/.locks/*
 # Project specific
 backups/
 cache/
-models/
 embeddings/
 *.pkl
 *.pickle 
+.myenv/*

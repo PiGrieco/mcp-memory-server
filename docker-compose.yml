@@ -1,112 +1,125 @@
+# =============================================================================
+# MCP Memory Server - Docker Compose Configuration
+# =============================================================================
+
 version: '3.8'
 
 services:
-  # Main API Gateway
-  api-gateway:
-    build: .
-    container_name: mcp-memory-api-gateway
-    ports:
-      - "8000:8000"
-    environment:
-      - SERVICE_TYPE=api-gateway
-      - MONGODB_MASTER_CONNECTION=${MONGODB_MASTER_CONNECTION}
-      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
-      - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}
-      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
-      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
-      - API_BASE_URL=${API_BASE_URL:-http://localhost:8000}
-    command: ["python", "cloud/api_gateway.py"]
-    volumes:
-      - ./logs:/app/logs
-    depends_on:
-      - redis
-    restart: unless-stopped
-    networks:
-      - mcp-network
-
-  # Billing Service
-  billing-service:
-    build: .
-    container_name: mcp-memory-billing
-    ports:
-      - "8001:8001"
-    environment:
-      - SERVICE_TYPE=billing
-      - MONGODB_MASTER_CONNECTION=${MONGODB_MASTER_CONNECTION}
-      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
-      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
-    command: ["python", "cloud/billing_system.py"]
-    volumes:
-      - ./logs:/app/logs
-    restart: unless-stopped
-    networks:
-      - mcp-network
-
-  # Web Frontend
-  frontend:
+  # Standard MCP server (stdio mode)
+  mcp-memory-server:
     build:
       context: .
-      dockerfile: frontend/Dockerfile
-    container_name: mcp-memory-frontend
-    ports:
-      - "3000:3000"
+      dockerfile: Dockerfile
+    container_name: mcp-memory-server
+    restart: unless-stopped
+
+    # Environment variables from .env file
+    env_file:
+      - .env
+
+    # Additional environment variables
     environment:
-      - REACT_APP_API_URL=${API_BASE_URL:-http://localhost:8000}
-      - REACT_APP_STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}
-    restart: unless-stopped
-    networks:
-      - mcp-network
+      - ENVIRONMENT=production
+      - PYTHONPATH=/app
 
-  # Redis for caching and session management
-  redis:
-    image: redis:7-alpine
-    container_name: mcp-memory-redis
-    ports:
-      - "6379:6379"
-    command: redis-server --appendonly yes
-    volumes:
-      - redis-data:/data
-    restart: unless-stopped
-    networks:
-      - mcp-network
-
-  # Nginx Reverse Proxy
-  nginx:
-    image: nginx:alpine
-    container_name: mcp-memory-nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./deployment/nginx.conf:/etc/nginx/nginx.conf
-      - ./deployment/ssl:/etc/nginx/ssl
-    depends_on:
-      - api-gateway
-      - frontend
-    restart: unless-stopped
-    networks:
-      - mcp-network
-
-  # Background Worker for heavy tasks
-  worker:
-    build: .
-    container_name: mcp-memory-worker
-    environment:
-      - SERVICE_TYPE=worker
-      - MONGODB_MASTER_CONNECTION=${MONGODB_MASTER_CONNECTION}
-      - REDIS_URL=redis://redis:6379
-    command: ["python", "cloud/background_worker.py"]
+    # Volumes for persistent data and configuration
     volumes:
       - ./logs:/app/logs
-    depends_on:
-      - redis
-    restart: unless-stopped
+      - ./.env:/app/.env:ro
+
+    # Network configuration
     networks:
       - mcp-network
 
-volumes:
-  redis-data:
+  # HTTP MCP server (network mode)
+  mcp-memory-server-http:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mcp-memory-server-http
+    restart: unless-stopped
+
+    # Environment variables from .env file
+    env_file:
+      - .env
+
+    # Additional environment variables
+    environment:
+      - ENVIRONMENT=production
+      - PYTHONPATH=/app
+      - HOST=0.0.0.0
+      - PORT=8000
+      - PROJECT_NAME=cursor_project
+      - DATABASE_NAME=mcp_memory_production
+      - MONGODB_URI=mongodb+srv://rjawaissaleem:tpQMJUV4cmknQqn3@cluster0.4ixuae0.mongodb.net/mcp_memory_production?retryWrites=true&w=majority&appName=Cluster0&tls=true&tlsAllowInvalidCertificates=true&tlsAllowInvalidHostnames=true
+      - MONGODB_DATABASE=mcp_memory_production
+      - MONGODB_COLLECTION=memories
+      - EMBEDDING_MODEL=all-MiniLM-L6-v2
+
+    # Expose HTTP port
+    ports:
+      - "8000:8000"
+
+    # Volumes for persistent data and configuration
+    volumes:
+      - ./logs:/app/logs
+      - ./.env:/app/.env:ro
+
+    # Network configuration
+    networks:
+      - mcp-network
+
+    # Override command for HTTP mode
+    command: ["python", "mcp_memory_server_http.py"]
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Optional: Local MongoDB for development
+  # Uncomment if you want to use local MongoDB instead of MongoDB Atlas
+  # mongodb:
+  #   image: mongo:7.0
+  #   container_name: mcp-mongodb
+  #   restart: unless-stopped
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: admin
+  #     MONGO_INITDB_ROOT_PASSWORD: password
+  #     MONGO_INITDB_DATABASE: mcp_memory_production
+  #   volumes:
+  #     - mongodb_data:/data/db
+  #     - ./mongo-init:/docker-entrypoint-initdb.d
+  #   ports:
+  #     - "27017:27017"
+  #   networks:
+  #     - mcp-network
 
 networks:
   mcp-network:
-    driver: bridge 
+    driver: bridge
+
+volumes:
+  # Uncomment if using local MongoDB
+  # mongodb_data:
+  logs:

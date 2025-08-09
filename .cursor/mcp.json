@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "memory-server": {
+      "command": "/usr/bin/python3",
+      "args": [
+        "/Users/awais/Desktop/Upworking/Grieco/mcp-memory-server/mcp-memory-production-clean/mcp_memory_server.py"
+      ]
+    }
+  }
+}
