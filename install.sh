@@ -1,6 +1,6 @@
 #!/bin/bash
 # One-Click Installer for MCP Memory Server Auto-Trigger
-# Usage: curl -sSL https://raw.githubusercontent.com/your-repo/mcp-memory-server/main/install.sh | bash
+# Usage: curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/main/install.sh | bash
 
 set -e
 
@@ -90,12 +90,12 @@ check_pip() {
 download_repo() {
     if command_exists git; then
         print_step "2" "Cloning repository with git"
-        git clone https://github.com/your-repo/mcp-memory-server.git
+        git clone https://github.com/PiGrieco/mcp-memory-server.git
         cd mcp-memory-server
     else
         print_step "2" "Downloading repository (git not found)"
         if command_exists curl; then
-            curl -L https://github.com/your-repo/mcp-memory-server/archive/main.zip -o mcp-memory-server.zip
+            curl -L https://github.com/PiGrieco/mcp-memory-server/archive/main.zip -o mcp-memory-server.zip
             if command_exists unzip; then
                 unzip mcp-memory-server.zip
                 mv mcp-memory-server-main mcp-memory-server

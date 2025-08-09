@@ -44,7 +44,7 @@ The revolutionary auto-trigger system makes memory management completely automat
 ### Option 1: Auto-Trigger Server (NEW!)
 ```bash
 # Clone the repository
-git clone https://github.com/your-repo/mcp-memory-server.git
+git clone https://github.com/PiGrieco/mcp-memory-server.git
 cd mcp-memory-server
 
 # Start with Auto-Trigger System
@@ -78,7 +78,7 @@ cd frontend && npm start
 
 ### Option 3: One-Line Setup
 ```bash
-curl -sSL https://raw.githubusercontent.com/your-repo/mcp-memory-server/main/setup.sh | bash
+curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/main/setup.sh | bash
 ```
 
 ## ✨ Features
@@ -150,7 +150,7 @@ curl -sSL https://raw.githubusercontent.com/your-repo/mcp-memory-server/main/set
 
 1. **Clone and Install**
    ```bash
-   git clone https://github.com/your-repo/mcp-memory-server.git
+   git clone https://github.com/PiGrieco/mcp-memory-server.git
    cd mcp-memory-server
    pip install -r requirements.txt
    ```
@@ -442,8 +442,8 @@ cd frontend && npm run dev
 
 ## 🆘 Support
 
-- **Issues** - [GitHub Issues](https://github.com/your-repo/mcp-memory-server/issues)
-- **Discussions** - [GitHub Discussions](https://github.com/your-repo/mcp-memory-server/discussions)
+- **Issues** - [GitHub Issues](https://github.com/PiGrieco/mcp-memory-server/issues)
+- **Discussions** - [GitHub Discussions](https://github.com/PiGrieco/mcp-memory-server/discussions)
 - **Documentation** - [docs/](docs/)
 - **Email** - support@your-domain.com
 
@@ -465,6 +465,6 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 **Made with ❤️ for the AI community**
 
-[⭐ Star us on GitHub](https://github.com/your-repo/mcp-memory-server) • [🐛 Report Issues](https://github.com/your-repo/mcp-memory-server/issues) • [💬 Join Discussions](https://github.com/your-repo/mcp-memory-server/discussions)
+[⭐ Star us on GitHub](https://github.com/PiGrieco/mcp-memory-server) • [🐛 Report Issues](https://github.com/PiGrieco/mcp-memory-server/issues) • [💬 Join Discussions](https://github.com/PiGrieco/mcp-memory-server/discussions)
 
 </div>

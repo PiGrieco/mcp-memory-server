@@ -124,7 +124,7 @@ curl -sSL https://raw.githubusercontent.com/repo/install.sh | bash
 
 #### **Opzione 2: Download e Installa**
 ```bash
-git clone https://github.com/your-repo/mcp-memory-server.git
+git clone https://github.com/PiGrieco/mcp-memory-server.git
 cd mcp-memory-server
 python install.py
 ```

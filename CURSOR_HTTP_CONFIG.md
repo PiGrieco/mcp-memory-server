@@ -10,7 +10,7 @@ This guide shows how to configure Cursor IDE to connect to your MCP Memory Serve
 
 ```bash
 # On your remote server/instance
-git clone https://github.com/AiGotsrl/mcp-memory-server.git
+git clone https://github.com/PiGrieco/mcp-memory-server.git
 cd mcp-memory-server
 
 # Make deployment script executable

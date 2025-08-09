@@ -39,14 +39,14 @@ No more manual "remember this" - your AI now **automatically**:
 ### **Copy-Paste This Command:**
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/your-repo/mcp-memory-server/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/main/install.sh | bash
 ```
 
 **Or download and run locally:**
 
 ```bash
 # Clone repository
-git clone https://github.com/your-repo/mcp-memory-server.git
+git clone https://github.com/PiGrieco/mcp-memory-server.git
 cd mcp-memory-server
 
 # One-click install
@@ -344,8 +344,8 @@ print('Keywords:', server.auto_trigger.keywords)
 
 ### **Get Help:**
 - 📚 [Full Documentation](docs/)
-- 🐛 [Report Issues](https://github.com/your-repo/mcp-memory-server/issues)
-- 💬 [Community Discussions](https://github.com/your-repo/mcp-memory-server/discussions)
+- 🐛 [Report Issues](https://github.com/PiGrieco/mcp-memory-server/issues)
+- 💬 [Community Discussions](https://github.com/PiGrieco/mcp-memory-server/discussions)
 
 ---
 
@@ -363,7 +363,7 @@ We welcome contributions! The auto-trigger system is modular and extensible.
 
 ```bash
 # Development setup
-git clone https://github.com/your-repo/mcp-memory-server.git
+git clone https://github.com/PiGrieco/mcp-memory-server.git
 cd mcp-memory-server
 pip install -r requirements-dev.txt
 
@@ -398,7 +398,7 @@ pip install -r requirements-dev.txt
 
 ### **Your AI will never forget again!**
 
-[🚀 **Install Now**](#-one-click-installation) • [🎯 **See Demo**](#-auto-trigger-demo) • [⭐ **Star on GitHub**](https://github.com/your-repo/mcp-memory-server)
+[🚀 **Install Now**](#-one-click-installation) • [🎯 **See Demo**](#-auto-trigger-demo) • [⭐ **Star on GitHub**](https://github.com/PiGrieco/mcp-memory-server)
 
 ### **Join thousands of developers using MCP Memory Server**
 

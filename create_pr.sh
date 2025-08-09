@@ -1,79 +1,71 @@
 #!/bin/bash
+# Script to create GitHub PR for Auto-Trigger Edition
 
-# MCP Memory Server v2.0.0 - Production Ready PR Creation Script
+echo "🚀 Creating GitHub PR for MCP Memory Server v2.0 Auto-Trigger Edition"
+echo "========================================================================="
 
-echo "🚀 Creating Production Ready PR for MCP Memory Server v2.0.0"
-echo "============================================================"
+# Get repository info
+REPO_URL=$(git remote get-url origin)
+REPO_NAME=$(basename "$REPO_URL" .git)
+REPO_OWNER=$(basename $(dirname "$REPO_URL"))
 
-# Repository information
-REPO_URL="https://github.com/AiGotsrl/mcp-memory-server"
-PR_BRANCH="production-ready-v2"
-BASE_BRANCH="main"
+echo "📁 Repository: $REPO_OWNER/$REPO_NAME"
+echo "🌿 Branch: production-ready-v2"
+echo "🎯 Target: main"
 
-# PR Details
-PR_TITLE="🎉 MCP Memory Server v2.0.0 - Production Ready Release"
-PR_LABELS="enhancement,major-release,production-ready,breaking-change"
-
-echo "📋 PR Information:"
-echo "  Repository: $REPO_URL"
-echo "  Branch: $PR_BRANCH -> $BASE_BRANCH"
-echo "  Title: $PR_TITLE"
-echo ""
-
-# Create the PR URL with pre-filled information
-PR_URL="${REPO_URL}/compare/${BASE_BRANCH}...${PR_BRANCH}?quick_pull=1"
-
-echo "🔗 PR Creation URL:"
-echo "$PR_URL"
-echo ""
-
-echo "📝 PR Description (copy from PR_DESCRIPTION.md):"
-echo "   File: $(pwd)/PR_DESCRIPTION.md"
-echo ""
-
-echo "📋 Quick Setup Instructions:"
-echo "1. Open the PR URL above in your browser"
-echo "2. Copy the content from PR_DESCRIPTION.md into the PR description"
-echo "3. Add the following labels:"
-echo "   - enhancement"
-echo "   - major-release" 
-echo "   - production-ready"
-echo "   - breaking-change"
-echo "4. Request reviews from:"
-echo "   - @architecture-team"
-echo "   - @security-team"
-echo "   - @frontend-team"
-echo "   - @integrations-team"
-echo ""
-
-echo "🎯 Key Points to Highlight:"
-echo "✅ Complete merge of main and dev branches"
-echo "✅ Production-ready architecture with 95% test coverage"
-echo "✅ Enhanced cloud infrastructure with MongoDB Atlas"
-echo "✅ Modern browser extension with multi-platform support"
-echo "✅ Unified AI integrations (Cursor, Claude, GPT)"
-echo "✅ New React dashboard with real-time monitoring"
-echo "✅ Comprehensive documentation and migration guides"
-echo ""
-
-echo "⚠️  Breaking Changes Note:"
-echo "This is a major release with breaking changes."
-echo "Migration path is provided and tested."
-echo ""
-
-echo "🚀 Opening PR URL..."
-if command -v open >/dev/null 2>&1; then
-    open "$PR_URL"
-    echo "✅ PR URL opened in browser"
-elif command -v xdg-open >/dev/null 2>&1; then
-    xdg-open "$PR_URL"
-    echo "✅ PR URL opened in browser"
+# Check if GitHub CLI is available
+if command -v gh &> /dev/null; then
+    echo "✅ GitHub CLI found, creating PR automatically..."
+    
+    # Create PR with GitHub CLI
+    gh pr create \
+        --title "🚀 MCP Memory Server v2.0 - Auto-Trigger Edition" \
+        --body-file PR_AUTO_TRIGGER_V2.md \
+        --base main \
+        --head production-ready-v2 \
+        --label "enhancement,auto-trigger,v2.0" \
+        --assignee "@me"
+    
+    echo "✅ PR created successfully!"
+    echo "🔗 Opening PR in browser..."
+    gh pr view --web
+    
 else
-    echo "Please manually open: $PR_URL"
+    echo "⚠️  GitHub CLI not found, providing manual instructions..."
+    echo ""
+    echo "📋 MANUAL PR CREATION:"
+    echo "1. Go to: https://github.com/$REPO_OWNER/$REPO_NAME/compare/main...production-ready-v2"
+    echo "2. Title: 🚀 MCP Memory Server v2.0 - Auto-Trigger Edition"
+    echo "3. Copy description from: PR_AUTO_TRIGGER_V2.md"
+    echo "4. Add labels: enhancement, auto-trigger, v2.0"
+    echo "5. Request review from team members"
+    echo ""
+    echo "🔗 Direct link:"
+    echo "https://github.com/$REPO_OWNER/$REPO_NAME/compare/main...production-ready-v2"
+    echo ""
+    
+    # Try to open in browser (macOS)
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "🌐 Opening in browser..."
+        open "https://github.com/$REPO_OWNER/$REPO_NAME/compare/main...production-ready-v2"
+    fi
 fi
 
 echo ""
-echo "📄 Don't forget to copy the PR description from:"
-echo "   $(pwd)/PR_DESCRIPTION.md"
+echo "📋 PR DESCRIPTION SUMMARY:"
+echo "• Revolutionary 7-type auto-trigger system"
+echo "• One-click installation (2 minutes vs 30-60 minutes)"
+echo "• Zero external dependencies required"
+echo "• Universal AI platform compatibility"
+echo "• Complete documentation rewrite"
+echo "• 23 new files added"
+echo "• Backwards compatible"
 echo ""
-echo "🎉 Ready to create the Production Ready PR!"
+echo "🎯 KEY FEATURES TO HIGHLIGHT IN REVIEW:"
+echo "• Auto-trigger on keywords: 'ricorda', 'importante', 'risolto'"
+echo "• Semantic similarity search for context"
+echo "• Pattern recognition for solutions"
+echo "• Automatic Cursor/Claude configuration"
+echo "• Comprehensive testing suite"
+echo ""
+echo "✅ Ready for review and merge!"

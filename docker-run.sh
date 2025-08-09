@@ -65,7 +65,7 @@ PROJECT_NAME=cursor_project
 DATABASE_NAME=mcp_memory_production
 
 # MongoDB Configuration (Update with your credentials)
-MONGODB_URI=mongodb+srv://rjawaissaleem:tpQMJUV4cmknQqn3@cluster0.4ixuae0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+MONGODB_URI=mongodb://localhost:27017
 MONGODB_DATABASE=mcp_memory_production
 MONGODB_COLLECTION=memories
 

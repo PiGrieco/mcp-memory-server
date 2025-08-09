@@ -5,7 +5,7 @@
 ### 1. Install Dependencies
 ```bash
 # Clone and setup
-git clone https://github.com/AiGotsrl/mcp-memory-server.git
+git clone https://github.com/PiGrieco/mcp-memory-server.git
 cd mcp-memory-server
 
 # Run automated setup

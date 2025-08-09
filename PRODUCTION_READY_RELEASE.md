@@ -189,10 +189,10 @@ docker-compose up -d
 ### Local Installation
 ```bash
 # Quick setup
-curl -sSL https://raw.githubusercontent.com/your-repo/setup.sh | bash
+curl -sSL https://raw.githubusercontent.com/PiGrieco/setup.sh | bash
 
 # Manual setup
-git clone https://github.com/your-repo/mcp-memory-server.git
+git clone https://github.com/PiGrieco/mcp-memory-server.git
 cd mcp-memory-server
 pip install -r requirements.txt
 python main.py
@@ -274,9 +274,9 @@ Special thanks to:
 ## 🆘 Support & Migration Help
 
 ### Getting Help
-- **Migration Issues** - [Open GitHub Issue](https://github.com/your-repo/issues)
+- **Migration Issues** - [Open GitHub Issue](https://github.com/PiGrieco/issues)
 - **Setup Problems** - Check [Troubleshooting Guide](docs/troubleshooting.md)
-- **Feature Requests** - [GitHub Discussions](https://github.com/your-repo/discussions)
+- **Feature Requests** - [GitHub Discussions](https://github.com/PiGrieco/discussions)
 
 ### Professional Support
 For organizations needing assistance:
@@ -291,13 +291,13 @@ For organizations needing assistance:
 
 ### Quick Install
 ```bash
-curl -sSL https://raw.githubusercontent.com/your-repo/setup.sh | bash
+curl -sSL https://raw.githubusercontent.com/PiGrieco/setup.sh | bash
 ```
 
 ### Manual Download
-- **[Source Code](https://github.com/your-repo/archive/v2.0.0.tar.gz)**
-- **[Docker Images](https://hub.docker.com/r/your-repo/mcp-memory-server)**
-- **[Release Notes](https://github.com/your-repo/releases/tag/v2.0.0)**
+- **[Source Code](https://github.com/PiGrieco/archive/v2.0.0.tar.gz)**
+- **[Docker Images](https://hub.docker.com/r/PiGrieco/mcp-memory-server)**
+- **[Release Notes](https://github.com/PiGrieco/releases/tag/v2.0.0)**
 
 ---
 

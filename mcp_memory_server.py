@@ -77,7 +77,7 @@ def initialize_full_memory_server():
     try:
         # Set environment variables for production
         os.environ.setdefault("ENVIRONMENT", "production")
-        os.environ.setdefault("MONGODB_URI", "mongodb+srv://rjawaissaleem:tpQMJUV4cmknQqn3@cluster0.4ixuae0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+        os.environ.setdefault("MONGODB_URI", "mongodb://localhost:27017")
         os.environ.setdefault("MONGODB_DATABASE", DATABASE_NAME)
         os.environ.setdefault("MONGODB_COLLECTION", "memories")
         os.environ.setdefault("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
