@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "mcp-memory-auto": {
+      "command": "python",
+      "args": ["/Users/piermatteogrieco/mcp-memory-server-1/main.py"],
+      "env": {
+        "AUTO_TRIGGER_ENABLED": "true"
+      }
+    }
+  }
+}

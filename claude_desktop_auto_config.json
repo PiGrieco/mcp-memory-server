@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "mcp-memory-server-auto": {
+      "command": "python",
+      "args": ["/Users/piermatteogrieco/mcp-memory-server-1/main_auto.py"],
+      "env": {
+        "AUTO_TRIGGER_ENABLED": "true",
+        "CLAUDE_AUTO_CONTEXT": "true",
+        "MEMORY_INJECTION": "true",
+        "CONTEXTUAL_SEARCH": "true",
+        "AUTO_SAVE_CONVERSATIONS": "true",
+        "IMPORTANCE_BOOST_KEYWORDS": "importante,critico,urgente,ricorda,decisione",
+        "SEMANTIC_SEARCH_THRESHOLD": "0.75",
+        "AUTO_CONTEXT_LIMIT": "5",
+        "CONVERSATION_SUMMARY_TRIGGER": "5"
+      }
+    }
+  }
+}
