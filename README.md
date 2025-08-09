@@ -170,6 +170,10 @@ result = await memory.process("Ricorda questa importante informazione")
 ```bash
 python install.py
 ```
+**🚀 Pre-Downloaded Models Included:**
+- ✅ **Instant startup** - No model download needed (97MB included)
+- ✅ **Offline ready** - Works without internet after clone
+- ✅ **Better UX** - No waiting on first run
 
 ### **Step 2: Start Server (5 seconds)**
 ```bash
