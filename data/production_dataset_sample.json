@@ -1,0 +1,3502 @@
+[
+  {
+    "text": "Basically, dove si trova backup procedures?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "The atm won't give my card back!",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Archivia: add database connection pooling (max 20 connections) please",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "I submitted a transaction but it was for the incorrect account.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Shopping on line I was declined when trying to buy something.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Archive: implement database migrations with rollback support now",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "when is the next day we have off",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "What is the maximum times I can auto top-up?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "are my tires aired properly",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what rules does southwest have for carry-on luggage",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "how do i change the windshield wipers",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "How do I update my PIN to a new number?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "i need to track the status of my order",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Basically, see you!",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Any place that takes Mastercard would be fine.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Well, important fix: use message queues for async processing",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Why is my last transfer pending?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "are you paid by somebody",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what things can you help me with exactly",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "use phone to call alexa",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Why was I charged a fee for my card payment?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "how can i apply for a discover card",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I received cash from the ATM earlier, but this shows up as pending in the app.  I've got the cash already.  How can this be still pending?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Is there a disposable virtual card?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "inform me what you do for fun in your free time",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "One of my transactions needs to be canceled.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Help me reset the passcode.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "can you get me simple instructions on how to do an oil change",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I was charged $1 in a transaction.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "look up the lowest amount i can pay on my electricity bill",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "So, save this: use database indexing for query optimization",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Actually, come implement logging?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "do you know if anyone's even looked at the application i sent in for the new visa card",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Issue: high CPU usage here",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Store solution: implement database migrations with rollback support please",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Sistemato high memory consumption tramite optimizing resource usage now",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "Well, documenta: configure nginx reverse proxy with ssl",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "how does one go about putting in a vacation request",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "should i hit or stay at 17 in blackjack",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "How old do you need to be to open an account?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "The rate of exchange isn't right for my cash withdrawal.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Sistemato high memory consumption tramite implementing data validation now",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "Actually, archivia: implement api versioning with proper headers",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "how does cybersecurity work",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Can I top up using my cheque?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "get me access to a list of my recent transactions",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "disconnect from my phone now, please",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "i wanna get my w-2 form",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Well, remember: use environment variables for configuration",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "tell me what the gas mileage is on my car",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "order some cat for me, i ran out",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what carry-on restrictions does southwest impose",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Well, resolved slow response times by implementing configuration management",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "by bus, how long would it take to get to detroit",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "i need to know the title of this song",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "How many payments can I make using a virtual card?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "any new restaurants near the mall",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "How can I implement real-time updates? here",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Why do you need so much information about me",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Basically, bug: memory leaks in react",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "ai what was the question",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "What do I do when my card expires?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "tell me what my shopping list consists of",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Errore: PermissionError here",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "can you put carrots on my shopping list",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "When I topped up the app has seemed to reverted it.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "what is my amex minimum payment",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Ho risolto data corruption usando upgrading dependencies here",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "What is the refund policy?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Fixed CORS policy violations with increasing timeout values thanks",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Problema risolto: use CDN for static assets with 24h cache please",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "how can i say thank you very much in chinese",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "view my transactions for the last week",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "There are a few payments in the app that I didn't make! Does someone else have my card?  What should I do?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "What do I do?  My card is broken.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "\nHow do I unblock my PIN?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "I got a extra €1 fee in my statement",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Solution found: use Docker multi-stage builds for smaller images now",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "what sort of things do you enjoy",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Who can top up my accounts?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "So, cerca deployment scripts",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "can you help me book a car rental in paris",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "could you connect to my phone",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "i'd like to add pancake mix to my shopping list if it's not already there",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "i need to find out do you know if zeus does reservations",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "quiet now",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I don't know the code for the app.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "what's the date on my last pay stub",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "find out what song this is",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what is today's big article in the washington post",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Problem: TypeScript compilation errors thanks",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "what percentage full is my gas tank",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "What locations are you in?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Basically, problema: test suite timeouts",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Essentially, document: add retry logic with exponential backoff",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "how long do i need to cook roast for",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Please explain to me the circumstances in which my card payment would be reverted?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "will you confirm my reservation for red robin at 10",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Basically, what's the best way to implement user authentication?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "How do I activate and link my new card?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "if i want to direct deposit my paycheck, what info do i need",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Are you aware of any charges for receiving money?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "My card is going to expire, what do I do?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "see if there is a recipe to make a casserole without any dairy",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "how much am i taxed each year",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I already paid to top-up but the funds aren't available yet, where are they?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "stop whisper mode",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Actually, save this: implement health checks for container orchestration",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "i would prefer not",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "i don't have the answer",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "how do i say thank you in spanish",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "create a reminder for me to exercise this week",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "The exchange rate from my card payment isn't right.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "what is my current reward point total on my visa card",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Difficoltà con: container startup problems please",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "go into whisper mode now",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "So, bug: authentication failures",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Actually, need help with memory leaks in react",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "is a toothbrush on my shopping list",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "how soon should i get my tires changed",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what's the best reviewed local roof repair place",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "how long will it take to be seated at the flying w",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "call bob for me",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Use credit card to transfer money",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Essentially, solution found: use docker multi-stage builds for smaller images",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "mashed potato's nutrition",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Basically, fixed issue: implement health checks for container orchestration",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "what steps should i follow if i lost my luggage",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Basically, ho risolto integration problem usando refactoring code architecture",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "how do i change my oil out and what kind should i use",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "inform me on what my credit card's apr is",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "talk in whisper voice",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what's the due date for my comcast bill",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I was trying to use contactless earlier, but it didn't work.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Thanks!",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Any fee for topping up?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Risolto CORS policy violations con increasing timeout values thanks",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "Help with Production deployment issues now",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "i need you to increase your speaker volume",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "who do i speak with about my card that was lost",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Am I able to do a SWIFT transfer?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "what is required to direct deposit my paycheck",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Someone might be using my card.  What should I do?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Well, remember: add monitoring with prometheus and grafana",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "when did i get my last oil change",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what is rhineland",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "would it be smart to get a plug converter when i visit israel",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "is honey a good sugar substitute",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "set a reminder for when the turkey is finished cooking",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "find a hotel with great reviews in san francisco",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "can you please whisper",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "i need a flight on delta from los angeles to seattle",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Resolved security vulnerabilities by enhancing observability today",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Parameter: DEBUG_MODE=false please",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Well, difficoltà con: test suite timeouts",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "i need to transfer one thousand dollars to my savings account from my checking",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "put bread on my shopping list",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I want to cancel a transfer right away! Can you help?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "make me a reservation in tampa from may 2 to may 4",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I solved security vulnerability using upgrading dependencies today",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "i must know what is currently on my calendar for friday the 1st",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Issue: React component re-renders please",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "What about an auto top-up, is that a option?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "confirm my friday reservation at 2:00",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "So, fixed container resource limits with implementing memory cleanup",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "do you have any good ways to make tomato soup",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "do i require a plug converter when i visit puerto rico",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "could you reserve me a hotel room in philadelphia near chinatown from 3/19 through 3/22",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Why does a payment show up twice?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "any travel advisories for portugal",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Configuration saved: SSL_KEY_PATH=/certs/server.key please",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "Please tell me how disposable virtual cards work?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "what are the ratings about at pho king",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "make a chart of all the tennis scores from this year",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "where is my delta flight",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "turn your volume up",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "How many disposable cards is the limit?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "i need a timer to be set",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "will you tell a joke",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I bought an item and the exchange rate was wrong.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Actually, how's your day?",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Can I get both a Visa and a Mastercard from you?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "help me report a lost card",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "i want to pay my car bill",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Document: implement JWT authentication with refresh tokens please",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "So, trova backup procedures",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "can you tell me my bank balance",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what is my credit card spending limit",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I purchased something about one to two weeks ago but for some reason the payment was returned to my account today even though I've already received one of the items. Can you tell me what's going on?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "I am not supposed to be charged a cash withdrawal fee, but I was.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "I've got charges on my account I did not authorize. Can I get this money back from the last couple of days that it's been coming out? I also need to freeze my card.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "I solved data corruption using using load balancing here",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "please reset the factory settings",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Sistemato monitoring blind spots tramite optimizing algorithms today",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Are extra cards free?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "way to change car oil",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "An extra fee of €1 was in my statement",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Salva questo: implement circuit breaker pattern for API calls please",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "tell me my chase credit card's apr",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I need some spare physical cards.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "How long will it take to activate my new card?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Help! In the app there is a payment that I don't remember.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "how many elements are on the periodic table",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Ho risolto deployment failure usando using message queues",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "my new debit card is lost and i need to report it",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "i no longer want my reservation anymore",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Dove si trova logging configuration? please",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "i didn't hear you, can you repeat that louder",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "So, important fix: add comprehensive logging with structured json",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Hi, Last week I have contacted the seller for a refund as directed by you, but i have not received the money yet. Please look into this issue with seller and help me in getting the refund.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "i'm changing your name to goliath",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what spanish word means hello",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I have been charged twice for the same thing!",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Importante: implement database migrations with rollback support today",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "I thought transfers were free of charge.  I bought something abroad and got charged a ridiculous fee. How do I get this problem fixed.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "is it easy to change the oil in my car",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Is auto top up available?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Why hasn't a transaction I did to my friend arrived yet?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Basically, fixed issue: add input validation and sanitization",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "can you tell me the miles per gallon rate of my car",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "So, I am a new customer and attempted to top up for the very first time today. It's already been pending for half an hour and doesn't seem to be working. I need to please get this fixed.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "i think my account is blocked",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Hello, I believe there has been a mistake made on the exchange rate for my card. Could you please check the official interbank exchange rate for me?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "walk me through making changes to my insurance policy",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what is the current date",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "hey how's it hanging",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "when is my cell phone due",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Risolto SSL handshake failures con adjusting resource limits",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "Goodbye!",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "what is my current signal strength",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Well, search for performance benchmarks",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "can you help me with seattle car rental bookings",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what is my routing number on my checking account",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I cannot prove my own identity.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Dove si trova caching strategy? today",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "I think my card has been used by somebody else since I was never in the little town where some transactions on this bill have come from. Please stop this right away.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "could you tell me how to direct deposit my check from work into nations bank",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "find out of grub burger takes reservations",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Food looks delicious",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "So, ho risolto synchronization issue usando implementing circuit breaker",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Can I change or hold different currency?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "tell me how to use credit card points",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Am I able to get a second card?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Well, resolved service unavailability by upgrading security measures",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "How do I change my AUD into GBP?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "i wanna know the gad i need to fill this car up with",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Why have I been charged more than once for the same transaction?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "is there a routing number for wells fargo",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "How do I link this new card?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Previous solution for database connection errors? please",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "bring up my location",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Risolto API response timeouts con adding database indexes please",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "There is a odd withdrawal on my account.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "My account is showing a double charge.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "turn up the volume",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "does village inn let you make reservations",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "i need assistance figuring out how to rollover my 401k, please",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Risolto API response timeouts con adding database indexes",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "How can I add money to my account from another account I have?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Documenta: use message queues for async processing today",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "how do i change my billing address",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "remove all items from todo list",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I think I lost my card . I dont know how long it has been missing. Can you see if maybe someone else has been using it?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "please look up the this cars mpg",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "If I were to do a transfer, what is the rate for that?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Trova performance benchmarks thanks",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "Essentially, i solved performance bottleneck using optimizing database queries",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "What credit cards are supported?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Qual è il modo migliore per implement real-time updates? now",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "Config: DEBUG_MODE=false thanks",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "go ahead and switch to the female voice",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I read about the auto-top up function, but can't find it in the app.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Can I have my card delivered on Tuesday?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "what's out at the theaters right now",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Can I choose between Visa or MasterCard?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Are top-ups unlimited?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "how do i get to the closest starbucks",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "can you help me with anything i need",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Archive: use blue-green deployment for zero downtime thanks",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "How did I solve SSL certificate renewal? here",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "are you from here",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "search google for how to set up direct deposit",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I need to cancel a transaction please!",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Where do I pay with my card?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Resolved service unavailability by adding redundancy here",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "I have been trying to make a transfer and it won't go through. I have checked all the receipts and its all correct but still won't let me do it.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "What's the best way to configure SSL certificates? now",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "do i need to change my oil",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what is the smallest payment i can make toward my xfinity bill",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Basically, difficoltà con: timeout issues",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "I swear that there are 2 payments on the app that I didn't make.  Could my card me stolen?  Please advise what I should do.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Document: use CDN for static assets with 24h cache here",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "move my money to the other account",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "the car you are driving uses what kind of gas",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Is there a way I can have a mastercard?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Essentially, where is docker configuration?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "How do I use the disposable cards?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Well, cerca testing strategies",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Is there any limit to the amount I can add to a card at a time?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "can you give me some stress management tips",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "i want david to know where i'm at",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "please cancel my reservation for tim at jb's",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "So, come va la giornata?",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "when was the last time i changed my oil",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I do not have the information to verify my identify.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "change the language you're using to american english",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "How long does it take for a top-up?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "please list my total spending on grocery shopping for the last two months",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Bug: high CPU usage here",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Well, dove si trova ssl configuration?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "how the birds fly",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "count the number of the letter a in happiness",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "go to the next song and skip",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "can you make a phone call to randy",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what's the carry on policy for delta",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "What was the extra charge for withdrawing money?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "So, errore: connectionerror",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "what plug type does russia use",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "how much gas is in my tank",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I would like to order a virtual card.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "what do i have on my calendar for monday the 1st of march",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "What happened to the cash that I tried to deposit into my account? It's gone!",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "I tried to top up but the app rejected it.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "what do i call you, ai",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "tell me now if you are a bot",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what are the nutrition facts for carrots",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Risolto data serialization errors con improving connection handling now",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "I exchange my currency quite a bit.  Do I get an exchange price break?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "could you help me find the interest on my chase account",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "how many vacation days do i have saved",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "in paris, get me a hotel room for 4 people from march 1st to 3rd",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I've made a transfer from France two days ago but I was wondering if international transfers take longer to arrive because it hasn't made it yet.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Well, search for caching strategy",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "for italy what timezone is it in",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I took out money, and didn't get all of it.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "how many miles can i drive before i need to change my oil",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Well, document: use blue-green deployment for zero downtime",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "There's a payment that isn't mine on my app",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "what are your hobbies exactly",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "i want you to go back to factory settings",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Soluzione precedente per cache invalidation problems? today",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "Essentially, qual era la soluzione per docker deployment failures?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "I tried activating my card and it didn't work",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "My account says I have a pending transfer.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "does minnis take reservations",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "How to configure load balancing? here",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "Is there a fee for sending additional cards?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Config: PORT=8080 thanks",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "Well, how can i implement real-time updates?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "what is the best thing for me to do to improve my credit score quickly",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Ho risolto security vulnerability usando refactoring code architecture please",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Sì now",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Configurazione: DATABASE_URL=postgresql://user:pass@localhost:5432/db",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "What's the best way to implement caching? thanks",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "I was charged twice for a few things this week when I only bought one. What do I do?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "i would like to call you andre 3000",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "alexa, buy a new television",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Dove si trova database optimization guide? now",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "My account was charged for a withdraw I tried to make that was decline.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "So, importante: implement api versioning with proper headers",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "My card isn't letting me purchase something and I wanted to know why.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "i say no to that question",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what is my current location",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Essentially, sistemato configuration drift tramite optimizing algorithms",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "can you add a doctor's appointment to friday's calendar",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Where do I go to add a new card?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Perfetto here",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "what do i need in order to change my oil",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what did i want to remember",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "please go ahead and change my name",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "how do i upgrade my operating system",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Why am I being charged to make cash withdrawals? I thought they were supposed to be free!",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "There is a duplicate payment on my card. Why?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "help to turn on whisper mode",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Resolved slow response times by adding redundancy",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Basically, configurazione: database_url=postgresql://user:pass@localhost:5432/db",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "i need to add a person to my bank account",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "due to getting a new job i need assistance with my 401k rollover",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "lost card found, want to put it back in app",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Essentially, parametro: database_url=postgresql://user:pass@localhost:5432/db",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "can you freeze my bank account",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Ho risolto service outage usando implementing retry logic today",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "what kind of gas does my car need",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "can you give the definition of deiscretionary",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "get rid of tuesday the 5ths dinner",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "tell me what i put on the shopping list",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "how many miles can i drive on 1 gallon of gas",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what is on my schedule for the day of march 5th",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "What is the exchange looking like?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Error: TimeoutError thanks",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "would it be ok if i have pepper and not salt",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "ok good chatting goodbye",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "i need to give my location to macy and george",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I solved service outage using implementing circuit breaker today",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "do you own a cat or do you own a dog",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "can i see money source?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Basically, remember: use database indexing for query optimization",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Which currencies do you work with?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "does travelling to st petersburg require a travel visa",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "What's the best way to implement data validation?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "So, what's the best way to handle file uploads?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "what routing number does chase in michigan use",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "can you check what fuel type to use with this car",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "An unauthorized payment is in my app",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "The app denied my top-up",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "should i know about any travel alerts before traveling in the usa",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Well, remember: implement circuit breaker pattern for api calls",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "transfer seventy dollars between national and citizens accounts",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Well, setting: ssl_cert_path=/certs/server.crt",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Does delivery to the US take long?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Essentially, ho risolto configuration error usando implementing retry logic",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "volume to 4",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "add schedule appraiser to my to do list",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "is there a certain type of gas i need to use",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Problem: WebSocket connection issues please",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "Aiuto con WebSocket connection issues please",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "i'd like to see last week's atm transactions",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Well, soluzione trovata: implement api versioning with proper headers",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "when my house burned down, so did my card",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "i need a good joke about office parties",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "could you tell me the fuel type for my car",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "how many years ago was al born",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "tell me where you were created",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "how many calories are in chocolate cake",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what are some good places to eat at",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "If I have this card, which ATMs can I go to?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Is there a reason my payment is still pending?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "My transfer is still pending, why?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "I solved deployment failure using adding caching layer now",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "i need a pto request for the dates jan 15th to jan 20th",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "would it be okay to change your name to daphne",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Aiuto con Test suite timeouts now",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "whats the exact time",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I have a transfer that's pending and wanted to know how long it is going to take to process?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Actually, help with react component re-renders",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Archivia: add database connection pooling (max 20 connections)",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "can you tell me how to figure out my current location",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "where exactly am i at the moment",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Well, difficoltà con: websocket connection issues",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "what is the current exchange rate between mxn and eur",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what do you recommend to do in vegas",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "How much will I be charged for exchanging foreign currency",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "What do I do with my \"decline\" message on a transfer?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "i'm going to jamaica next week; am i needing a visa",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Basically, ricorda: configure nginx reverse proxy with ssl",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "can i purchase a vacation using this",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Well, perfetto",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "Well, sistemato security vulnerabilities tramite improving connection management",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "explain to me the process of evaporation",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Why is there a direct debit I didn't make showing in the app?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "So, archivia: use database indexing for query optimization",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Sistemato monitoring blind spots tramite enhancing observability thanks",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Well, fixed issue: use database indexing for query optimization",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Impostazione: TIMEOUT=30000 please",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Essentially, importante: add retry logic with exponential backoff",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "which time zones does european countries use",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Come manage Docker containers? please",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "can you get me a flight from san francisco to san jose using american airlines",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Actually, sistemato configuration drift tramite adding performance tuning",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "what veggies can i pair with mushrooms",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what are all of the ingredients for brownies from scratch",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "I could not get my transfer to happen correctly and was wondering why?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "does my american express card have any international transaction fees",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Documenta: use environment variables for configuration here",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "uh-huh",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "you need to skip this song and play the next one",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "ai throw the dice on the table",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "so what sort of hobbies are you into",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "add the current song to my favorite playlist",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Aiuto con React component re-renders",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "Does my top up and apple pay work together?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Essentially, exercise is important",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Essentially, resolved unstable performance by enhancing observability",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "Salva questo: add database connection pooling (max 20 connections) thanks",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "italian"
+  },
+  {
+    "text": "new playlist that i will add god's plan to",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "tell me how many days off i have taken so far",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Problema: TypeScript compilation errors today",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "please give me the name of a few good options for places to eat dinner tonight",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "when do i take my car in for a tire change",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "are you able to play beatles songs",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "remind me to do this in awhile",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "My disposable virtual card doesn't seem to work",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "Well, problem: bundle size too large",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "Basically, store solution: use database indexing for query optimization",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "i don't know how to spell mississippi",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Is there a longer processing time for international bank transfers?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "does my checking account have a pin number",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what is the expiration month of my card",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "go ahead and roll the 6 sided dice for me",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "what was the original name of jesus in egyptian myth",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "What are the currencies and cards that are supported with my account?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "am i connected to wifi",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Why would the ATM machine fail to give me the cash withdrawal I requested?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77",
+    "language": "en"
+  },
+  {
+    "text": "can i reach seattle with this amount of fuel",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "is it recommended to get any specific shots before i travel to argentina",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "does one need a visa to go there",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "Problema: Docker image build failures please",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic",
+    "language": "english"
+  },
+  {
+    "text": "are you familiar with any types of subjects",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "do you know when our next day off is",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  },
+  {
+    "text": "make your name jake",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150",
+    "language": "en"
+  }
+]

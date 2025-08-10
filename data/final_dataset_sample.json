@@ -1,0 +1,1514 @@
+[
+  {
+    "text": "I need my card activated.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "There's a payment with my card that I definitely didn't create. I don't know anyone by that name.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I am unable to activate my card, it won't let me.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I want to activate my new card.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Who do I contact if there is a direct debit that I did not create.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "You can activate your card in a few seconds by going to account, hitting activate, and just following the directions.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I found my card, I would like to reactivate it.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I want to inactivate my account.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "If you to to account, hit activate, and follow the instructions, you can activate it in just a few seconds.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Can you activate my card pls",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "i cannot seem to activate card",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Help my activate my card.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "My card needs to be activated asap",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I have a new card and I need to activate it.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I am unable to activate my card, it won't let me.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I need my card to be activated right now.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I want to activate my new card.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "can i create my own pin right away",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I thought I lost my card but I found it today, so I would like to reactivate it.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "You can do that in just a few seconds. Go to account, hit activate, and follow the directions from there.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Please help me with my card.  It won't activate.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I want to block my card or deactivate it or something, it's been stolen and I don't want it misused. I want this handled right away.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Help me create several temp cards every day.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I would like my card activated.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I want to create a new pin.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I want to activate the card.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I cannot activate my card.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I tired but an unable to activate my card.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I would like to reactivate my card that I previously reported lost. I located the card this morning.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Activate my card",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I want to deactivate my account.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I thought I lost my card but I found it today, so I would like to reactivate it.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I want to deactivate my account.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I am unable to activate my card, it won't let me.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "i cant seem to activate card",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Could you please activate my card",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Could I reactivate my card please, I couldn't find it but it turns out it was in my jacket pocket.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I want to inactivate my account.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I would like to activate my card.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I found my lost card in my jacket pocket this morning so I'd like to reactivate it please.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I want to reactivate my card, I thought I had lost it but found it again this morning.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "can i create my own pin right away",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "It won't let me activate my card.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I want to create a new pin.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I need my card activated.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Did you deactivate my card it's not working anymore",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Help me activate my card.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "do i have to setup apple pay to use it",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "My card needs to be activated asap",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Can you activate my card pls",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "My card needs to be activated.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Help me create several temp cards every day.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Help me create several temp cards every day.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Help me activate my card.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I cannot activate my card.",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I solved container deployment failures with increasing file upload timeout limits",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto container deployment failures con increasing file upload timeout limits",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Remember that implement proper error handling in async functions",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto file upload timeout issues con implementing refresh token mechanism",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "I solved file upload timeout issues with fixing container health check configuration",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "I solved API rate limiting errors with configuring proper CORS headers on server",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ricorda che use environment variables for sensitive data",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Important: use connection pooling for database efficiency",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Archive this solution: {solution_detail}",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto file upload timeout issues con increasing file upload timeout limits",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto file upload timeout issues con configuring proper CORS headers on server",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Important: increase timeout to 30 seconds for slow connections",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "I solved CORS errors in browser with adding database indexes on frequently queried columns",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "I solved container deployment failures with implementing refresh token mechanism",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Save this configuration: {config_info}",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "I solved authentication token expiration with implementing exponential backoff retry",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Configuration: {system_config}",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto slow database queries con fixing container health check configuration",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto memory leak in the application con increasing file upload timeout limits",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto API rate limiting errors con implementing proper cleanup in useEffect",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "I solved CORS errors in browser with configuring proper CORS headers on server",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto file upload timeout issues con implementing exponential backoff retry",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto CORS errors in browser con adding database indexes on frequently queried columns",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Store credentials for {service_name}",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "I solved slow database queries with adding database indexes on frequently queried columns",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "I solved file upload timeout issues with configuring proper CORS headers on server",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto slow database queries con implementing proper cleanup in useEffect",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Remember that implement rate limiting to prevent abuse",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "I solved authentication token expiration with adding database indexes on frequently queried columns",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto authentication token expiration con adding database indexes on frequently queried columns",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Configurazione: {system_config}",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto slow database queries con configuring proper CORS headers on server",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto file upload timeout issues con adding database indexes on frequently queried columns",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto CORS errors in browser con fixing container health check configuration",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Archivia questa soluzione: {solution_detail}",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto container deployment failures con fixing container health check configuration",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto memory leak in the application con using cache-aside pattern with TTL",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "I solved memory leak in the application with implementing refresh token mechanism",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "I solved memory leak in the application with fixing container health check configuration",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Importante: use message queues for async processing",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Archive this solution: {solution_detail}",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto memory leak in the application con fixing container health check configuration",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto container deployment failures con adding database indexes on frequently queried columns",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto API rate limiting errors con configuring proper CORS headers on server",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Archive this solution: {solution_detail}",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "I solved file upload timeout issues with fixing container health check configuration",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "I solved file upload timeout issues with using cache-aside pattern with TTL",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Importante: add retry logic with exponential backoff",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto authentication token expiration con using cache-aside pattern with TTL",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto slow database queries con increasing file upload timeout limits",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "I solved memory leak in the application with using cache-aside pattern with TTL",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Remember that implement rate limiting to prevent abuse",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "I solved API rate limiting errors with implementing refresh token mechanism",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto memory leak in the application con using cache-aside pattern with TTL",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho risolto file upload timeout issues con increasing file upload timeout limits",
+    "label": 0,
+    "label_name": "SAVE_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "I believe I left my smartphone at the hotel I was staying at.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Why do you require so many details about my identity?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Hi, Yesterdays i was unable to do online shopping as it was getting declined. Today I am facing the same issue. Please help me in this respect.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I am not able to verify my id. Why?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "What are the requirements to verify my identity?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Could you please freeze my card immediately?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I tried to buy something online yesterday but it wouldn't stop saying declined. Tried again today but same thing happened. What's Broken?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I didn't get the money I transferred",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Has my card been lost in delivery?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "What is needed to activate my card?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "how do i find out about transfers",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "How many disposable cards per person?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I do not recongize a payment in my account.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "How long does it typically take a transfer to go through?  I sent some money to a friend earlier today, and she really needs it.  It still is a pending transfer, even though I sent it a few hours ago.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I cannot remember my passcode, is there a way to retrieve it?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Should I just wait until the post office sends a change of address form?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I'm expecting a refund but it's no where to be seen",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "This card payment isn't is recognition.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Please help, the atm swallowed my card, what do I do?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "One of my payments was doubled",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I made a purchase earlier today but it is still listed as pending- when will it go through?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I just bought an item and would like to stop payment, is this possible?  The item has not been received yet.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "My card is still pending, I've been waiting a while.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "How do I create a disposable virtual card?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I was charge a fee that I wasn't told about",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Where can I find my card PIN?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Can you tell me what the cash withdrawal is in my statement?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "How long does it take to make an urgent transfer from China?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "My card is about to expire, what do I do?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "There has been an unusual withdrawal from my account, can you help?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "If my card payment isn't working what do I do?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Are there any limits on where I can use my card?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I purchased an item and the exchange rate was wrong",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Will you accept my other card from the U.S.?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "What ATMs will accept this type of card?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Which establishments will accept my card?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I don't understand why my payment was declined. I thought everything was ok.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "How can I change my Tholepin ?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Where is the transfer to my account?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Why do you have an identity check?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Can I use the apple watch to make a top-up?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I wanted $100 but only got $20",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Why didn't my top up work?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I can't do the verification.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "How can I know where my card will be accepted?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I cannot get my google pay to work.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "how do i dispute a payment I didnt make",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I bought something and I take issue with the exchange rate applied.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "I have tried to use my card several times and it does not work.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Where do I find the exchange rate?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Why was my payment declined? I keep trying my card but it's not working.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "want to know where funds come from",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "The date my card expires is coming up",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Why can't my beneficiary access my account?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "My identity can't be verified.",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "banking77"
+  },
+  {
+    "text": "Come posso deploy to production?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "How can I handle database transactions?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Aiuto con {technical_issue}",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "How can I handle API errors?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Cerco {search_target}",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "What was the fix for {past_issue}?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "How can I configure load balancing?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Come posso handle API errors?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Qual è il modo migliore per {task_description}?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "How can I optimize React performance?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Find documentation for {feature_name}",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Come posso implement user authentication?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Show me how to {action_description}",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Cerca {code_pattern}",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Come posso configure load balancing?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Devo trovare {information_need}",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "How can I debug memory issues?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Help with {technical_issue}",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Mostrami come {action_description}",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "How can I implement caching strategy?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Come posso debug memory issues?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "What's the best way to {task_description}?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "Come posso optimize React performance?",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "I need to find {information_need}",
+    "label": 1,
+    "label_name": "SEARCH_MEMORY",
+    "source": "synthetic"
+  },
+  {
+    "text": "roll a die please",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "what can i do to jump start my car",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "how long does it take to get to applebees in new york",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "what's the recipe for rice noodles",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "how do i say dinner in spanish",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "check today's calendar for meetings",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "provide me with ideas of things we can do in charlotte",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "can i use pasta sauce instead of tomato paste",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "i'm cooking an egg, timer for 3 mins",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "what kinds of subjects do you know about",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "can you translate hello into swedish for me",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "the birds fly with there wings",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "see how many days i've taken off so far",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "what's the nutritional info for a ganola bar",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "please clear out my whole to do list",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "how does one jump a car",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "what do i need when i go shopping",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "can you say what you just said again",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "i want you to quit the action",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "hey how old are you",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "do i have to get shots to travel to iraq",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "how much can i use on my visa",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "look up how much i earn annually",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "spell: dessert",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "what are the steps for setting up direct deposit for my paycheck",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "book a car rental to miami florida today",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "i need you to call michael at home",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "i need know my credit limit on my american express card",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "please tell me how to go about asking for a vacation",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "what do you think would be a good dinner",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "whats the cars mpg",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "am i eligible for a new credit card",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "how many points earned do i have with my american express card",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "can you tell me what my tire pressure is",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "who has seen my cellphone",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "let me hear all of the items on my to do list, please",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "do you have any information on how to open a new credit card",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "how many calories are in apples",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "tell me what date it is please",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "i need an uber for 5 to go to the concerthall",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "will you add a reminder for me",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "can i turn on the alarm now",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "blackberry pie instructions",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "what is 87 divided by 4",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "i'm going to need an uber to take 4 people to the mall",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "i wanna know some things to do in phoenix",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "yes, that is right",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "which food do you give your pets",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "what is on my schedule for tomorrow",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "i need to let my bank know i will be in america from april to may",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "what are my insurance advantages",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "i would like to put carrots on my list for shopping",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "did i buy too many donuts recently, like last week",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "how much is the irs going to get from me",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "for toby's, is it busy around six",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "clinc150"
+  },
+  {
+    "text": "OK, perfetto",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ottimo lavoro!",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "synthetic"
+  },
+  {
+    "text": "Capito",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "synthetic"
+  },
+  {
+    "text": "Suona bene",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "synthetic"
+  },
+  {
+    "text": "I understand",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "synthetic"
+  },
+  {
+    "text": "Alright",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "synthetic"
+  },
+  {
+    "text": "Ho capito",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "synthetic"
+  },
+  {
+    "text": "Grazie per l'aiuto",
+    "label": 2,
+    "label_name": "NO_ACTION",
+    "source": "synthetic"
+  }
+]

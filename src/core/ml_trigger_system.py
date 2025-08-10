@@ -30,7 +30,7 @@ try:
     import torch
     import torch.nn as nn
     import torch.optim as optim
-    from transformers import AutoTokenizer, AutoModel
+    from transformers import AutoTokenizer, AutoModel, AutoModelForSequenceClassification, pipeline
     HAS_TORCH = True
 except ImportError:
     HAS_TORCH = False
@@ -316,6 +316,123 @@ class FeatureExtractor:
             return float(similarity)
         except:
             return 0.5
+
+
+class HuggingFaceMLTriggerModel:
+    """Production-ready ML model using trained Hugging Face model"""
+    
+    def __init__(self, model_name: str = "PiGrieco/mcp-memory-auto-trigger-model"):
+        """Initialize with the trained HF model"""
+        self.model_name = model_name
+        self.classifier = None
+        self.class_mapping = {
+            "SAVE_MEMORY": ActionType.SAVE_MEMORY,
+            "SEARCH_MEMORY": ActionType.SEARCH_MEMORY, 
+            "NO_ACTION": ActionType.NO_ACTION
+        }
+        self.label_mapping = {0: "SAVE_MEMORY", 1: "SEARCH_MEMORY", 2: "NO_ACTION"}
+        self.confidence_threshold = 0.7  # Minimum confidence for prediction
+        
+        logger.info(f"Initializing HuggingFace ML model: {model_name}")
+        
+    def load_model(self) -> bool:
+        """Load the trained model from Hugging Face Hub"""
+        try:
+            if not HAS_TORCH:
+                logger.error("PyTorch not available for HuggingFace model")
+                return False
+                
+            logger.info(f"Loading model from HuggingFace Hub: {self.model_name}")
+            
+            # Load using pipeline for easy inference
+            device = -1  # Default to CPU
+            if HAS_TORCH:
+                try:
+                    import torch
+                    if torch.cuda.is_available():
+                        device = 0  # Use GPU if available
+                except:
+                    pass  # Keep CPU device
+                
+            self.classifier = pipeline(
+                "text-classification",
+                model=self.model_name,
+                tokenizer=self.model_name,
+                return_all_scores=True,
+                device=device
+            )
+            
+            logger.info("✅ HuggingFace model loaded successfully")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Failed to load HuggingFace model: {e}")
+            return False
+    
+    def predict(self, text: str, features: MLFeatures = None) -> Tuple[ActionType, float]:
+        """Make prediction using the HuggingFace model"""
+        if not self.classifier:
+            if not self.load_model():
+                return ActionType.NO_ACTION, 0.0
+        
+        try:
+            # Use the provided text for prediction
+            if not text or not text.strip():
+                return ActionType.NO_ACTION, 0.5
+            
+            # Get predictions with confidence scores
+            predictions = self.classifier(text)
+            
+            # Find the prediction with highest score
+            best_prediction = max(predictions, key=lambda x: x['score'])
+            predicted_label = best_prediction['label']
+            confidence = best_prediction['score']
+            
+            # Map to ActionType
+            action = self.class_mapping.get(predicted_label, ActionType.NO_ACTION)
+            
+            logger.debug(f"HF Prediction: {predicted_label} (confidence: {confidence:.3f})")
+            
+            return action, confidence
+            
+        except Exception as e:
+            logger.error(f"Prediction error: {e}")
+            return ActionType.NO_ACTION, 0.0
+    
+    def update_model(self, features: MLFeatures, action: ActionType, user_feedback: Optional[Dict[str, Any]] = None) -> bool:
+        """
+        Note: The HuggingFace model is pre-trained and frozen.
+        For online learning, we'd need to implement fine-tuning, which is complex.
+        For now, we log the feedback for future retraining.
+        """
+        try:
+            feedback_data = {
+                'timestamp': datetime.now(timezone.utc).isoformat(),
+                'predicted_action': action.value,
+                'user_feedback': user_feedback,
+                'features': asdict(features) if features else None
+            }
+            
+            # Log for future retraining
+            logger.info(f"Feedback logged for model improvement: {feedback_data}")
+            
+            # TODO: Implement periodic retraining pipeline
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error logging feedback: {e}")
+            return False
+    
+    def get_feature_importance(self) -> Dict[str, float]:
+        """
+        Feature importance for transformer models is complex.
+        Return placeholder values.
+        """
+        return {
+            "message_text": 0.8,
+            "conversation_context": 0.15,
+            "user_patterns": 0.05
+        }
 
 
 class MLTriggerModel:
@@ -634,9 +751,17 @@ class MLAutoTriggerSystem:
         # Initialize components
         self.feature_extractor = FeatureExtractor(embedding_service)
         
-        # Model directory
-        model_dir = Path(self.config.ml_trigger.model_cache_dir)
-        self.ml_model = MLTriggerModel(model_dir)
+        # Initialize ML model based on configuration
+        if self.config.ml_trigger.model_type == "huggingface":
+            self.ml_model = HuggingFaceMLTriggerModel(
+                model_name=self.config.ml_trigger.huggingface_model_name
+            )
+            logger.info(f"Using HuggingFace model: {self.config.ml_trigger.huggingface_model_name}")
+        else:
+            # Fallback to sklearn model
+            model_dir = Path(self.config.ml_trigger.model_cache_dir)
+            self.ml_model = MLTriggerModel(model_dir)
+            logger.info(f"Using sklearn model: {self.config.ml_trigger.model_type}")
         
         # User behavior tracking
         self.user_contexts = {}

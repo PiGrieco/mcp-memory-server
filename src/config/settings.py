@@ -160,8 +160,13 @@ class MLTriggerConfig:
     behavior_history_limit: int = field(default_factory=lambda: int(os.getenv("BEHAVIOR_HISTORY_LIMIT", "1000")))
     
     # Model parameters
-    model_type: str = field(default_factory=lambda: os.getenv("ML_MODEL_TYPE", "random_forest"))
+    model_type: str = field(default_factory=lambda: os.getenv("ML_MODEL_TYPE", "huggingface"))  # huggingface, random_forest, gradient_boosting
     model_params: Dict[str, Any] = field(default_factory=dict)
+    
+    # Hugging Face model configuration
+    huggingface_model_name: str = field(default_factory=lambda: os.getenv("HUGGINGFACE_MODEL_NAME", "PiGrieco/mcp-memory-auto-trigger-model"))
+    huggingface_token: Optional[str] = field(default_factory=lambda: os.getenv("HUGGINGFACE_TOKEN"))
+    use_gpu: bool = field(default_factory=lambda: os.getenv("ML_USE_GPU", "false").lower() == "true")
 
 
 @dataclass

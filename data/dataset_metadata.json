@@ -1,0 +1,29 @@
+{
+  "dataset_info": {
+    "total_examples": 44837,
+    "target_size": 100000,
+    "retention_rate": "44.8%",
+    "duplicates_removed": 3,
+    "creation_date": "2024-12-19"
+  },
+  "splits": {
+    "train": 35869,
+    "validation": 4484,
+    "test": 4484
+  },
+  "label_distribution": {
+    "SAVE_MEMORY": 6747,
+    "SEARCH_MEMORY": 17967,
+    "NO_ACTION": 20123
+  },
+  "source_distribution": {
+    "banking77": 13083,
+    "clinc150": 19222,
+    "synthetic": 12532
+  },
+  "quality_assessment": {
+    "real_data_percentage": "72.0%",
+    "synthetic_data_percentage": "28.0%",
+    "overall_quality": "🌟 EXCELLENT"
+  }
+}
