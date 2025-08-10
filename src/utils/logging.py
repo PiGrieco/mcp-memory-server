@@ -4,8 +4,31 @@ Logging utilities for MCP Memory Server
 
 import logging
 import time
+import sys
 from functools import wraps
-from typing import Any, Callable
+from typing import Any, Callable, Optional
+
+
+def setup_logging(config: Optional[Any] = None):
+    """Setup logging configuration"""
+    import os
+    
+    # Get log level from environment or config
+    log_level = os.getenv("LOG_LEVEL", "INFO").upper()
+    
+    # Configure logging
+    logging.basicConfig(
+        level=getattr(logging, log_level, logging.INFO),
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.StreamHandler(sys.stdout)
+        ]
+    )
+    
+    # Set specific loggers to avoid spam
+    logging.getLogger("transformers").setLevel(logging.WARNING)
+    logging.getLogger("torch").setLevel(logging.WARNING)
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 
 def get_logger(name: str) -> logging.Logger:

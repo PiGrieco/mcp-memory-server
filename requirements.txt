@@ -97,7 +97,8 @@ pandas>=2.0.0
 matplotlib>=3.7.0
 seaborn>=0.12.0
 
-# Optional: Advanced ML (uncomment if needed)
-# torch>=2.0.0
-# transformers>=4.30.0
-# tensorflow>=2.13.0
+# ML Dependencies for Auto-Trigger (required)
+torch>=2.1.0
+transformers>=4.30.0
+accelerate>=0.20.0
+datasets>=2.12.0
