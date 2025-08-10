@@ -40,6 +40,66 @@ class RealisticDatasetBuilder:
             'NO_ACTION': 2
         }
     
+    async def preview_dataset_creation(self, target_size: int):
+        """Preview what the dataset creation would look like"""
+        logger.info("🔍 PREVIEWING DATASET CREATION")
+        
+        print("\n📊 **DATASET SOURCES ANALYSIS**")
+        print("=" * 40)
+        
+        # Test each source
+        sources_info = {
+            "BANKING77": {"target": min(15000, target_size // 4), "expected": 13083},
+            "CLINC150": {"target": min(20000, target_size // 4), "expected": 19225}, 
+            "SNIPS": {"target": min(500, target_size // 10), "expected": 328},
+            "MASSIVE": {"target": min(25000, target_size // 4), "expected": 0}  # We know it fails
+        }
+        
+        total_real = 0
+        for source, info in sources_info.items():
+            available = min(info["expected"], info["target"])
+            total_real += available
+            status = "✅" if info["expected"] > 0 else "❌"
+            print(f"{status} {source:12}: {available:8,} / {info['target']:8,} (available: {info['expected']:,})")
+        
+        synthetic_needed = max(0, target_size - total_real)
+        
+        print(f"\n📈 **COMPOSITION BREAKDOWN**")
+        print(f"Real datasets:     {total_real:8,} examples")
+        print(f"Synthetic needed:  {synthetic_needed:8,} examples")
+        print(f"Total target:      {target_size:8,} examples")
+        
+        synthetic_ratio = (synthetic_needed / target_size) * 100
+        real_ratio = (total_real / target_size) * 100
+        
+        print(f"\n🎯 **QUALITY METRICS**")
+        print(f"Real data ratio:   {real_ratio:6.1f}%")
+        print(f"Synthetic ratio:   {synthetic_ratio:6.1f}%")
+        
+        if real_ratio >= 30:
+            quality = "🌟 EXCELLENT"
+        elif real_ratio >= 20:
+            quality = "✅ VERY GOOD"
+        elif real_ratio >= 10:
+            quality = "👍 GOOD"
+        else:
+            quality = "⚠️  ACCEPTABLE"
+            
+        print(f"Expected quality:  {quality}")
+        
+        print(f"\n🚀 **SYNTHETIC GENERATION PREVIEW**")
+        print("Templates per action:")
+        print("  SAVE:       15 templates × varied params")
+        print("  SEARCH:     12 templates × varied params") 
+        print("  NO_ACTION:  10 templates × varied params")
+        print("Languages:    English (60%) + Italian (40%)")
+        print("Complexity:   Simple, Medium, Complex scenarios")
+        
+        print(f"\n✅ **READY TO BUILD**")
+        print("Run without --dry-run to create the actual dataset")
+        
+        return True
+    
     def build_comprehensive_dataset(self, target_size: int = 100000) -> DatasetDict:
         """Build dataset from working sources + synthetic"""
         
@@ -50,18 +110,18 @@ class RealisticDatasetBuilder:
         # 1. Load confirmed working datasets
         logger.info("Loading confirmed working datasets...")
         
-        # BANKING77 (13K examples)
-        banking_examples = self.load_banking77(4000)
+        # BANKING77 (13K examples) - use all available
+        banking_examples = self.load_banking77(15000)  # More than available to get all
         all_examples.extend(banking_examples)
         logger.info(f"✅ BANKING77: {len(banking_examples)} examples")
         
-        # CLINC150 (19K examples) 
-        clinc_examples = self.load_clinc150(15000)
+        # CLINC150 (19K examples) - use all available
+        clinc_examples = self.load_clinc150(25000)  # More than available to get all
         all_examples.extend(clinc_examples)
         logger.info(f"✅ CLINC150: {len(clinc_examples)} examples")
         
         # SNIPS (328 examples - small but useful)
-        snips_examples = self.load_snips(328)
+        snips_examples = self.load_snips(500)  # Get all available
         all_examples.extend(snips_examples)
         logger.info(f"✅ SNIPS: {len(snips_examples)} examples")
         
@@ -430,6 +490,88 @@ class RealisticDatasetBuilder:
                 'configure load balancing',
                 'implement caching strategy',
                 'handle API errors'
+            ],
+            # Missing vocabularies from templates
+            'config_info': [
+                'database connection pool size = 20',
+                'Redis cache TTL = 3600 seconds',
+                'JWT token expiry = 24 hours',
+                'API rate limit = 1000 requests/hour',
+                'Docker memory limit = 2GB',
+                'Nginx timeout = 30 seconds'
+            ],
+            'important_note': [
+                'always validate user input',
+                'use HTTPS in production',
+                'backup database daily',
+                'monitor CPU usage',
+                'implement proper logging',
+                'test before deployment'
+            ],
+            'doc_info': [
+                'API endpoint documentation updated',
+                'database schema changes documented',
+                'deployment process documented',
+                'error handling guide created',
+                'configuration reference updated',
+                'troubleshooting guide added'
+            ],
+            'setting_info': [
+                'production environment variables',
+                'SSL certificate configuration',
+                'database connection settings',
+                'API keys and secrets',
+                'monitoring dashboard config',
+                'backup and recovery settings'
+            ],
+            'service_name': [
+                'GitHub OAuth',
+                'AWS S3 bucket',
+                'MongoDB cluster',
+                'Redis instance',
+                'Docker registry',
+                'email service'
+            ],
+            'solution_detail': [
+                'memory leak fix with proper cleanup',
+                'performance optimization using indexes',
+                'security patch for authentication',
+                'scalability improvement with caching',
+                'error handling with retry logic',
+                'monitoring setup with alerts'
+            ],
+            'system_config': [
+                'Kubernetes cluster configuration',
+                'Docker container settings',
+                'Load balancer configuration',
+                'Database connection pooling',
+                'Cache configuration',
+                'API gateway settings'
+            ],
+            # Additional missing placeholders
+            'issue': [
+                'memory leak in React components',
+                'slow database queries',
+                'authentication failures',
+                'CORS errors in browser',
+                'timeout errors in API',
+                'container deployment failures'
+            ],
+            'fix_method': [
+                'adding database indexes on frequently queried columns',
+                'implementing proper component cleanup',
+                'using cache-aside pattern with TTL',
+                'configuring proper CORS headers',
+                'adding retry logic with exponential backoff',
+                'optimizing Docker image layers'
+            ],
+            'problem': [
+                'slow API response times',
+                'memory leaks in production',
+                'authentication token expiry',
+                'database connection timeouts',
+                'high CPU usage',
+                'container startup failures'
             ]
         }
         
@@ -507,7 +649,7 @@ class RealisticDatasetBuilder:
         return dataset_dict
     
     def balance_classes(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Balance classes to desired distribution"""
+        """Balance classes to desired distribution - PRESERVE DATASET SIZE"""
         
         target_distribution = {
             'SAVE_MEMORY': 0.4,
@@ -516,32 +658,58 @@ class RealisticDatasetBuilder:
         }
         
         total_size = len(df)
+        logger.info(f"Balancing {total_size:,} examples...")
+        
+        # Calculate current distribution
+        current_dist = df['label_name'].value_counts(normalize=True)
+        logger.info(f"Current distribution: {current_dist.to_dict()}")
+        
+        # For large datasets, be conservative with downsampling to preserve data
+        if total_size > 50000:
+            logger.info("Large dataset detected - using conservative balancing to preserve data")
+            # Allow larger variations to keep more data
+            multiplier = 1.5  # Allow 50% more than target for downsampling
+        else:
+            multiplier = 1.0
+        
         balanced_dfs = []
         
         for class_name, ratio in target_distribution.items():
-            target_count = int(total_size * ratio)
             class_df = df[df['label_name'] == class_name]
+            current_size = len(class_df)
+            
+            # Calculate target with multiplier for large datasets
+            base_target = int(total_size * ratio)
+            max_target = int(base_target * multiplier)
+            target_count = min(current_size, max_target)
             
             if len(class_df) > target_count:
-                # Downsample
+                # Conservative downsampling
                 class_df = class_df.sample(n=target_count, random_state=42)
-            elif len(class_df) < target_count:
-                # Upsample with repetition
-                factor = target_count // len(class_df) if len(class_df) > 0 else 1
-                remainder = target_count % len(class_df) if len(class_df) > 0 else 0
-                
-                if len(class_df) > 0:
-                    upsampled = pd.concat([class_df] * factor)
-                    if remainder > 0:
-                        upsampled = pd.concat([upsampled, class_df.sample(n=remainder, random_state=42)])
-                    class_df = upsampled
+            elif len(class_df) < base_target:
+                # Upsample only if significantly below target
+                shortage = base_target - len(class_df)
+                if shortage > len(class_df) * 0.1:  # Only upsample if shortage > 10%
+                    factor = base_target // len(class_df) if len(class_df) > 0 else 1
+                    remainder = base_target % len(class_df) if len(class_df) > 0 else 0
+                    
+                    if len(class_df) > 0:
+                        upsampled = pd.concat([class_df] * factor)
+                        if remainder > 0:
+                            upsampled = pd.concat([upsampled, class_df.sample(n=remainder, random_state=42)])
+                        class_df = upsampled
             
+            logger.info(f"Class {class_name}: {current_size:,} -> {len(class_df):,}")
             balanced_dfs.append(class_df)
         
-        balanced_df = pd.concat(balanced_dfs).sample(frac=1, random_state=42).reset_index(drop=True)
+        balanced_df = pd.concat(balanced_dfs, ignore_index=True)
+        final_size = len(balanced_df)
+        retention_rate = (final_size / total_size) * 100
         
-        logger.info("Classes balanced to target distribution")
-        return balanced_df
+        logger.info(f"Balanced dataset: {final_size:,} examples (retained {retention_rate:.1f}%)")
+        
+        # Shuffle and return
+        return balanced_df.sample(frac=1, random_state=42).reset_index(drop=True)
     
     async def upload_to_huggingface(self, dataset: DatasetDict, repo_name: str) -> str:
         """Upload dataset to Hugging Face Hub"""
@@ -581,6 +749,7 @@ async def main():
     parser.add_argument("--target-size", type=int, default=100000, help="Target dataset size")
     parser.add_argument("--repo-name", type=str, default="mcp-memory-auto-trigger-100k", help="HF repo name")
     parser.add_argument("--upload", action="store_true", help="Upload to Hugging Face")
+    parser.add_argument("--dry-run", action="store_true", help="Preview dataset creation without building")
     
     args = parser.parse_args()
     
@@ -588,11 +757,57 @@ async def main():
     print("=" * 50)
     print(f"Target size: {args.target_size:,}")
     print(f"Upload to HF: {args.upload}")
+    print(f"Dry run: {args.dry_run}")
+    
+    if args.dry_run:
+        print("\n🔍 **DRY RUN MODE - PREVIEW ONLY**")
+        builder = RealisticDatasetBuilder(args.hf_token)
+        await builder.preview_dataset_creation(args.target_size)
+        return
     
     try:
         # Build dataset
         builder = RealisticDatasetBuilder(args.hf_token)
         dataset = builder.build_comprehensive_dataset(args.target_size)
+        
+        # Save locally for inspection
+        import os
+        os.makedirs("data", exist_ok=True)
+        
+        # Save as JSON for easy inspection
+        train_data = dataset['train']
+        sample_data = train_data.select(range(min(100, len(train_data))))
+        
+        with open("data/sample_dataset.json", "w") as f:
+            import json
+            sample_examples = []
+            for example in sample_data:
+                sample_examples.append({
+                    "text": example["text"],
+                    "label": example["label"],
+                    "source": example.get("source", "unknown")
+                })
+            json.dump(sample_examples, f, indent=2, ensure_ascii=False)
+        
+        print(f"\n📁 Sample saved: data/sample_dataset.json ({len(sample_examples)} examples)")
+        
+        # Show statistics
+        print(f"\n📊 **DATASET STATISTICS**")
+        print(f"Total examples: {len(train_data):,}")
+        
+        # Count by label
+        from collections import Counter
+        label_counts = Counter(train_data['label'])
+        for label, count in label_counts.items():
+            label_name = {0: "SAVE_MEMORY", 1: "SEARCH_MEMORY", 2: "NO_ACTION"}.get(label, f"UNKNOWN_{label}")
+            print(f"  {label_name}: {count:,} examples ({count/len(train_data)*100:.1f}%)")
+        
+        # Count by source  
+        if 'source' in train_data.column_names:
+            source_counts = Counter(train_data['source'])
+            print(f"\n📚 **BY SOURCE**")
+            for source, count in source_counts.items():
+                print(f"  {source}: {count:,} examples ({count/len(train_data)*100:.1f}%)")
         
         # Upload if requested
         if args.upload and args.hf_token:

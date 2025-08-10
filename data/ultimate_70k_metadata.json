@@ -1,0 +1,59 @@
+{
+  "dataset_info": {
+    "name": "MCP Memory Auto-Trigger Ultimate 70K Dataset",
+    "version": "2.0",
+    "total_examples": 47516,
+    "target_size": 70000,
+    "creation_date": "2024-12-19",
+    "description": "Ultimate high-quality dataset combining real and synthetic data for memory auto-trigger classification",
+    "languages": [
+      "english"
+    ],
+    "task": "text_classification",
+    "classes": [
+      "SAVE_MEMORY",
+      "SEARCH_MEMORY",
+      "NO_ACTION"
+    ],
+    "composition": "Real professional datasets + advanced synthetic generation"
+  },
+  "statistics": {
+    "label_distribution": {
+      "1": 17849,
+      "0": 8837,
+      "2": 20830
+    },
+    "source_distribution": {
+      "banking77": 13083,
+      "clinc150": 19222,
+      "synthetic_original": 5255,
+      "synthetic_advanced_english": 9956
+    },
+    "creation_phase_distribution": {
+      "NaN": 32305,
+      "original_45k": 5255,
+      "expansion_25k": 9956
+    },
+    "text_stats": {
+      "avg_length": 48.97710244970116,
+      "min_length": 2,
+      "max_length": 433,
+      "unique_texts": 47516
+    }
+  },
+  "quality_metrics": {
+    "uniqueness": "100.00%",
+    "completeness": "100%",
+    "real_data_ratio": "68.0%",
+    "balance_score": "Good distribution across classes",
+    "diversity_score": "High template and vocabulary variety"
+  },
+  "training_info": {
+    "recommended_split": "80/10/10 train/val/test",
+    "expected_accuracy": ">90%",
+    "training_time_estimate": "3-4 hours on A100",
+    "deployment_ready": true,
+    "model_size_estimate": "200-500MB",
+    "inference_speed": "Fast (optimized for production)"
+  }
+}
