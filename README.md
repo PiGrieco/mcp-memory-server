@@ -51,6 +51,10 @@ cd mcp-memory-server
 
 # One-click install
 python install.py
+
+# Or use professional setup
+pip install -e .
+make install
 ```
 
 ### **That's It! 🎉**
@@ -347,7 +351,11 @@ print('Keywords:', server.auto_trigger.keywords)
 ```
 
 ### **Get Help:**
-- 📚 [Full Documentation](docs/)
+- 📚 [Installation Guide](INSTALLATION.md)
+- 📖 [Usage Guide](USAGE.md)
+- 🔌 [API Reference](API.md)
+- 💾 [Changelog](CHANGELOG.md)
+- 🔧 [Examples](examples/)
 - 🐛 [Report Issues](https://github.com/PiGrieco/mcp-memory-server/issues)
 - 💬 [Community Discussions](https://github.com/PiGrieco/mcp-memory-server/discussions)
 

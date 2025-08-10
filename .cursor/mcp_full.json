@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "mcp-memory-server-full": {
+      "command": "python",
+      "args": ["/Users/piermatteogrieco/mcp-memory-server-1/main_full_simple.py"],
+      "env": {
+        "PYTHONPATH": "/Users/piermatteogrieco/mcp-memory-server-1"
+      }
+    }
+  }
+}

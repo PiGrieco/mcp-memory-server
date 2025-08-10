@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "mcp-memory-server": {
+      "command": "python",
+      "args": ["/Users/piermatteogrieco/mcp-memory-server-1/main.py"],
+      "env": {
+        "PYTHONPATH": "/Users/piermatteogrieco/mcp-memory-server-1",
+        "LOG_LEVEL": "INFO",
+        "MONGODB_URI": "mongodb://localhost:27017",
+        "PROJECT_NAME": "cursor_project",
+        "DATABASE_NAME": "mcp_memory_production",
+        "EMBEDDING_MODEL": "all-MiniLM-L6-v2"
+      }
+    }
+  }
+}
