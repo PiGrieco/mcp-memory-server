@@ -138,6 +138,33 @@ class SecurityConfig:
 
 
 @dataclass
+class MLTriggerConfig:
+    """ML-based trigger system configuration"""
+    # Operating mode: deterministic, ml_only, hybrid, learning
+    mode: str = field(default_factory=lambda: os.getenv("ML_TRIGGER_MODE", "hybrid"))
+    
+    # ML model configuration
+    ml_confidence_threshold: float = field(default_factory=lambda: float(os.getenv("ML_CONFIDENCE_THRESHOLD", "0.7")))
+    model_cache_dir: str = field(default_factory=lambda: os.getenv("ML_MODEL_CACHE_DIR", "./models/ml_triggers"))
+    
+    # Training configuration
+    training_enabled: bool = field(default_factory=lambda: os.getenv("ML_TRAINING_ENABLED", "true").lower() == "true")
+    retrain_interval: int = field(default_factory=lambda: int(os.getenv("ML_RETRAIN_INTERVAL", "50")))  # samples
+    
+    # Feature extraction
+    feature_extraction_timeout: float = field(default_factory=lambda: float(os.getenv("FEATURE_EXTRACTION_TIMEOUT", "5.0")))
+    max_conversation_history: int = field(default_factory=lambda: int(os.getenv("MAX_CONVERSATION_HISTORY", "10")))
+    
+    # User behavior tracking
+    user_behavior_tracking: bool = field(default_factory=lambda: os.getenv("USER_BEHAVIOR_TRACKING", "true").lower() == "true")
+    behavior_history_limit: int = field(default_factory=lambda: int(os.getenv("BEHAVIOR_HISTORY_LIMIT", "1000")))
+    
+    # Model parameters
+    model_type: str = field(default_factory=lambda: os.getenv("ML_MODEL_TYPE", "random_forest"))
+    model_params: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
 class Config:
     """Main configuration class"""
     database: DatabaseConfig = field(default_factory=DatabaseConfig)
@@ -145,6 +172,7 @@ class Config:
     server: ServerConfig = field(default_factory=ServerConfig)
     memory: MemoryConfig = field(default_factory=MemoryConfig)
     security: SecurityConfig = field(default_factory=SecurityConfig)
+    ml_trigger: MLTriggerConfig = field(default_factory=MLTriggerConfig)
     
     # Environment
     environment: Environment = field(default_factory=get_environment)
