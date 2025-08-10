@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "mcp-memory-ml": {
+      "command": "python",
+      "args": ["${PROJECT_ROOT}/main_auto.py"],
+      "env": {
+        "MONGODB_URI": "mongodb://localhost:27017/mcp_memory_ml",
+        "ML_MODEL_TYPE": "huggingface",
+        "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
+        "ML_TRIGGER_MODE": "hybrid"
+      }
+    }
+  }
+}

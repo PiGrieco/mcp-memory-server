@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "mcp-memory-simple": {
+      "command": "python",
+      "args": ["${PROJECT_ROOT}/simple_mcp_server.py"],
+      "env": {
+        "MONGODB_URI": "mongodb://localhost:27017/mcp_memory_local"
+      }
+    }
+  }
+}
