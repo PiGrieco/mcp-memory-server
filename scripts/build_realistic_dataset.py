@@ -241,9 +241,10 @@ class RealisticDatasetBuilder:
         
         # Try different approaches for MASSIVE
         approaches = [
+            lambda: load_dataset("AmazonScience/massive", "all", use_auth_token=self.hf_token),
+            lambda: load_dataset("AmazonScience/massive", "all", trust_remote_code=True, use_auth_token=self.hf_token),
             lambda: load_dataset("AmazonScience/massive", use_auth_token=self.hf_token),
-            lambda: load_dataset("AmazonScience/massive", "en", use_auth_token=self.hf_token),
-            lambda: load_dataset("AmazonScience/massive", streaming=True, use_auth_token=self.hf_token)
+            lambda: load_dataset("AmazonScience/massive", "en-US", use_auth_token=self.hf_token)
         ]
         
         for i, approach in enumerate(approaches):
