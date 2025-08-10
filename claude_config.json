@@ -2,7 +2,7 @@
   "mcpServers": {
     "mcp-memory-claude": {
       "command": "python",
-      "args": ["/Users/piermatteogrieco/mcp-memory-server-production/claude_smart_server.py"],
+      "args": ["/Users/piermatteogrieco/mcp-memory-server-production/claude_mcp_server.py"],
       "env": {
         "ML_MODEL_TYPE": "huggingface",
         "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
