@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "mcp-memory-claude": {
+      "command": "python",
+      "args": ["/Users/piermatteogrieco/mcp-memory-server-production/claude_smart_server.py"],
+      "env": {
+        "ML_MODEL_TYPE": "huggingface",
+        "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
+        "AUTO_TRIGGER_ENABLED": "true",
+        "CLAUDE_MODE": "true",
+        "LOG_LEVEL": "INFO",
+        "MEMORY_THRESHOLD": "0.6",
+        "SEMANTIC_THRESHOLD": "0.8"
+      }
+    }
+  }
+}
