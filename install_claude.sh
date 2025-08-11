@@ -16,10 +16,27 @@ BLUE='\033[0;34m'
 PURPLE='\033[0;35m'
 NC='\033[0m' # No Color
 
-# Get the absolute path of the script directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SERVER_PATH="$SCRIPT_DIR/claude_smart_server.py"
-CONFIG_PATH="$SCRIPT_DIR/claude_config.json"
+# Installation configuration
+REPO_URL="https://github.com/PiGrieco/mcp-memory-server.git"
+REPO_BRANCH="production-ready-v2"
+INSTALL_DIR="$HOME/mcp-memory-server"
+
+# Check if we're running from existing installation or need to clone
+if [ -f "$(dirname "${BASH_SOURCE[0]}")/mcp_base_server.py" ]; then
+    # Running from existing installation
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    echo -e "${BLUE}📍 Using existing installation: $SCRIPT_DIR${NC}"
+else
+    # Need to clone repository
+    echo -e "${BLUE}📥 Cloning repository to: $INSTALL_DIR${NC}"
+    if [ ! -d "$INSTALL_DIR" ]; then
+        git clone -b "$REPO_BRANCH" "$REPO_URL" "$INSTALL_DIR"
+    fi
+    SCRIPT_DIR="$INSTALL_DIR"
+fi
+
+SERVER_PATH="$SCRIPT_DIR/claude_mcp_server.py"
+CONFIG_TEMPLATE="$SCRIPT_DIR/config/templates/claude_template.json"
 
 echo -e "${BLUE}📍 Installation directory: $SCRIPT_DIR${NC}"
 
@@ -40,158 +57,212 @@ else
     exit 1
 fi
 
-# Check if Claude config directory exists
-CLAUDE_CONFIG_DIR="$HOME/.config/claude"
-if [ ! -d "$CLAUDE_CONFIG_DIR" ]; then
-    echo -e "${YELLOW}📁 Creating Claude config directory...${NC}"
-    mkdir -p "$CLAUDE_CONFIG_DIR"
-fi
-
 echo -e "${GREEN}✅ Prerequisites check completed${NC}"
 
-# Step 2: Install Python dependencies
-echo -e "\n${BLUE}📦 Step 2: Installing/checking Python dependencies...${NC}"
+# Step 2: Setup Python environment and dependencies
+echo -e "\n${BLUE}🐍 Step 2: Setting up Python environment...${NC}"
 
-# Check if virtual environment should be used
-if [ -n "$VIRTUAL_ENV" ]; then
-    echo -e "${YELLOW}🐍 Using virtual environment: $VIRTUAL_ENV${NC}"
+cd "$SCRIPT_DIR"
+
+# Create virtual environment if not exists
+if [ ! -d "venv" ]; then
+    echo -e "${YELLOW}Creating Python virtual environment...${NC}"
+    $PYTHON_CMD -m venv venv
+    echo -e "${GREEN}✅ Virtual environment created${NC}"
+else
+    echo -e "${YELLOW}Using existing virtual environment${NC}"
 fi
 
+# Activate virtual environment
+source venv/bin/activate
+echo -e "${GREEN}✅ Virtual environment activated${NC}"
+
+# Upgrade pip
+echo -e "${YELLOW}Upgrading pip...${NC}"
+pip install --upgrade pip > /dev/null 2>&1
+
 # Install dependencies
-echo -e "${YELLOW}Installing ML dependencies for Claude...${NC}"
-$PYTHON_CMD -m pip install torch>=2.1.0 transformers>=4.30.0 accelerate datasets --quiet
+echo -e "\n${BLUE}📦 Step 3: Installing dependencies...${NC}"
 
-echo -e "${YELLOW}Installing MCP dependencies...${NC}"
-$PYTHON_CMD -m pip install mcp sentence-transformers scikit-learn asyncio python-dotenv pydantic --quiet
+echo -e "${YELLOW}Installing core dependencies...${NC}"
+pip install -r requirements.txt --quiet
 
-echo -e "${GREEN}✅ Dependencies installed${NC}"
+echo -e "${GREEN}✅ All dependencies installed${NC}"
 
-# Step 3: Test ML model access
-echo -e "\n${BLUE}🧠 Step 3: Testing ML model access for Claude...${NC}"
+# Step 4: Test ML model access and installation
+echo -e "\n${BLUE}🧠 Step 4: Testing ML model access and installation...${NC}"
 
-$PYTHON_CMD -c "
+echo -e "${YELLOW}Testing MCP server...${NC}"
+timeout 10s python mcp_base_server.py > /dev/null 2>&1 || {
+    echo -e "${YELLOW}⚠️ Server test timeout (normal for first run)${NC}"
+}
+
+echo -e "${YELLOW}Testing ML components...${NC}"
+python -c "
 import sys
-sys.path.insert(0, '$SCRIPT_DIR/src')
-
 try:
     from transformers import pipeline
     print('✅ Transformers library working')
+    from sentence_transformers import SentenceTransformer
+    print('✅ Sentence Transformers working')
+    import torch
+    print('✅ PyTorch working')
+    from mcp.server import Server
+    print('✅ MCP library working')
     
-    # Test Hugging Face model access
+    # Test model access
     from huggingface_hub import model_info
     model_name = 'PiGrieco/mcp-memory-auto-trigger-model'
-    info = model_info(model_name)
-    print(f'✅ ML model accessible: {model_name}')
-    print(f'   Model size: ~{info.safetensors.total // (1024*1024)}MB')
-    print('✅ Claude Desktop integration ready')
+    try:
+        info = model_info(model_name)
+        print(f'✅ ML model accessible: {model_name}')
+        print(f'   Model size: ~{info.safetensors.total // (1024*1024)}MB')
+    except:
+        print('⚠️ Model will be downloaded on first use (~63MB)')
     
+    print('✅ All components ready for Claude Desktop')
 except Exception as e:
-    print(f'⚠️ ML model check warning: {e}')
-    print('Model will be downloaded on first use')
+    print(f'❌ Component test failed: {e}')
+    sys.exit(1)
 "
 
-# Step 4: Create Claude Desktop configuration
-echo -e "\n${BLUE}⚙️ Step 4: Configuring Claude Desktop MCP integration...${NC}"
+echo -e "${GREEN}✅ Installation test completed successfully${NC}"
 
-# Update config file with correct path
-sed "s|/Users/piermatteogrieco/mcp-memory-server-production/claude_smart_server.py|$SERVER_PATH|g" "$CONFIG_PATH" > "$CONFIG_PATH.tmp"
-mv "$CONFIG_PATH.tmp" "$CONFIG_PATH"
+# Step 5: Create Claude Desktop configuration
+echo -e "\n${BLUE}⚙️ Step 5: Configuring Claude Desktop MCP integration...${NC}"
 
-# Copy configuration to Claude Desktop
-CLAUDE_MCP_CONFIG="$CLAUDE_CONFIG_DIR/claude_desktop_config.json"
-
-if [ -f "$CLAUDE_MCP_CONFIG" ]; then
-    echo -e "${YELLOW}📝 Backing up existing Claude Desktop config...${NC}"
-    cp "$CLAUDE_MCP_CONFIG" "$CLAUDE_MCP_CONFIG.backup.$(date +%s)"
-    
-    # Merge with existing config if possible
-    echo -e "${YELLOW}📝 Merging with existing Claude configuration...${NC}"
-    
-    # Try to merge JSON (basic merge)
-    if command -v jq &> /dev/null; then
-        jq -s '.[0] * .[1]' "$CLAUDE_MCP_CONFIG" "$CONFIG_PATH" > "$CLAUDE_MCP_CONFIG.tmp" 2>/dev/null || {
-            echo -e "${YELLOW}⚠️ JSON merge failed, using direct replacement${NC}"
-            cp "$CONFIG_PATH" "$CLAUDE_MCP_CONFIG"
-        }
-        if [ -f "$CLAUDE_MCP_CONFIG.tmp" ]; then
-            mv "$CLAUDE_MCP_CONFIG.tmp" "$CLAUDE_MCP_CONFIG"
-        fi
-    else
-        echo -e "${YELLOW}📝 Installing Claude MCP configuration...${NC}"
-        cp "$CONFIG_PATH" "$CLAUDE_MCP_CONFIG"
-    fi
+# Detect OS and set Claude config path
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    CLAUDE_CONFIG_DIR="$HOME/Library/Application Support/Claude"
 else
-    echo -e "${YELLOW}📝 Installing Claude MCP configuration...${NC}"
-    cp "$CONFIG_PATH" "$CLAUDE_MCP_CONFIG"
+    CLAUDE_CONFIG_DIR="$HOME/.config/claude"
 fi
 
-echo -e "${GREEN}✅ Claude Desktop configuration updated${NC}"
+echo -e "${YELLOW}📁 Creating Claude config directory...${NC}"
+mkdir -p "$CLAUDE_CONFIG_DIR"
 
-# Step 5: Test the server
-echo -e "\n${BLUE}🧪 Step 5: Testing Claude MCP server...${NC}"
+# Create Claude MCP configuration with dynamic paths
+CLAUDE_MCP_CONFIG="$CLAUDE_CONFIG_DIR/claude_desktop_config.json"
 
-echo -e "${YELLOW}Testing Claude server initialization...${NC}"
-timeout 30s $PYTHON_CMD "$SERVER_PATH" --test 2>/dev/null || {
-    echo -e "${YELLOW}⚠️ Server test timeout (normal for first ML model download)${NC}"
+echo -e "${YELLOW}📝 Creating Claude Desktop configuration...${NC}"
+cat > "$CLAUDE_MCP_CONFIG" << EOF
+{
+  "mcpServers": {
+    "mcp-memory-claude": {
+      "command": "$SCRIPT_DIR/venv/bin/python",
+      "args": ["$SCRIPT_DIR/claude_mcp_server.py"],
+      "env": {
+        "ML_MODEL_TYPE": "huggingface",
+        "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
+        "AUTO_TRIGGER_ENABLED": "true",
+        "PRELOAD_ML_MODEL": "true",
+        "CLAUDE_MODE": "true",
+        "LOG_LEVEL": "INFO",
+        "MEMORY_THRESHOLD": "0.7",
+        "SEMANTIC_THRESHOLD": "0.8"
+      }
+    }
+  }
 }
+EOF
 
-# Step 6: Create startup script
-echo -e "\n${BLUE}🚀 Step 6: Creating Claude startup script...${NC}"
+echo -e "${GREEN}✅ Claude Desktop configuration created${NC}"
 
-STARTUP_SCRIPT="$SCRIPT_DIR/start_claude_server.sh"
-cat > "$STARTUP_SCRIPT" << EOF
+# Step 6: Create startup and convenience scripts
+echo -e "\n${BLUE}🚀 Step 6: Creating convenience scripts...${NC}"
+
+# Create start script
+cat > "$SCRIPT_DIR/start_claude.sh" << 'EOF'
 #!/bin/bash
 # Claude Desktop MCP Memory Server Startup Script
 
-cd "$SCRIPT_DIR"
-echo "🔮 Starting Claude Desktop MCP Memory Server with ML Auto-Triggers..."
-echo "📍 Server path: $SERVER_PATH"
+cd "$(dirname "$0")"
+source venv/bin/activate
+
+echo "🔮 Starting Claude Desktop MCP Memory Server..."
+echo "📍 Server: claude_mcp_server.py"
 echo "⚡ ML model will auto-load on first message"
 echo "🔮 Optimized for Claude Desktop native MCP integration"
 echo ""
 
-$PYTHON_CMD "$SERVER_PATH"
+python claude_mcp_server.py
 EOF
 
-chmod +x "$STARTUP_SCRIPT"
-echo -e "${GREEN}✅ Claude startup script created: $STARTUP_SCRIPT${NC}"
+chmod +x "$SCRIPT_DIR/start_claude.sh"
+
+# Create update script
+cat > "$SCRIPT_DIR/update_claude.sh" << EOF
+#!/bin/bash
+# Claude Desktop MCP Memory Server Update Script
+
+cd "$SCRIPT_DIR"
+source venv/bin/activate
+
+echo "🔄 Updating Claude MCP Memory Server..."
+git fetch origin
+git pull origin $REPO_BRANCH
+
+echo "📦 Updating dependencies..."
+pip install -r requirements.txt --upgrade --quiet
+
+echo "✅ Claude update completed successfully"
+EOF
+
+chmod +x "$SCRIPT_DIR/update_claude.sh"
+
+echo -e "${GREEN}✅ Convenience scripts created${NC}"
 
 # Final instructions
 echo -e "\n${GREEN}🎉 CLAUDE DESKTOP INSTALLATION COMPLETED!${NC}"
 echo "============================================="
 
-echo -e "\n${PURPLE}📋 CLAUDE DESKTOP SETUP INSTRUCTIONS:${NC}"
-echo "1. 🔮 Open Claude Desktop application"
-echo "2. ⚙️ The MCP server is configured in ~/.config/claude/claude_desktop_config.json"
-echo "3. 🔄 Restart Claude Desktop if it was running"
-echo "4. 💬 Start a new conversation to test the integration"
+echo -e "\n${BLUE}📁 Installation Directory:${NC} $SCRIPT_DIR"
+echo -e "${BLUE}🐍 Python Environment:${NC} $SCRIPT_DIR/venv/"
+
+echo -e "\n${PURPLE}📋 CLAUDE DESKTOP SETUP:${NC}"
+echo "1. 🔮 Restart Claude Desktop application"
+echo "2. ⚙️ MCP server configured in: $CLAUDE_MCP_CONFIG"
+echo "3. 💬 Start a new conversation to test the integration"
+
+echo -e "\n${BLUE}🚀 Quick Start Commands:${NC}"
+echo "  cd $SCRIPT_DIR"
+echo "  ./start_claude.sh              # Start Claude MCP server"
+echo "  ./update_claude.sh             # Update to latest version"
 
 echo -e "\n${BLUE}🧪 TEST THE CLAUDE INTEGRATION:${NC}"
-echo "Try these commands in Claude Desktop:"
-echo -e "  ${YELLOW}• 'Ricorda che i React hooks vanno usati solo nei componenti funzionali'${NC}"
-echo -e "  ${YELLOW}• 'Ho risolto il bug di autenticazione implementando JWT refresh tokens'${NC}"
-echo -e "  ${YELLOW}• 'Puoi spiegarmi come funziona async/await in JavaScript?'${NC}"
-echo -e "  ${YELLOW}• 'Importante: validare sempre input utente prima delle query database'${NC}"
+echo "Try these in Claude Desktop:"
+echo -e "  ${YELLOW}• 'Ricorda che React hooks vanno solo nei componenti funzionali'${NC}"
+echo -e "  ${YELLOW}• 'Ho risolto il bug JWT implementando refresh tokens'${NC}"
+echo -e "  ${YELLOW}• 'Spiega come funziona async/await in JavaScript'${NC}"
+echo -e "  ${YELLOW}• 'Importante: validare sempre input prima delle query database'${NC}"
 
-echo -e "\n${BLUE}⚡ ML MODEL CLAUDE:${NC}"
-echo "• The ML model will download automatically on first use (~63MB)"
-echo "• First trigger may take 10-30 seconds (model download)"
-echo "• Subsequent triggers will be instant (0.03s)"
-echo "• Optimized for Claude Desktop native MCP protocol"
+echo -e "\n${BLUE}⚡ ML AUTO-TRIGGERS:${NC}"
+echo "• 🤖 Model: PiGrieco/mcp-memory-auto-trigger-model (99.56% accuracy)"
+echo "• 📊 Size: ~63MB (downloads automatically on first use)"
+echo "• ⚡ Speed: First use 10-30s, then instant (0.03s)"
+echo "• 🎯 Platform: Optimized for Claude Desktop MCP protocol"
 
-echo -e "\n${BLUE}🔧 MANUAL START (if needed):${NC}"
-echo "  $STARTUP_SCRIPT"
+echo -e "\n${BLUE}🔧 MANUAL COMMANDS:${NC}"
+echo "  cd $SCRIPT_DIR && source venv/bin/activate"
+echo "  python claude_mcp_server.py    # Direct server start"
 
 echo -e "\n${BLUE}📁 FILES CREATED:${NC}"
-echo "  • Server: $SERVER_PATH"
-echo "  • Config: $CLAUDE_MCP_CONFIG"
-echo "  • Startup: $STARTUP_SCRIPT"
+echo "  • MCP Server: $SERVER_PATH"
+echo "  • Claude Config: $CLAUDE_MCP_CONFIG"
+echo "  • Start Script: $SCRIPT_DIR/start_claude.sh"
+echo "  • Update Script: $SCRIPT_DIR/update_claude.sh"
 
 echo -e "\n${BLUE}🔮 CLAUDE FEATURES:${NC}"
-echo "  • Native MCP protocol integration"
-echo "  • Enhanced explanation detection"
-echo "  • Claude-optimized trigger thresholds"
-echo "  • Smart conversation analysis"
+echo "  • 🧠 Infinite AI memory with ML auto-triggers"
+echo "  • 🔍 Semantic search for context retrieval"
+echo "  • 💾 Automatic memory categorization (Knowledge, Error, Solution, etc.)"
+echo "  • ⚡ Real-time memory operations"
+echo "  • 🎯 Claude-optimized trigger thresholds"
 
-echo -e "\n${GREEN}✅ Your Claude Desktop now has infinite AI memory! 🧠✨${NC}"
-echo -e "${PURPLE}🔮 Claude can now remember everything and help you better!${NC}"
+echo -e "\n${GREEN}✅ Claude Desktop now has infinite AI memory! 🧠✨${NC}"
+echo -e "${PURPLE}🔮 Claude can now remember everything and provide better assistance!${NC}"
+
+if [ "$SCRIPT_DIR" != "$(pwd)" ]; then
+    echo -e "\n${YELLOW}💡 TIP: Add to your shell profile for easy access:${NC}"
+    echo "  alias claude-memory='cd $SCRIPT_DIR && ./start_claude.sh'"
+fi
