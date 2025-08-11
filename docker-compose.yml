@@ -1,0 +1,30 @@
+version: "3.9"
+services:
+  memory-server:
+    build: .
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      HF_HOME: ${HF_HOME:-/models}
+      AUTO_TRIGGER_MODEL: ${AUTO_TRIGGER_MODEL:-PiGrieco/mcp-memory-auto-trigger-model}
+    volumes:
+      - hf-cache:${HF_HOME:-/models}
+    # Per restare minimal NON abilito DB qui; quando vorrai:
+    # depends_on:
+    #   - mongo
+
+  # mongo:
+  #   image: mongo:7
+  #   restart: unless-stopped
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - mongo-data:/data/db
+
+volumes:
+  hf-cache:
+    driver: local
+  # mongo-data:
+  #   driver: local

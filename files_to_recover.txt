@@ -1,1 +1,0 @@
-install.sh install_cursor.sh install_claude.sh install_gpt.sh install_windsurf.sh install_lovable.sh install_replit.sh start_universal.sh
