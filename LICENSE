@@ -1,0 +1,121 @@
+MIT License
+
+Copyright (c) 2024 PiGrieco and Contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## Third-Party Licenses
+
+This project includes third-party software components with their own licenses:
+
+### HuggingFace Transformers
+- License: Apache License 2.0
+- Repository: https://github.com/huggingface/transformers
+- Copyright: Copyright 2018- The Hugging Face team
+
+### Sentence Transformers
+- License: Apache License 2.0
+- Repository: https://github.com/UKPLab/sentence-transformers
+- Copyright: Copyright 2019 Nils Reimers
+
+### PyMongo
+- License: Apache License 2.0
+- Repository: https://github.com/mongodb/mongo-python-driver
+- Copyright: Copyright 2009-2024 MongoDB, Inc.
+
+### FastAPI
+- License: MIT License
+- Repository: https://github.com/tiangolo/fastapi
+- Copyright: Copyright (c) 2018 Sebastián Ramírez
+
+### Pydantic
+- License: MIT License
+- Repository: https://github.com/pydantic/pydantic
+- Copyright: Copyright (c) 2017 to present Pydantic
+
+### NumPy
+- License: BSD 3-Clause License
+- Repository: https://github.com/numpy/numpy
+- Copyright: Copyright (c) 2005-2024, NumPy Developers
+
+### scikit-learn
+- License: BSD 3-Clause License
+- Repository: https://github.com/scikit-learn/scikit-learn
+- Copyright: Copyright (c) 2007-2024 The scikit-learn developers
+
+### Docker
+- License: Apache License 2.0
+- Repository: https://github.com/docker/docker
+- Copyright: Copyright 2012-2024 Docker, Inc.
+
+---
+
+## Model Licenses
+
+### Custom ML Models
+The pre-trained ML models used in this project (`PiGrieco/mcp-memory-auto-trigger-model`) 
+are licensed under the MIT License and are freely available for use, modification, 
+and distribution.
+
+### Base Models
+This project may use base models from HuggingFace Hub. Please refer to the specific 
+model cards for their individual licenses:
+- Most models are under Apache 2.0 or MIT licenses
+- Some models may have specific usage restrictions
+- Commercial use permissions vary by model
+
+---
+
+## Data and Privacy
+
+This software is designed to process and store conversational data and memory content. 
+Users are responsible for:
+
+1. **Data Compliance**: Ensuring compliance with applicable data protection laws 
+   (GDPR, CCPA, etc.)
+2. **User Consent**: Obtaining appropriate consent for data processing
+3. **Data Security**: Implementing appropriate security measures for stored data
+4. **Data Retention**: Managing data retention according to legal requirements
+
+---
+
+## Attribution
+
+If you use this software in your project, we appreciate attribution. You can use:
+
+```
+This project uses MCP Memory Server (https://github.com/PiGrieco/mcp-memory-server)
+Licensed under MIT License
+```
+
+---
+
+## Contact
+
+For licensing questions or clarifications, please contact:
+- Email: licensing@mcp-memory-server.com
+- GitHub Issues: https://github.com/PiGrieco/mcp-memory-server/issues
+
+---
+
+**Note**: This license applies to the MCP Memory Server codebase. Individual components, 
+models, and dependencies may have their own licenses. Please review the `requirements.txt` 
+file and component documentation for complete licensing information.
