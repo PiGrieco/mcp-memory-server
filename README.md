@@ -71,8 +71,7 @@ Simply tell your AI assistant:
 **Examples:**
 - "Install this: https://github.com/PiGrieco/mcp-memory-server on Cursor"
 - "Install this: https://github.com/PiGrieco/mcp-memory-server on Claude"
-- "Install this: https://github.com/PiGrieco/mcp-memory-server on GPT"
-
+  
 ### **What Happens During Installation:**
 
 When you give the prompt, your AI assistant will:
@@ -92,7 +91,6 @@ If the prompt method doesn't work, use direct commands:
 |----------|---------------------|
 | **🎯 Cursor IDE** | `curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_cursor.sh \| bash` |
 | **🔮 Claude Desktop** | `curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_claude.sh \| bash` |
-| **🤖 GPT/OpenAI** | `curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_gpt.sh \| bash` |
 | **🌪️ Windsurf IDE** | `curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_windsurf.sh \| bash` |
 | **💙 Lovable Platform** | `curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_lovable.sh \| bash` |
 | **⚡ Replit Cloud** | `curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_replit.sh \| bash` |
