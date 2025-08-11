@@ -15,12 +15,27 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Get the absolute path of the script directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Installation configuration
+REPO_URL="https://github.com/PiGrieco/mcp-memory-server.git"
+REPO_BRANCH="production-ready-v2"
+INSTALL_DIR="$HOME/mcp-memory-server"
+
+# Check if we're running from existing installation or need to clone
+if [ -f "$(dirname "${BASH_SOURCE[0]}")/mcp_base_server.py" ]; then
+    # Running from existing installation
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    echo -e "${BLUE}📍 Using existing installation: $SCRIPT_DIR${NC}"
+else
+    # Need to clone repository
+    echo -e "${BLUE}📥 Cloning repository to: $INSTALL_DIR${NC}"
+    if [ ! -d "$INSTALL_DIR" ]; then
+        git clone -b "$REPO_BRANCH" "$REPO_URL" "$INSTALL_DIR"
+    fi
+    SCRIPT_DIR="$INSTALL_DIR"
+fi
+
 SERVER_PATH="$SCRIPT_DIR/cursor_mcp_server.py"
 CONFIG_PATH="$SCRIPT_DIR/cursor_config.json"
-
-echo -e "${BLUE}📍 Installation directory: $SCRIPT_DIR${NC}"
 
 # Step 1: Check prerequisites
 echo -e "\n${BLUE}🔍 Step 1: Checking prerequisites...${NC}"

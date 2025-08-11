@@ -67,45 +67,58 @@ graph TB
 
 ## 🚀 **Quick Start**
 
-### **Prerequisites**
+### **⚡ One-Command Installation from GitHub**
 
-- Python 3.8+
-- Docker & Docker Compose (recommended)
-- MongoDB Atlas account (or local MongoDB)
-
-### **⚡ 1-Minute Setup (Docker)**
+Install directly from GitHub repository with one command:
 
 ```bash
-# Clone the repository
-git clone https://github.com/PiGrieco/mcp-memory-server.git
-cd mcp-memory-server
-
-# Quick setup with Docker
-./docker-setup.sh
-
-# Start the complete system
-docker-compose up -d
-
-# Verify everything is running
-docker-compose ps
+curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install.sh | bash
 ```
 
-### **🔧 Manual Setup**
+This will:
+- ✅ Clone the repository to `~/mcp-memory-server`
+- ✅ Set up Python virtual environment
+- ✅ Install all dependencies
+- ✅ Configure your chosen AI platform
+- ✅ Create convenience scripts
+
+### **🎯 Platform-Specific Install**
+
+**For Cursor IDE:**
+```bash
+curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_cursor.sh | bash
+```
+
+**For Claude Desktop:**
+```bash
+curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_claude.sh | bash
+```
+
+### **🔧 Manual Installation**
 
 ```bash
-# Clone and install
-git clone https://github.com/PiGrieco/mcp-memory-server.git
+# Clone repository
+git clone -b production-ready-v2 https://github.com/PiGrieco/mcp-memory-server.git
 cd mcp-memory-server
+
+# Set up environment
+python3 -m venv venv
+source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Configure environment
-cp .env.example .env
-# Edit .env with your MongoDB URI and settings
+# Start server
+python mcp_base_server.py
+```
 
-# Run the server
-python main.py
+### **🐳 Docker Setup (Alternative)**
+
+```bash
+# Clone and start with Docker
+git clone https://github.com/PiGrieco/mcp-memory-server.git
+cd mcp-memory-server
+docker-compose up -d
 ```
 
 ---

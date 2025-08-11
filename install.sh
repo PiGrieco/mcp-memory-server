@@ -1,6 +1,7 @@
 #!/bin/bash
-# One-Click Installer for MCP Memory Server Auto-Trigger
-# Usage: curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/main/install.sh | bash
+
+# 🧠 MCP Memory Server - Universal GitHub Installer
+# One-command installation from GitHub repository
 
 set -e
 
@@ -9,305 +10,349 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
 NC='\033[0m' # No Color
 
-# Helper functions
-print_header() {
-    echo -e "${BLUE}🚀 MCP Memory Server Auto-Trigger Installer${NC}"
-    echo -e "${BLUE}===============================================${NC}"
-}
+# Configuration
+REPO_URL="https://github.com/PiGrieco/mcp-memory-server.git"
+REPO_BRANCH="production-ready-v2"
+INSTALL_DIR="$HOME/mcp-memory-server"
+PYTHON_CMD=""
 
-print_step() {
-    echo -e "\n${YELLOW}🔸 Step $1: $2${NC}"
-}
+echo -e "${PURPLE}🧠 MCP Memory Server - GitHub Installation${NC}"
+echo -e "${PURPLE}============================================${NC}"
+echo -e "${BLUE}📦 Repository: $REPO_URL${NC}"
+echo -e "${BLUE}🌿 Branch: $REPO_BRANCH${NC}"
+echo -e "${BLUE}📁 Install Directory: $INSTALL_DIR${NC}"
+echo ""
 
-print_success() {
+# Function to print status
+print_status() {
     echo -e "${GREEN}✅ $1${NC}"
-}
-
-print_error() {
-    echo -e "${RED}❌ $1${NC}"
 }
 
 print_warning() {
     echo -e "${YELLOW}⚠️ $1${NC}"
 }
 
-# Check if command exists
-command_exists() {
-    command -v "$1" >/dev/null 2>&1
+print_error() {
+    echo -e "${RED}❌ $1${NC}"
 }
+
+print_info() {
+    echo -e "${BLUE}ℹ️ $1${NC}"
+}
+
+# Step 1: Check prerequisites
+echo -e "${BLUE}🔍 Step 1: Checking prerequisites...${NC}"
+
+# Check Git
+if ! command -v git &> /dev/null; then
+    print_error "Git not found. Please install Git first:"
+    echo "  macOS: brew install git"
+    echo "  Ubuntu/Debian: sudo apt-get install git"
+    echo "  CentOS/RHEL: sudo yum install git"
+    exit 1
+fi
+print_status "Git found: $(git --version)"
+
+# Check Python
+if command -v python3 &> /dev/null; then
+    PYTHON_VERSION=$(python3 --version 2>&1 | cut -d' ' -f2)
+    PYTHON_CMD="python3"
+    print_status "Python $PYTHON_VERSION found"
+elif command -v python &> /dev/null; then
+    PYTHON_VERSION=$(python --version 2>&1 | cut -d' ' -f2)
+    PYTHON_CMD="python"
+    print_status "Python $PYTHON_VERSION found"
+else
+    print_error "Python not found. Please install Python 3.8+:"
+    echo "  macOS: brew install python3"
+    echo "  Ubuntu/Debian: sudo apt-get install python3 python3-pip python3-venv"
+    echo "  CentOS/RHEL: sudo yum install python3 python3-pip"
+    exit 1
+fi
 
 # Check Python version
-check_python() {
-    if command_exists python3; then
-        PYTHON_CMD="python3"
-    elif command_exists python; then
-        PYTHON_CMD="python"
+PYTHON_VERSION_MAJOR=$(echo $PYTHON_VERSION | cut -d. -f1)
+PYTHON_VERSION_MINOR=$(echo $PYTHON_VERSION | cut -d. -f2)
+if [ "$PYTHON_VERSION_MAJOR" -lt 3 ] || ([ "$PYTHON_VERSION_MAJOR" -eq 3 ] && [ "$PYTHON_VERSION_MINOR" -lt 8 ]); then
+    print_error "Python 3.8+ required, found $PYTHON_VERSION"
+    exit 1
+fi
+
+# Step 2: Clone repository
+echo -e "\n${BLUE}📥 Step 2: Cloning repository...${NC}"
+
+if [ -d "$INSTALL_DIR" ]; then
+    print_warning "Directory $INSTALL_DIR already exists"
+    read -p "Do you want to remove it and reinstall? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        rm -rf "$INSTALL_DIR"
     else
-        print_error "Python not found. Please install Python 3.8+"
-        exit 1
+        print_info "Using existing directory"
     fi
-    
-    # Check version
-    version=$($PYTHON_CMD -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
-    major=$(echo $version | cut -d. -f1)
-    minor=$(echo $version | cut -d. -f2)
-    
-    if [ "$major" -lt 3 ] || ([ "$major" -eq 3 ] && [ "$minor" -lt 8 ]); then
-        print_error "Python 3.8+ required, found $version"
-        exit 1
-    fi
-    
-    print_success "Python $version found"
+fi
+
+if [ ! -d "$INSTALL_DIR" ]; then
+    print_info "Cloning repository..."
+    git clone -b "$REPO_BRANCH" "$REPO_URL" "$INSTALL_DIR"
+    print_status "Repository cloned successfully"
+else
+    print_info "Updating existing repository..."
+    cd "$INSTALL_DIR"
+    git fetch origin
+    git checkout "$REPO_BRANCH"
+    git pull origin "$REPO_BRANCH"
+    print_status "Repository updated successfully"
+fi
+
+cd "$INSTALL_DIR"
+
+# Step 3: Create virtual environment
+echo -e "\n${BLUE}🐍 Step 3: Setting up Python environment...${NC}"
+
+if [ ! -d "venv" ]; then
+    print_info "Creating virtual environment..."
+    $PYTHON_CMD -m venv venv
+    print_status "Virtual environment created"
+else
+    print_info "Virtual environment already exists"
+fi
+
+# Activate virtual environment
+source venv/bin/activate
+print_status "Virtual environment activated"
+
+# Upgrade pip
+print_info "Upgrading pip..."
+pip install --upgrade pip > /dev/null 2>&1
+
+# Step 4: Install dependencies
+echo -e "\n${BLUE}📦 Step 4: Installing dependencies...${NC}"
+
+print_info "Installing core dependencies..."
+pip install -r requirements.txt --quiet
+
+print_status "All dependencies installed successfully"
+
+# Step 5: Test installation
+echo -e "\n${BLUE}🧪 Step 5: Testing installation...${NC}"
+
+print_info "Testing MCP server..."
+timeout 10s python mcp_base_server.py > /dev/null 2>&1 || {
+    print_warning "Server test timeout (normal for first run)"
 }
 
-# Install pip if needed
-check_pip() {
-    if ! command_exists pip && ! command_exists pip3; then
-        print_warning "pip not found, installing..."
-        if command_exists curl; then
-            curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-            $PYTHON_CMD get-pip.py
-            rm get-pip.py
-        else
-            print_error "pip installation failed. Please install pip manually."
-            exit 1
-        fi
-    fi
-    
-    # Use pip3 if available, otherwise pip
-    if command_exists pip3; then
-        PIP_CMD="pip3"
-    else
-        PIP_CMD="pip"
-    fi
-    
-    print_success "pip available"
+print_info "Testing ML components..."
+python -c "
+import sys
+try:
+    from transformers import pipeline
+    print('✅ Transformers working')
+    from sentence_transformers import SentenceTransformer
+    print('✅ Sentence Transformers working')
+    import torch
+    print('✅ PyTorch working')
+    from mcp.server import Server
+    print('✅ MCP library working')
+    print('✅ All components ready')
+except Exception as e:
+    print(f'⚠️ Warning: {e}')
+    sys.exit(1)
+" || {
+    print_error "Component test failed"
+    exit 1
 }
 
-# Download repository
-download_repo() {
-    if command_exists git; then
-        print_step "2" "Cloning repository with git"
-        git clone https://github.com/PiGrieco/mcp-memory-server.git
-        cd mcp-memory-server
-    else
-        print_step "2" "Downloading repository (git not found)"
-        if command_exists curl; then
-            curl -L https://github.com/PiGrieco/mcp-memory-server/archive/main.zip -o mcp-memory-server.zip
-            if command_exists unzip; then
-                unzip mcp-memory-server.zip
-                mv mcp-memory-server-main mcp-memory-server
-                cd mcp-memory-server
-                rm ../mcp-memory-server.zip
-            else
-                print_error "unzip not found. Please install unzip or use git."
-                exit 1
-            fi
-        else
-            print_error "Neither git nor curl found. Please install one of them."
-            exit 1
-        fi
-    fi
-    print_success "Repository downloaded"
-}
+print_status "Installation test completed successfully"
 
-# Install dependencies
-install_dependencies() {
-    print_step "3" "Installing Python dependencies"
-    
-    # Core dependencies
-    deps=(
-        "mcp>=1.0.0"
-        "sentence-transformers"
-        "asyncio"
-        "python-dotenv"
-        "pydantic"
-        "uvicorn"
-        "fastapi"
-    )
-    
-    for dep in "${deps[@]}"; do
-        echo "   Installing $dep..."
-        if $PIP_CMD install "$dep" >/dev/null 2>&1; then
-            echo "   ✅ $dep installed"
-        else
-            print_warning "Failed to install $dep, continuing..."
-        fi
-    done
-    
-    print_success "Dependencies installed"
-}
+# Step 6: Platform-specific setup
+echo -e "\n${BLUE}⚙️ Step 6: Platform-specific configuration...${NC}"
 
-# Create configurations
-create_configs() {
-    print_step "4" "Creating configurations"
-    
-    # Cursor config
-    cursor_dir="$HOME/.cursor"
-    mkdir -p "$cursor_dir"
-    
-    cat > "$cursor_dir/mcp_settings.json" << 'EOF'
+echo "Choose your platform for MCP integration:"
+echo "1. Cursor IDE"
+echo "2. Claude Desktop"
+echo "3. Manual setup (I'll configure myself)"
+echo "4. Skip platform setup"
+
+read -p "Enter your choice (1-4): " -n 1 -r PLATFORM_CHOICE
+echo
+
+case $PLATFORM_CHOICE in
+    1)
+        print_info "Setting up Cursor IDE integration..."
+        
+        # Create Cursor config directory
+        CURSOR_CONFIG_DIR="$HOME/.cursor"
+        mkdir -p "$CURSOR_CONFIG_DIR"
+        
+        # Create MCP configuration
+        cat > "$CURSOR_CONFIG_DIR/mcp_settings.json" << EOF
 {
   "mcpServers": {
-    "mcp-memory-auto": {
-      "command": "python",
-      "args": ["INSTALL_PATH/main_simple.py"],
+    "mcp-memory-ml": {
+      "command": "$INSTALL_DIR/venv/bin/python",
+      "args": ["$INSTALL_DIR/cursor_mcp_server.py"],
       "env": {
-        "AUTO_TRIGGER": "true",
-        "KEYWORDS": "ricorda,nota,importante,salva,memorizza,remember",
-        "PATTERNS": "risolto,solved,fixed,bug fix,solution,tutorial"
+        "ML_MODEL_TYPE": "huggingface",
+        "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
+        "AUTO_TRIGGER_ENABLED": "true",
+        "PRELOAD_ML_MODEL": "true",
+        "CURSOR_MODE": "true",
+        "LOG_LEVEL": "INFO",
+        "MEMORY_THRESHOLD": "0.7",
+        "SEMANTIC_THRESHOLD": "0.8"
       }
     }
   }
 }
 EOF
-    
-    # Replace INSTALL_PATH with actual path
-    sed -i.bak "s|INSTALL_PATH|$(pwd)|g" "$cursor_dir/mcp_settings.json"
-    rm "$cursor_dir/mcp_settings.json.bak" 2>/dev/null || true
-    
-    print_success "Cursor config: $cursor_dir/mcp_settings.json"
-    
-    # Claude config
-    claude_dir="$HOME/.config/claude"
-    mkdir -p "$claude_dir"
-    
-    cat > "$claude_dir/claude_desktop_config.json" << 'EOF'
+        
+        # Also create alternative config file
+        cp "$CURSOR_CONFIG_DIR/mcp_settings.json" "$CURSOR_CONFIG_DIR/mcp.json"
+        
+        print_status "Cursor IDE configuration created"
+        print_info "Restart Cursor IDE to see the MCP Memory Server"
+        ;;
+        
+    2)
+        print_info "Setting up Claude Desktop integration..."
+        
+        # Detect OS and set Claude config path
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            CLAUDE_CONFIG_DIR="$HOME/Library/Application Support/Claude"
+        else
+            CLAUDE_CONFIG_DIR="$HOME/.config/claude"
+        fi
+        
+        mkdir -p "$CLAUDE_CONFIG_DIR"
+        
+        # Create Claude MCP configuration
+        cat > "$CLAUDE_CONFIG_DIR/claude_desktop_config.json" << EOF
 {
   "mcpServers": {
-    "mcp-memory-auto": {
-      "command": "python",
-      "args": ["INSTALL_PATH/main_simple.py"],
+    "mcp-memory-claude": {
+      "command": "$INSTALL_DIR/venv/bin/python",
+      "args": ["$INSTALL_DIR/claude_mcp_server.py"],
       "env": {
-        "AUTO_TRIGGER": "true",
-        "CLAUDE_MODE": "true"
+        "ML_MODEL_TYPE": "huggingface",
+        "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
+        "AUTO_TRIGGER_ENABLED": "true",
+        "CLAUDE_MODE": "true",
+        "LOG_LEVEL": "INFO"
       }
     }
   }
 }
 EOF
-    
-    # Replace INSTALL_PATH with actual path
-    sed -i.bak "s|INSTALL_PATH|$(pwd)|g" "$claude_dir/claude_desktop_config.json"
-    rm "$claude_dir/claude_desktop_config.json.bak" 2>/dev/null || true
-    
-    print_success "Claude config: $claude_dir/claude_desktop_config.json"
-}
+        
+        print_status "Claude Desktop configuration created"
+        print_info "Restart Claude Desktop to see the MCP Memory Server"
+        ;;
+        
+    3)
+        print_info "Manual setup selected"
+        print_info "Configuration files are available in: $INSTALL_DIR/config/examples/"
+        ;;
+        
+    4)
+        print_info "Platform setup skipped"
+        ;;
+        
+    *)
+        print_warning "Invalid choice, skipping platform setup"
+        ;;
+esac
 
-# Test installation
-test_installation() {
-    print_step "5" "Testing installation"
-    
-    # Test Python imports
-    if $PYTHON_CMD -c "import asyncio; print('✅ asyncio OK')" 2>/dev/null; then
-        print_success "Python imports working"
-    else
-        print_warning "Some Python imports failed"
-    fi
-    
-    # Test server file
-    if [ -f "main_simple.py" ]; then
-        print_success "Server file found"
-    else
-        print_error "Server file missing"
-        return 1
-    fi
-    
-    # Test auto-trigger
-    if [ -f "test_auto_trigger.py" ]; then
-        if $PYTHON_CMD test_auto_trigger.py >/dev/null 2>&1; then
-            print_success "Auto-trigger test passed"
-        else
-            print_warning "Auto-trigger test failed, but installation may still work"
-        fi
-    fi
-    
-    return 0
-}
+# Step 7: Create convenient scripts
+echo -e "\n${BLUE}🚀 Step 7: Creating convenience scripts...${NC}"
 
 # Create start script
-create_start_script() {
-    cat > start_mcp_server.sh << 'EOF'
+cat > "$INSTALL_DIR/start.sh" << 'EOF'
 #!/bin/bash
-# Start MCP Memory Server with Auto-Trigger
+# MCP Memory Server Starter Script
 
-echo "🚀 Starting MCP Memory Server..."
-echo "✅ Auto-trigger system enabled"
-echo "✅ Keywords: ricorda, nota, importante, salva, memorizza"
-echo "✅ Patterns: risolto, solved, fixed, bug fix, solution"
-echo ""
-echo "🎯 Ready for Cursor/Claude integration!"
-echo "📡 Server will start on next line..."
-echo ""
+cd "$(dirname "$0")"
+source venv/bin/activate
 
-python main_simple.py
+echo "🧠 MCP Memory Server - Choose Mode:"
+echo "1. Simple MCP Server (recommended)"
+echo "2. Auto-Trigger ML Server (advanced)"
+echo "3. Cursor IDE Server"
+echo "4. Claude Desktop Server"
+
+read -p "Enter your choice (1-4): " -n 1 -r MODE
+echo
+
+case $MODE in
+    1) python mcp_base_server.py ;;
+    2) python main_auto.py ;;
+    3) python cursor_mcp_server.py ;;
+    4) python claude_mcp_server.py ;;
+    *) echo "Invalid choice"; exit 1 ;;
+esac
 EOF
-    
-    chmod +x start_mcp_server.sh
-    print_success "Start script created: ./start_mcp_server.sh"
-}
 
-# Main installation function
-main() {
-    print_header
-    
-    # Step 1: Check requirements
-    print_step "1" "Checking requirements"
-    check_python
-    check_pip
-    
-    # Step 2: Download repository
-    download_repo
-    
-    # Step 3: Install dependencies
-    install_dependencies
-    
-    # Step 4: Create configurations
-    create_configs
-    
-    # Step 5: Test installation
-    test_installation
-    
-    # Step 6: Create convenience script
-    create_start_script
-    
-    # Success message
-    echo ""
-    echo -e "${GREEN}🎉 INSTALLATION COMPLETED!${NC}"
-    echo -e "${GREEN}=========================${NC}"
-    echo -e "${GREEN}✅ MCP Memory Server installed${NC}"
-    echo -e "${GREEN}✅ Auto-trigger system configured${NC}"
-    echo -e "${GREEN}✅ Cursor IDE integration ready${NC}"
-    echo -e "${GREEN}✅ Claude Desktop integration ready${NC}"
-    
-    echo ""
-    echo -e "${BLUE}🚀 QUICK START:${NC}"
-    echo -e "${BLUE}1. Start the server:${NC}"
-    echo -e "   ${YELLOW}./start_mcp_server.sh${NC}"
-    echo ""
-    echo -e "${BLUE}2. Open Cursor IDE:${NC}"
-    echo -e "   - Press ${YELLOW}Cmd+L${NC} (macOS) or ${YELLOW}Ctrl+L${NC} (Windows/Linux)"
-    echo -e "   - Try: ${YELLOW}'Ricorda che Python è case-sensitive'${NC}"
-    echo ""
-    echo -e "${BLUE}3. Open Claude Desktop:${NC}"
-    echo -e "   - Restart Claude Desktop"
-    echo -e "   - Auto-trigger system will be active"
-    
-    echo ""
-    echo -e "${BLUE}🎯 TEST KEYWORDS:${NC}"
-    echo -e "   • ${YELLOW}ricorda${NC}, ${YELLOW}importante${NC}, ${YELLOW}nota${NC} → Auto-save"
-    echo -e "   • ${YELLOW}risolto${NC}, ${YELLOW}solved${NC}, ${YELLOW}fixed${NC} → Solution save"
-    echo -e "   • ${YELLOW}come${NC}, ${YELLOW}how${NC}, ${YELLOW}what${NC} → Auto-search"
-    
-    echo ""
-    echo -e "${BLUE}📁 Installation directory: ${YELLOW}$(pwd)${NC}"
-    echo -e "${BLUE}📋 Configurations created in ~/.cursor and ~/.config/claude${NC}"
-    
-    echo ""
-    echo -e "${GREEN}Your AI now has infinite memory! 🧠✨${NC}"
-}
+chmod +x "$INSTALL_DIR/start.sh"
 
-# Run main function
-main "$@"
+# Create update script
+cat > "$INSTALL_DIR/update.sh" << EOF
+#!/bin/bash
+# MCP Memory Server Update Script
+
+cd "$INSTALL_DIR"
+source venv/bin/activate
+
+echo "🔄 Updating MCP Memory Server..."
+git fetch origin
+git checkout $REPO_BRANCH
+git pull origin $REPO_BRANCH
+
+echo "📦 Updating dependencies..."
+pip install -r requirements.txt --upgrade --quiet
+
+echo "✅ Update completed successfully"
+EOF
+
+chmod +x "$INSTALL_DIR/update.sh"
+
+print_status "Convenience scripts created"
+
+# Final instructions
+echo -e "\n${GREEN}🎉 INSTALLATION COMPLETED SUCCESSFULLY!${NC}"
+echo "========================================"
+
+echo -e "\n${BLUE}📁 Installation Directory:${NC} $INSTALL_DIR"
+echo -e "${BLUE}🐍 Python Environment:${NC} $INSTALL_DIR/venv/"
+
+echo -e "\n${BLUE}🚀 Quick Start Commands:${NC}"
+echo "  cd $INSTALL_DIR"
+echo "  ./start.sh                    # Interactive server selection"
+echo "  ./update.sh                   # Update to latest version"
+
+echo -e "\n${BLUE}🎯 Direct Server Commands:${NC}"
+echo "  cd $INSTALL_DIR && source venv/bin/activate"
+echo "  python mcp_base_server.py     # Simple MCP server"
+echo "  python main_auto.py           # ML auto-trigger server"
+echo "  python cursor_mcp_server.py   # Cursor IDE integration"
+echo "  python claude_mcp_server.py   # Claude Desktop integration"
+
+echo -e "\n${BLUE}🧪 Test Your Installation:${NC}"
+echo "  cd $INSTALL_DIR"
+echo "  source venv/bin/activate"
+echo "  python test_installation.py   # Run comprehensive tests"
+
+echo -e "\n${BLUE}📚 Documentation:${NC}"
+echo "  README: $INSTALL_DIR/README.md"
+echo "  Quick Start: $INSTALL_DIR/QUICK_START.md"
+echo "  Examples: $INSTALL_DIR/config/examples/"
+
+if [ $PLATFORM_CHOICE -eq 1 ] || [ $PLATFORM_CHOICE -eq 2 ]; then
+    echo -e "\n${YELLOW}⚠️ IMPORTANT: Restart your AI application to see the MCP Memory Server${NC}"
+fi
+
+echo -e "\n${GREEN}✨ Your AI now has infinite memory! 🧠${NC}"
+echo -e "${BLUE}🌐 Repository: $REPO_URL${NC}"
+echo -e "${BLUE}📖 Documentation: https://github.com/PiGrieco/mcp-memory-server${NC}"
