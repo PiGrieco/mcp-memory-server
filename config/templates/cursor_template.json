@@ -1,9 +1,23 @@
 {
   "mcpServers": {
-    "mcp-memory": {
+    "mcp-memory-cursor": {
       "command": "{{INSTALL_DIR}}/venv/bin/python",
       "args": ["{{INSTALL_DIR}}/cursor_mcp_server.py"],
-      "env": {}
+      "env": {
+        "ML_MODEL_TYPE": "huggingface",
+        "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
+        "AUTO_TRIGGER_ENABLED": "true",
+        "PRELOAD_ML_MODEL": "true",
+        "CURSOR_MODE": "true",
+        "LOG_LEVEL": "INFO",
+        "ML_CONFIDENCE_THRESHOLD": "0.7",
+        "TRIGGER_THRESHOLD": "0.15",
+        "SIMILARITY_THRESHOLD": "0.3",
+        "MEMORY_THRESHOLD": "0.7",
+        "SEMANTIC_THRESHOLD": "0.8",
+        "ML_TRIGGER_MODE": "hybrid",
+        "INSTALL_DIR": "{{INSTALL_DIR}}"
+      }
     }
   }
 }

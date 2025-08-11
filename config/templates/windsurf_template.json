@@ -1,17 +1,15 @@
 {
   "mcpServers": {
-    "mcp-memory-replit": {
+    "mcp-memory-windsurf": {
       "command": "{{INSTALL_DIR}}/venv/bin/python",
-      "args": ["{{INSTALL_DIR}}/replit_mcp_server.py"],
+      "args": ["{{INSTALL_DIR}}/windsurf_mcp_server.py"],
       "env": {
         "ML_MODEL_TYPE": "huggingface",
         "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
         "AUTO_TRIGGER_ENABLED": "true",
         "PRELOAD_ML_MODEL": "true",
-        "REPLIT_MODE": "true",
+        "WINDSURF_MODE": "true",
         "LOG_LEVEL": "INFO",
-        "MEMORY_STORAGE": "file",
-        "SKIP_DATABASE": "true",
         "ML_CONFIDENCE_THRESHOLD": "0.7",
         "TRIGGER_THRESHOLD": "0.15",
         "SIMILARITY_THRESHOLD": "0.3",
