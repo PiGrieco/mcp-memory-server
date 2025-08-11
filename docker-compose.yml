@@ -1,30 +1,125 @@
-version: "3.9"
+# =============================================================================
+# MCP Memory Server - Docker Compose Configuration
+# =============================================================================
+
+version: '3.8'
+
 services:
-  memory-server:
-    build: .
-    ports:
-      - "8080:8080"
+  # Standard MCP server (stdio mode)
+  mcp-memory-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mcp-memory-server
+    restart: unless-stopped
+
+    # Environment variables from .env file
     env_file:
       - .env
-    environment:
-      HF_HOME: ${HF_HOME:-/models}
-      AUTO_TRIGGER_MODEL: ${AUTO_TRIGGER_MODEL:-PiGrieco/mcp-memory-auto-trigger-model}
-    volumes:
-      - hf-cache:${HF_HOME:-/models}
-    # Per restare minimal NON abilito DB qui; quando vorrai:
-    # depends_on:
-    #   - mongo
 
-  # mongo:
-  #   image: mongo:7
+    # Additional environment variables
+    environment:
+      - ENVIRONMENT=production
+      - PYTHONPATH=/app
+
+    # Volumes for persistent data and configuration
+    volumes:
+      - ./logs:/app/logs
+      - ./.env:/app/.env:ro
+
+    # Network configuration
+    networks:
+      - mcp-network
+
+  # HTTP MCP server (network mode)
+  mcp-memory-server-http:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mcp-memory-server-http
+    restart: unless-stopped
+
+    # Environment variables from .env file
+    env_file:
+      - .env
+
+    # Additional environment variables
+    environment:
+      - ENVIRONMENT=production
+      - PYTHONPATH=/app
+      - HOST=0.0.0.0
+      - PORT=8000
+      - PROJECT_NAME=cursor_project
+      - DATABASE_NAME=mcp_memory_production
+      - MONGODB_URI=mongodb://localhost:27017/mcp_memory_production
+      - MONGODB_DATABASE=mcp_memory_production
+      - MONGODB_COLLECTION=memories
+      - EMBEDDING_MODEL=all-MiniLM-L6-v2
+
+    # Expose HTTP port
+    ports:
+      - "8000:8000"
+
+    # Volumes for persistent data and configuration
+    volumes:
+      - ./logs:/app/logs
+      - ./.env:/app/.env:ro
+
+    # Network configuration
+    networks:
+      - mcp-network
+
+    # Override command for HTTP mode
+    command: ["python", "mcp_memory_server_http.py"]
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Optional: Local MongoDB for development
+  # Uncomment if you want to use local MongoDB instead of MongoDB Atlas
+  # mongodb:
+  #   image: mongo:7.0
+  #   container_name: mcp-mongodb
   #   restart: unless-stopped
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: admin
+  #     MONGO_INITDB_ROOT_PASSWORD: password
+  #     MONGO_INITDB_DATABASE: mcp_memory_production
+  #   volumes:
+  #     - mongodb_data:/data/db
+  #     - ./mongo-init:/docker-entrypoint-initdb.d
   #   ports:
   #     - "27017:27017"
-  #   volumes:
-  #     - mongo-data:/data/db
+  #   networks:
+  #     - mcp-network
+
+networks:
+  mcp-network:
+    driver: bridge
 
 volumes:
-  hf-cache:
-    driver: local
-  # mongo-data:
-  #   driver: local
+  # Uncomment if using local MongoDB
+  # mongodb_data:
+  logs:

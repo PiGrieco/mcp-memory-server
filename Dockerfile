@@ -1,27 +1,54 @@
+# =============================================================================
+# MCP Memory Server - Production Docker Image
+# =============================================================================
+
 FROM python:3.11-slim
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
-    HF_HOME=/models \
-    AUTO_TRIGGER_MODEL=PiGrieco/mcp-memory-auto-trigger-model
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PIP_NO_CACHE_DIR=1
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 
+# HTTP Server environment variables
+ENV HOST=0.0.0.0
+ENV PORT=8000
+
+# Set working directory
 WORKDIR /app
 
-# git aiuta i download HF; immagine ultra-minima
-RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
-# layer cache: deps prima del codice
-COPY requirements.txt /app/requirements.txt
+# Copy requirements first for better caching
+COPY requirements.txt .
 
-# HTTP deps espliciti (se non già nel requirements.txt)
-RUN python -m pip install --upgrade pip && \
-    pip install -r requirements.txt && \
-    pip install fastapi uvicorn
+# Install Python dependencies
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
 
-# codice
-COPY . /app
+# Copy application code
+COPY . .
 
-EXPOSE 8080
+# Create logs directory and set permissions
+RUN mkdir -p /app/logs
 
-CMD ["uvicorn", "mcp_memory_server_http:app", "--host", "0.0.0.0", "--port", "8080"]
+# Create non-root user for security
+RUN useradd --create-home --shell /bin/bash mcp && \
+    chown -R mcp:mcp /app && \
+    chmod -R 755 /app/logs
+USER mcp
+
+# Expose port for HTTP/network mode
+EXPOSE 8000
+
+# Health check for HTTP mode
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || python -c "import sys; sys.exit(0)"
+
+# Default command - MCP standard mode (can be overridden for HTTP mode)
+CMD ["python", "mcp_memory_server.py"]
