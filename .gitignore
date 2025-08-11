@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+venv/
+env/
+.env
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Mac
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Models and data
+models/
+*.model
+*.pkl
+*.joblib
+data/*.json
+data/*.csv
+!data/*metadata.json

@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "mcp-memory-auto": {
+      "command": "python",
+      "args": [
+        "/Users/piermatteogrieco/mcp-memory-server/main_simple.py"
+      ],
+      "env": {
+        "AUTO_TRIGGER_ENABLED": "true",
+        "TRIGGER_KEYWORDS": "ricorda,nota,importante,salva,memorizza,remember,note,important,save",
+        "SOLUTION_PATTERNS": "risolto,solved,fixed,bug fix,solution,tutorial,come fare,how to",
+        "AUTO_SAVE_THRESHOLD": "0.7",
+        "SEMANTIC_THRESHOLD": "0.8",
+        "TRIGGER_COOLDOWN": "30",
+        "CONVERSATION_MONITORING": "true",
+        "CONTEXT_INJECTION": "true",
+        "REAL_TIME_ANALYSIS": "true"
+      }
+    }
+  }
+}

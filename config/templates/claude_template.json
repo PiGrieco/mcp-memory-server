@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "mcp-memory-claude": {
+      "command": "{{INSTALL_DIR}}/venv/bin/python",
+      "args": ["{{INSTALL_DIR}}/claude_mcp_server.py"],
+      "env": {
+        "ML_MODEL_TYPE": "huggingface",
+        "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
+        "AUTO_TRIGGER_ENABLED": "true",
+        "CLAUDE_MODE": "true",
+        "LOG_LEVEL": "INFO",
+        "MEMORY_THRESHOLD": "0.7",
+        "SEMANTIC_THRESHOLD": "0.8"
+      }
+    }
+  }
+}
