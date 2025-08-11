@@ -71,6 +71,7 @@ Simply tell your AI assistant:
 **Examples:**
 - "Install this: https://github.com/PiGrieco/mcp-memory-server on Cursor"
 - "Install this: https://github.com/PiGrieco/mcp-memory-server on Claude"
+- "Install this: https://github.com/PiGrieco/mcp-memory-server deploying it externally and connecting the app to it"
   
 ### **What Happens During Installation:**
 
