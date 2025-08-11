@@ -19,7 +19,7 @@ NC='\033[0m' # No Color
 
 # Get the absolute path of the script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SERVER_PATH="$SCRIPT_DIR/replit_smart_server.py"
+SERVER_PATH="$SCRIPT_DIR/replit_mcp_server.py"
 
 echo -e "${BLUE}📍 Installation directory: $SCRIPT_DIR${NC}"
 

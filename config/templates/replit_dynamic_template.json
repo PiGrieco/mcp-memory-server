@@ -1,14 +1,14 @@
 {
   "mcpServers": {
-    "mcp-memory-claude": {
+    "mcp-memory-replit": {
       "command": "{{INSTALL_DIR}}/venv/bin/python",
-      "args": ["{{INSTALL_DIR}}/claude_mcp_server.py"],
+      "args": ["{{INSTALL_DIR}}/replit_mcp_server.py"],
       "env": {
         "ML_MODEL_TYPE": "huggingface",
         "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
         "AUTO_TRIGGER_ENABLED": "true",
         "PRELOAD_ML_MODEL": "true",
-        "CLAUDE_MODE": "true",
+        "REPLIT_MODE": "true",
         "LOG_LEVEL": "INFO",
         "MEMORY_STORAGE": "file",
         "SKIP_DATABASE": "true",
@@ -17,7 +17,8 @@
         "SIMILARITY_THRESHOLD": "0.3",
         "MEMORY_THRESHOLD": "0.7",
         "SEMANTIC_THRESHOLD": "0.8",
-        "ML_TRIGGER_MODE": "hybrid"
+        "ML_TRIGGER_MODE": "hybrid",
+        "INSTALL_DIR": "{{INSTALL_DIR}}"
       }
     }
   }

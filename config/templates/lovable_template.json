@@ -1,14 +1,14 @@
 {
   "mcpServers": {
-    "mcp-memory-claude": {
+    "mcp-memory-lovable": {
       "command": "{{INSTALL_DIR}}/venv/bin/python",
-      "args": ["{{INSTALL_DIR}}/claude_mcp_server.py"],
+      "args": ["{{INSTALL_DIR}}/lovable_mcp_server.py"],
       "env": {
         "ML_MODEL_TYPE": "huggingface",
         "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
         "AUTO_TRIGGER_ENABLED": "true",
         "PRELOAD_ML_MODEL": "true",
-        "CLAUDE_MODE": "true",
+        "LOVABLE_MODE": "true",
         "LOG_LEVEL": "INFO",
         "MEMORY_STORAGE": "file",
         "SKIP_DATABASE": "true",
