@@ -67,31 +67,45 @@ graph TB
 
 ## 🚀 **Quick Start**
 
-### **⚡ One-Command Installation from GitHub**
+### **💬 Prompt-Based Installation**
 
-Install directly from GitHub repository with one command:
+Simply tell your AI assistant:
+
+> **"Installa questo: https://github.com/PiGrieco/mcp-memory-server"**
+
+Your AI will automatically run the installation commands below.
+
+### **⚡ Universal Installation (All Platforms)**
+
+**One command installs for ALL AI platforms:**
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_universal_prompt.sh | bash
 ```
 
-This will:
-- ✅ Clone the repository to `~/mcp-memory-server`
-- ✅ Set up Python virtual environment
-- ✅ Install all dependencies
-- ✅ Configure your chosen AI platform
-- ✅ Create convenience scripts
+**What it does:**
+- ✅ Clones repository to `~/mcp-memory-server`
+- ✅ Sets up Python virtual environment with all dependencies
+- ✅ Configures **ALL platforms**: Cursor, Claude, GPT, Windsurf
+- ✅ Creates universal HTTP API on `http://localhost:8080`
+- ✅ Tests ML auto-triggers (99.56% accuracy model)
+- ✅ Ready to use in 2-3 minutes
 
-### **🎯 Platform-Specific Install**
+### **🎯 Platform-Specific Installation**
 
-**For Cursor IDE:**
+**Cursor IDE:**
 ```bash
 curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_cursor.sh | bash
 ```
 
-**For Claude Desktop:**
+**Claude Desktop:**
 ```bash
 curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_claude.sh | bash
+```
+
+**GPT/OpenAI (with browser extension):**
+```bash
+curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_gpt.sh | bash
 ```
 
 ### **🔧 Manual Installation**
@@ -104,63 +118,61 @@ cd mcp-memory-server
 # Set up environment
 python3 -m venv venv
 source venv/bin/activate
-
-# Install dependencies
 pip install -r requirements.txt
 
-# Start server
-python mcp_base_server.py
-```
-
-### **🐳 Docker Setup (Alternative)**
-
-```bash
-# Clone and start with Docker
-git clone https://github.com/PiGrieco/mcp-memory-server.git
-cd mcp-memory-server
-docker-compose up -d
+# Start universal server
+./start_universal.sh
 ```
 
 ---
 
-## 🎮 **Available Servers & Integrations**
+## 🎮 **Usage After Installation**
 
-### **🎯 Platform-Specific MCP Servers**
+### **🚀 Quick Start Commands**
 
-| Platform | Server File | Description |
-|----------|-------------|-------------|
-| **Cursor IDE** | `cursor_mcp_server.py` | Code completion with memory context |
-| **Claude Desktop** | `claude_mcp_server.py` | Persistent conversation memory |
-| **GPT/OpenAI** | `gpt_mcp_server.py` | ChatGPT memory enhancement |
-| **Windsurf IDE** | `windsurf_mcp_server.py` | Development context memory |
-| **Lovable** | `lovable_mcp_server.py` | Project memory for Lovable |
-| **Replit** | `replit_mcp_server.py` | Cloud development memory |
+After installation, choose your preferred mode:
 
-### **🔧 Server Modes**
-
-#### **1. 🧠 Full Production Server**
 ```bash
-python main.py
-```
-Complete feature set with ML auto-triggers, semantic search, and production monitoring.
+cd ~/mcp-memory-server
 
-#### **2. ⚡ Simple MCP Server**
-```bash
-python simple_mcp_server.py
-```
-Lightweight version for basic memory operations.
+# Universal API (works with any platform)
+./start_universal.sh                # HTTP API on localhost:8080
 
-#### **3. 🤖 Auto-Trigger Server**
-```bash
-python main_auto.py
-```
-ML-powered server with 99.56% accuracy for automatic memory management.
+# Platform-specific servers
+./start_cursor.sh                   # Cursor IDE MCP server
+./start_claude.sh                   # Claude Desktop MCP server
+./start_gpt.sh                      # GPT/OpenAI HTTP API + browser extension
 
-#### **4. 🌐 HTTP API Server**
-```bash
-python mcp_memory_server_http.py
+# Update to latest version
+./update_universal.sh               # Updates from GitHub
 ```
-REST API interface for custom integrations.
+
+### **🎯 Supported AI Platforms**
+
+| Platform | Auto-Configured | Integration Type | Status |
+|----------|----------------|------------------|---------|
+| **🎯 Cursor IDE** | ✅ `~/.cursor/mcp_settings.json` | Native MCP | Ready |
+| **🔮 Claude Desktop** | ✅ `~/Library/Application Support/Claude/` | Native MCP | Ready |
+| **🤖 GPT/OpenAI** | ✅ HTTP API + Browser Extension | HTTP API | Ready |
+| **🌪️ Windsurf IDE** | ✅ `~/.config/windsurf/` | Native MCP | Ready |
+| **💙 Lovable Platform** | ✅ HTTP API Integration | HTTP API | Ready |
+| **⚡ Replit Cloud** | ✅ Cloud Service | HTTP API | Ready |
+
+### **🌐 Universal HTTP API**
+
+The universal installation creates an HTTP API that works with **any platform**:
+
+- **URL**: `http://localhost:8080`
+- **Dashboard**: `http://localhost:8080/` (web interface)
+- **API Docs**: `http://localhost:8080/docs` (auto-generated)
+
+**API Endpoints**:
+```bash
+POST /analyze    # Analyze messages for auto-triggers
+POST /save       # Save memories manually
+POST /search     # Search existing memories
+GET  /health     # System health check
+```
 
 ---
 
@@ -197,68 +209,58 @@ The crown jewel of MCP Memory Server is its **intelligent auto-trigger system** 
 
 ---
 
-## 🔧 **Configuration**
+## 🧪 **Testing Your Installation**
 
-### **Environment Variables**
+### **🔍 Verify Everything Works**
 
-```env
-# MongoDB Configuration
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/
-MONGODB_DATABASE=mcp_memory_production
-MONGODB_COLLECTION=memories
+After installation, test your setup:
 
-# ML Auto-Trigger Configuration
-ML_MODEL_TYPE=huggingface
-HUGGINGFACE_MODEL_NAME=PiGrieco/mcp-memory-auto-trigger-model
-ML_TRIGGER_MODE=hybrid  # hybrid, ml_only, deterministic_only
+#### **1. Restart Your AI Application**
+- **Cursor IDE**: Restart completely to detect MCP server
+- **Claude Desktop**: Restart to load new configuration
+- **ChatGPT**: Install browser extension from `~/mcp-memory-server/browser_extension/`
 
-# Embedding Configuration
-EMBEDDING_PROVIDER=sentence_transformers
-EMBEDDING_MODEL=all-MiniLM-L6-v2
+#### **2. Test Commands**
 
-# Server Configuration
-SERVER_HOST=localhost
-SERVER_PORT=8000
-ENVIRONMENT=production
+Try these in your AI assistant:
 
-# Security
-API_KEY=your_secure_api_key_here
+```
+🧪 Memory Save Test:
+"Ricorda che React hooks vanno usati solo nei componenti funzionali"
+
+🔍 Search Test:
+"Cosa ricordi sui React hooks?"
+
+⚡ Auto-Trigger Test:
+"Ho risolto il bug implementando JWT refresh tokens per l'autenticazione"
+
+🎯 Question Test:
+"Puoi spiegarmi come funziona async/await in JavaScript?"
 ```
 
-### **Platform Configurations**
+#### **3. Check Universal API**
 
-#### **Cursor IDE Setup**
-```json
-// ~/.cursor/mcp_settings.json
-{
-  "mcpServers": {
-    "mcp-memory": {
-      "command": "python",
-      "args": ["/path/to/cursor_mcp_server.py"],
-      "env": {
-        "MONGODB_URI": "your_mongodb_uri",
-        "ML_TRIGGER_MODE": "hybrid"
-      }
-    }
-  }
-}
+If using the universal installation:
+
+```bash
+# Check API status
+curl http://localhost:8080/health
+
+# Open web dashboard
+open http://localhost:8080/
+
+# Test analyze endpoint
+curl -X POST http://localhost:8080/analyze \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Test message", "platform": "test"}'
 ```
 
-#### **Claude Desktop Setup**
-```json
-// ~/.config/claude/claude_desktop_config.json
-{
-  "mcpServers": {
-    "mcp-memory": {
-      "command": "python",
-      "args": ["/path/to/claude_mcp_server.py"],
-      "env": {
-        "MONGODB_URI": "your_mongodb_uri"
-      }
-    }
-  }
-}
-```
+### **🎯 What to Expect**
+
+- **✅ Automatic memory saving** when you mention important information
+- **🔍 Intelligent search** when you ask questions about past topics
+- **⚡ ML auto-triggers** working within 10-30 seconds (first model download)
+- **📊 Memory notifications** showing save/search operations
 
 ---
 
@@ -310,56 +312,48 @@ The system automatically classifies memories based on:
 
 ---
 
-## 🐳 **Docker Deployment**
+## 🆘 **Troubleshooting**
 
-### **Production Docker Setup**
+### **Common Issues**
 
+#### **"MCP server not visible"**
 ```bash
-# Build and start all services
-docker-compose up -d
+# Restart your AI application completely
+# Check configuration file path:
+ls ~/.cursor/mcp_settings.json        # Cursor
+ls ~/Library/Application\ Support/Claude/claude_desktop_config.json  # Claude (macOS)
 
-# Scale memory servers
-docker-compose up -d --scale memory-server=3
-
-# Monitor logs
-docker-compose logs -f memory-server
-
-# Update deployment
-docker-compose pull && docker-compose up -d
+# Verify Python path in config
+cat ~/.cursor/mcp_settings.json | grep command
 ```
 
-### **Docker Compose Services**
-
-- **memory-server**: Main MCP memory server
-- **mongodb**: Database service (if not using Atlas)
-- **redis**: Caching layer
-- **nginx**: Load balancer and reverse proxy
-- **monitoring**: Prometheus + Grafana monitoring
-
----
-
-## 📈 **Monitoring & Analytics**
-
-### **Built-in Metrics**
-
-- **Memory Operations**: Save/search/retrieve counts
-- **ML Performance**: Prediction accuracy and timing
-- **API Performance**: Response times and error rates
-- **Database Metrics**: Query performance and storage usage
-- **Platform Analytics**: Usage by AI platform
-
-### **Health Endpoints**
-
+#### **"Module not found errors"**
 ```bash
-# System health
-curl http://localhost:8000/health
-
-# Detailed metrics
-curl http://localhost:8000/metrics
-
-# ML model status
-curl http://localhost:8000/ml/status
+cd ~/mcp-memory-server
+source venv/bin/activate
+pip install -r requirements.txt
 ```
+
+#### **"ML model download timeout"**
+```bash
+# First run may take 10-30 seconds for model download (~63MB)
+# Subsequent runs will be instant (0.03s)
+cd ~/mcp-memory-server
+source venv/bin/activate
+python -c "from transformers import pipeline; print('Model ready')"
+```
+
+#### **"Permission denied"**
+```bash
+chmod +x ~/mcp-memory-server/start_*.sh
+chmod +x ~/mcp-memory-server/update_*.sh
+```
+
+### **Getting Help**
+
+- **📖 Issues**: [GitHub Issues](https://github.com/PiGrieco/mcp-memory-server/issues)
+- **💬 Discussions**: [GitHub Discussions](https://github.com/PiGrieco/mcp-memory-server/discussions)
+- **🔧 Installation Guide**: [INSTALL_FROM_GITHUB.md](INSTALL_FROM_GITHUB.md)
 
 ---
 
@@ -391,97 +385,40 @@ curl http://localhost:8000/ml/status
 
 ---
 
-## 🚀 **API Reference**
+## 🏗️ **Advanced Features**
 
-### **REST API Endpoints**
+### **🎯 Memory Types & Auto-Classification**
 
-```bash
-# Save memory
-POST /api/v1/memories
-{
-  "content": "Important information to remember",
-  "context": {"importance": 0.8, "tags": ["important"]},
-  "project": "my-project"
-}
+The system automatically categorizes memories:
 
-# Search memories
-GET /api/v1/memories/search?q=search+query&limit=5
+- **`KNOWLEDGE`** - Important facts and learning
+- **`SOLUTION`** - Bug fixes and problem solutions  
+- **`ERROR`** - Problems and debugging sessions
+- **`DECISION`** - Important decisions and rationale
+- **`CONVERSATION`** - General dialogue and discussions
 
-# Get memory by ID
-GET /api/v1/memories/{memory_id}
+### **⚡ Performance Metrics**
 
-# Auto-analyze content
-POST /api/v1/analyze
-{
-  "content": "Message to analyze for triggers",
-  "platform": "cursor"
-}
-```
+- **🎯 ML Accuracy**: 99.56% trigger detection
+- **⚡ Response Time**: <100ms average
+- **📊 Model Size**: ~63MB (auto-download)
+- **🌍 Languages**: English, Italian, Spanish, French
+- **🔄 Uptime**: 99.9% production availability
 
-### **WebSocket API**
+### **🔧 Customization**
 
-```javascript
-// Real-time memory operations
-const ws = new WebSocket('ws://localhost:8000/ws');
-
-ws.send(JSON.stringify({
-  action: 'analyze_message',
-  data: {
-    message: 'User message to analyze',
-    platform: 'claude'
-  }
-}));
-```
-
----
-
-## 🔧 **Development**
-
-### **Local Development Setup**
+Advanced users can customize via environment variables:
 
 ```bash
-# Clone repository
-git clone https://github.com/PiGrieco/mcp-memory-server.git
-cd mcp-memory-server
+# Advanced ML configuration
+export ML_MODEL_TYPE=huggingface
+export HUGGINGFACE_MODEL_NAME=PiGrieco/mcp-memory-auto-trigger-model
+export MEMORY_THRESHOLD=0.7
+export SEMANTIC_THRESHOLD=0.8
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# or
-venv\Scripts\activate  # Windows
-
-# Install development dependencies
-pip install -r requirements-dev.txt
-
-# Run tests
-pytest tests/
-
-# Start development server
-python main.py --debug
-```
-
-### **Project Structure**
-
-```
-mcp-memory-server/
-├── src/                          # Core application
-│   ├── core/                     # Server implementations
-│   │   ├── mcp_server.py        # Main MCP server
-│   │   ├── auto_trigger_system.py # Deterministic triggers
-│   │   ├── ml_trigger_system.py  # ML-based triggers
-│   │   └── hybrid_trigger_system.py # Hybrid system
-│   ├── services/                 # Business logic
-│   │   ├── memory_service.py     # Memory management
-│   │   ├── database_service.py   # MongoDB operations
-│   │   ├── embedding_service.py  # Semantic embeddings
-│   │   └── health_service.py     # System monitoring
-│   ├── models/                   # Data models
-│   └── utils/                    # Utilities
-├── integrations/                 # Platform integrations
-├── config/                       # Configuration examples
-├── docker/                       # Docker configurations
-├── tests/                        # Test suite
-└── docs/                         # Documentation
+# Database configuration (optional - defaults to in-memory)
+export MONGODB_URI=mongodb://localhost:27017
+export MONGODB_DATABASE=mcp_memory
 ```
 
 ---
@@ -523,13 +460,17 @@ Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md)
 
 ---
 
-## 📊 **Statistics**
+## 🎉 **What You Get**
 
-- **🎯 ML Accuracy**: 99.56%
-- **⚡ Response Time**: <100ms average
-- **🔄 Uptime**: 99.9% production availability
-- **📈 Scalability**: Tested up to 1M+ memories
-- **🌍 Multi-language**: English, Italian, Spanish, French support
+After installation, your AI assistant will have:
+
+- **🧠 Infinite Memory**: Never forgets important information
+- **🤖 99.56% ML Accuracy**: Intelligent auto-triggers for memory operations
+- **⚡ Real-time Speed**: Sub-100ms memory operations
+- **🔍 Semantic Search**: Find information by meaning, not keywords
+- **🎯 Multi-Platform**: Works across Cursor, Claude, GPT, and more
+- **📊 Smart Categories**: Automatic classification of knowledge, solutions, errors
+- **🌐 Universal API**: HTTP interface for custom integrations
 
 ---
 
