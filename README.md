@@ -496,9 +496,7 @@ Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md)
 ## 🆘 **Support**
 
 - **📖 Documentation**: [Full Documentation](https://pigrieco.github.io/mcp-memory-server)
-- **💬 Discord**: [Join our community](https://discord.gg/mcp-memory-server)
 - **🐛 Issues**: [GitHub Issues](https://github.com/PiGrieco/mcp-memory-server/issues)
-- **📧 Email**: support@mcp-memory-server.com
 
 ---
 
