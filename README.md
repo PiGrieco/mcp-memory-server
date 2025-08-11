@@ -71,24 +71,29 @@ graph TB
 
 Simply tell your AI assistant:
 
-> **"Installa questo: https://github.com/PiGrieco/mcp-memory-server"**
+> **"Install this: @https://github.com/PiGrieco/mcp-memory-server"**
 
-Your AI will automatically run the installation commands below.
+Your AI will automatically:
+1. 📥 Download the interactive installer from GitHub
+2. 🎯 Ask you to select your AI platform (Cursor, Claude, GPT, etc.)
+3. ⚙️ Configure everything with dynamic paths (no hardcoded usernames)
+4. 🧪 Test the ML components and MCP integration
+5. ✅ Ready to use in 2-3 minutes
 
 ### **⚡ Universal Installation (All Platforms)**
 
-**One command installs for ALL AI platforms:**
+**Interactive installer with platform selection:**
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_universal_prompt.sh | bash
+curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_universal_interactive.sh | bash
 ```
 
 **What it does:**
-- ✅ Clones repository to `~/mcp-memory-server`
+- 🎯 **Asks you to select your AI platform** (Cursor, Claude, GPT, etc.)
+- ✅ Clones repository to `~/mcp-memory-server` 
 - ✅ Sets up Python virtual environment with all dependencies
-- ✅ Configures **ALL platforms**: Cursor, Claude, GPT, Windsurf
-- ✅ Creates universal HTTP API on `http://localhost:8080`
-- ✅ Tests ML auto-triggers (99.56% accuracy model)
+- ⚙️ **Configures your specific platform** with dynamic paths
+- 🧪 Tests ML auto-triggers (99.56% accuracy model)
 - ✅ Ready to use in 2-3 minutes
 
 ### **🎯 Platform-Specific Installation**
