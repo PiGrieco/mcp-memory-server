@@ -8,20 +8,45 @@ import asyncio
 import os
 import sys
 from pathlib import Path
+import time
 from typing import Dict, List, Any
 
-# Add src to path
-sys.path.insert(0, str(Path(__file__).parent / "src"))
+# Dynamic path resolution - works from any installation location
+SCRIPT_DIR = Path(__file__).parent.absolute()
+SRC_DIR = SCRIPT_DIR / "src"
+
+# Add src to path dynamically
+sys.path.insert(0, str(SRC_DIR))
+
+# Force environment variables for auto-trigger - ALWAYS enabled
+os.environ["AUTO_TRIGGER_ENABLED"] = "true"
+os.environ["ML_MODEL_TYPE"] = "huggingface"
+os.environ["HUGGINGFACE_MODEL_NAME"] = "PiGrieco/mcp-memory-auto-trigger-model"
+os.environ["LOVABLE_MODE"] = "true"
+os.environ["LOG_LEVEL"] = "INFO"
+os.environ["MEMORY_STORAGE"] = "file"
+os.environ["SKIP_DATABASE"] = "true"
+os.environ["PRELOAD_ML_MODEL"] = "true"
+
+# ML Model Thresholds - Critical for proper auto-trigger operation
+os.environ["ML_CONFIDENCE_THRESHOLD"] = "0.7"  # Main ML confidence threshold (70%)
+os.environ["ML_TRIGGER_MODE"] = "hybrid"       # Use hybrid deterministic + ML approach
+os.environ["TRIGGER_THRESHOLD"] = "0.15"       # General trigger threshold (15%)
+os.environ["SIMILARITY_THRESHOLD"] = "0.3"     # Similarity threshold for searches
+os.environ["MEMORY_THRESHOLD"] = "0.7"         # Memory importance threshold
+os.environ["SEMANTIC_THRESHOLD"] = "0.8"       # Semantic similarity threshold
+
+# Additional ML Configuration for continuous learning
+os.environ["ML_TRAINING_ENABLED"] = "true"     # Enable continuous learning
+os.environ["ML_RETRAIN_INTERVAL"] = "50"       # Retrain after 50 samples
+os.environ["FEATURE_EXTRACTION_TIMEOUT"] = "5.0"  # Feature extraction timeout
+os.environ["MAX_CONVERSATION_HISTORY"] = "10"  # Max conversation context
+os.environ["USER_BEHAVIOR_TRACKING"] = "true"  # Track user patterns
+os.environ["BEHAVIOR_HISTORY_LIMIT"] = "1000"  # Behavior history limit
 
 # Import base MCP server
 from mcp_base_server import MCPMemoryServer, run_mcp_server
 from mcp.types import Tool, TextContent
-
-# Set environment
-os.environ.setdefault("ML_MODEL_TYPE", "huggingface")
-os.environ.setdefault("HUGGINGFACE_MODEL_NAME", "PiGrieco/mcp-memory-auto-trigger-model")
-os.environ.setdefault("AUTO_TRIGGER_ENABLED", "true")
-os.environ.setdefault("LOVABLE_MODE", "true")
 
 
 class LovableMCPServer(MCPMemoryServer):
@@ -33,8 +58,15 @@ class LovableMCPServer(MCPMemoryServer):
             'projects_tracked': 0,
             'designs_saved': 0,
             'features_documented': 0,
+            'auto_triggers': 0,
+            'ml_predictions': 0,
             'ui_components_saved': 0
         }
+        
+        # Auto-trigger configuration
+        self.auto_trigger_enabled = True
+        self.trigger_keywords = ['ricorda', 'nota', 'importante', 'salva', 'memorizza', 'remember', 'note', 'important', 'save']
+        self.solution_patterns = ['risolto', 'solved', 'fixed', 'bug fix', 'solution', 'tutorial', 'come fare', 'how to']
         
         # Add Lovable-specific tools
         self._add_lovable_tools()

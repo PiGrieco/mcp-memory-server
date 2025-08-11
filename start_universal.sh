@@ -6,7 +6,7 @@ source venv/bin/activate
 
 echo "🧠 Universal MCP Memory Server Starting..."
 echo "🌐 API available at: http://localhost:8080"
-echo "🎯 Supports: Cursor, Claude, GPT, Windsurf, and more"
+echo "🎯 Supports: Cursor, Claude, Windsurf, Lovable, Replit, and more"
 echo ""
 
 python universal_api.py &
