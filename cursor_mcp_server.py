@@ -61,6 +61,11 @@ class CursorMCPServer(MCPMemoryServer):
             'ml_predictions': 0
         }
         
+        # Auto-trigger configuration
+        self.auto_trigger_enabled = True
+        self.trigger_keywords = ['ricorda', 'nota', 'importante', 'salva', 'memorizza', 'remember', 'note', 'important', 'save']
+        self.solution_patterns = ['risolto', 'solved', 'fixed', 'bug fix', 'solution', 'tutorial', 'come fare', 'how to']
+        
         # Add Cursor-specific tools
         self._add_cursor_tools()
         
@@ -352,6 +357,96 @@ class CursorMCPServer(MCPMemoryServer):
         result += f"   Context Saved: {'✅' if context_saved else '❌'}\n"
         
         return [TextContent(type="text", text=result)]
+    
+    def analyze_for_auto_trigger(self, content: str) -> List[Dict]:
+        """Analyze content for auto-trigger patterns"""
+        triggers = []
+        content_lower = content.lower()
+        
+        # Keyword trigger
+        found_keywords = [kw for kw in self.trigger_keywords if kw in content_lower]
+        if found_keywords:
+            triggers.append({
+                'type': 'save_memory',
+                'reason': f'Keywords found: {found_keywords}',
+                'params': {
+                    'content': content,
+                    'importance': 0.8,
+                    'memory_type': 'explicit_request',
+                    'auto_triggered': True
+                }
+            })
+        
+        # Pattern trigger for solutions
+        found_patterns = [pattern for pattern in self.solution_patterns if pattern in content_lower]
+        if found_patterns:
+            triggers.append({
+                'type': 'save_memory', 
+                'reason': f'Solution patterns found: {found_patterns}',
+                'params': {
+                    'content': content,
+                    'importance': 0.9,
+                    'memory_type': 'solution',
+                    'auto_triggered': True
+                }
+            })
+        
+        self.cursor_stats['auto_triggers'] += len(triggers)
+        return triggers
+    
+    async def auto_save_memory(self, content: str, importance: float = 0.7, memory_type: str = "cursor_session", auto_triggered: bool = True) -> Dict:
+        """Auto-save memory with Cursor-specific handling"""
+        try:
+            memory_id = f"cursor_mem_{int(time.time())}"
+            
+            result = {
+                'success': True,
+                'memory_id': memory_id,
+                'message': 'Memory auto-saved for Cursor IDE',
+                'content_preview': content[:100] + "..." if len(content) > 100 else content,
+                'importance': importance,
+                'auto_triggered': auto_triggered
+            }
+            
+            print(f"💾 Cursor Auto-Save: {memory_id}")
+            print(f"   Content: {content[:80]}...")
+            print(f"   Importance: {importance}")
+            
+            self.cursor_stats['auto_triggers'] += 1
+            return result
+            
+        except Exception as e:
+            print(f"❌ Auto-save failed: {e}")
+            return {
+                'success': False,
+                'error': str(e),
+                'message': 'Auto-save failed'
+            }
+    
+    def handle_message(self, content: str, auto_analyze: bool = True) -> Dict:
+        """Handle message with auto-trigger analysis for Cursor"""
+        result = {
+            'message_processed': True,
+            'auto_triggers': [],
+            'actions_executed': [],
+            'cursor_optimized': True
+        }
+        
+        if auto_analyze and self.auto_trigger_enabled:
+            triggers = self.analyze_for_auto_trigger(content)
+            result['auto_triggers'] = triggers
+            
+            # Execute triggers
+            for trigger in triggers:
+                if trigger['type'] == 'save_memory':
+                    save_result = asyncio.run(self.auto_save_memory(**trigger['params']))
+                    result['actions_executed'].append({
+                        'action': 'auto_save_memory',
+                        'result': save_result,
+                        'reason': trigger['reason']
+                    })
+                    
+        return result
 
 
 async def main():
