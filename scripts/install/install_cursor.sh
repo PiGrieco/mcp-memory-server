@@ -126,7 +126,7 @@ cat > "$CURSOR_MCP_CONFIG" << EOF
   "mcpServers": {
     "mcp-memory-cursor": {
       "command": "$SCRIPT_DIR/venv/bin/python",
-      "args": ["$SCRIPT_DIR/servers/legacy/cursor_mcp_server.py"],
+      "args": ["$SCRIPT_DIR/src/core/simple_mcp_server.py"],
       "env": {
         "ML_MODEL_TYPE": "huggingface",
         "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
