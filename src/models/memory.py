@@ -4,21 +4,12 @@ Memory models for MCP Memory Server
 
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union
+from typing import List, Optional, Dict, Any
 from dataclasses import dataclass, field
-
-from .base import (
-    BaseModel, 
-    TimestampMixin, 
-    ValidationError,
-    validate_required_field,
-    validate_string_length,
-    validate_numeric_range,
-    validate_list_not_empty
-)
+from pydantic import BaseModel, Field
 
 
-class MemoryType(Enum):
+class MemoryType(str, Enum):
     """Types of memories"""
     CONVERSATION = "conversation"
     FUNCTION = "function"
@@ -27,195 +18,119 @@ class MemoryType(Enum):
     DECISION = "decision"
     ERROR = "error"
     WARNING = "warning"
-    SYSTEM = "system"
-    USER = "user"
 
 
-class MemoryImportance(Enum):
-    """Memory importance levels"""
-    LOW = 0.2
-    MEDIUM = 0.5
-    HIGH = 0.8
-    CRITICAL = 1.0
+class MemoryImportance(str, Enum):
+    """Importance levels for memories"""
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
 
 
 @dataclass
-class Memory(BaseModel, TimestampMixin):
-    """Memory model"""
-    id: Optional[str] = None
-    project: str = ""
-    content: str = ""
-    memory_type: MemoryType = MemoryType.CONVERSATION
-    importance: float = MemoryImportance.MEDIUM.value
-    metadata: Dict[str, Any] = field(default_factory=dict)
+class Memory:
+    """Memory data model"""
+    id: str
+    project: str
+    content: str
+    memory_type: MemoryType
+    importance: float = 0.5
     tags: List[str] = field(default_factory=list)
-    embedding: Optional[List[float]] = None
-    
-    # Context information
+    metadata: Dict[str, Any] = field(default_factory=dict)
     context: Dict[str, Any] = field(default_factory=dict)
-    source: Optional[str] = None
-    user_id: Optional[str] = None
-    session_id: Optional[str] = None
-    
-    # Search and retrieval
-    similarity_score: Optional[float] = None
+    embedding: Optional[List[float]] = None
+    created_at: datetime = field(default_factory=datetime.utcnow)
+    updated_at: datetime = field(default_factory=datetime.utcnow)
     access_count: int = 0
     last_accessed: Optional[datetime] = None
-    
-    def validate(self) -> None:
-        """Validate memory data"""
-        validate_required_field(self.project, "project")
-        validate_required_field(self.content, "content")
-        
-        validate_string_length(self.project, "project", min_length=1, max_length=100)
-        validate_string_length(self.content, "content", min_length=1, max_length=50000)
-        
-        validate_numeric_range(self.importance, "importance", min_value=0.0, max_value=1.0)
-        
-        if self.similarity_score is not None:
-            validate_numeric_range(self.similarity_score, "similarity_score", min_value=0.0, max_value=1.0)
-        
-        if self.source:
-            validate_string_length(self.source, "source", max_length=200)
+    similarity_score: Optional[float] = None
     
     def increment_access(self) -> None:
         """Increment access count and update last accessed time"""
         self.access_count += 1
         self.last_accessed = datetime.utcnow()
-        self.touch()
 
 
-@dataclass
 class MemoryCreate(BaseModel):
     """Model for creating a new memory"""
-    project: str = ""
-    content: str = ""
-    memory_type: MemoryType = MemoryType.CONVERSATION
-    importance: float = MemoryImportance.MEDIUM.value
-    metadata: Dict[str, Any] = field(default_factory=dict)
-    tags: List[str] = field(default_factory=list)
-    embedding: Optional[List[float]] = None
-    context: Dict[str, Any] = field(default_factory=dict)
-    source: Optional[str] = None
-    user_id: Optional[str] = None
-    session_id: Optional[str] = None
-    
-    def validate(self) -> None:
-        """Validate memory creation data"""
-        validate_required_field(self.project, "project")
-        validate_required_field(self.content, "content")
-        
-        validate_string_length(self.project, "project", min_length=1, max_length=100)
-        validate_string_length(self.content, "content", min_length=1, max_length=50000)
-        
-        # Normalize importance to 0-1 range if > 1.0
-        if self.importance > 1.0:
-            self.importance = min(self.importance / 10.0, 1.0)
-        
-        validate_numeric_range(self.importance, "importance", min_value=0.0, max_value=1.0)
-        
-        if self.source:
-            validate_string_length(self.source, "source", max_length=200)
+    project: str = Field(..., description="Project name")
+    content: str = Field(..., description="Memory content")
+    memory_type: MemoryType = Field(default=MemoryType.CONVERSATION, description="Type of memory")
+    importance: float = Field(default=0.5, ge=0.0, le=1.0, description="Importance level (0-1)")
+    tags: List[str] = Field(default_factory=list, description="Tags for categorization")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional metadata")
+    context: Dict[str, Any] = Field(default_factory=dict, description="Context information")
+    embedding: Optional[List[float]] = Field(default=None, description="Text embedding vector")
 
 
-@dataclass
 class MemoryUpdate(BaseModel):
     """Model for updating a memory"""
-    content: Optional[str] = None
-    memory_type: Optional[MemoryType] = None
-    importance: Optional[float] = None
-    metadata: Optional[Dict[str, Any]] = None
-    tags: Optional[List[str]] = None
-    context: Optional[Dict[str, Any]] = None
-    
-    def validate(self) -> None:
-        """Validate memory update data"""
-        if self.content is not None:
-            validate_string_length(self.content, "content", min_length=1, max_length=50000)
-        
-        if self.importance is not None:
-            # Normalize importance to 0-1 range if > 1.0
-            if self.importance > 1.0:
-                self.importance = min(self.importance / 10.0, 1.0)
-            validate_numeric_range(self.importance, "importance", min_value=0.0, max_value=1.0)
+    content: Optional[str] = Field(default=None, description="Memory content")
+    memory_type: Optional[MemoryType] = Field(default=None, description="Type of memory")
+    importance: Optional[float] = Field(default=None, ge=0.0, le=1.0, description="Importance level (0-1)")
+    tags: Optional[List[str]] = Field(default=None, description="Tags for categorization")
+    metadata: Optional[Dict[str, Any]] = Field(default=None, description="Additional metadata")
+    context: Optional[Dict[str, Any]] = Field(default=None, description="Context information")
+    embedding: Optional[List[float]] = Field(default=None, description="Text embedding vector")
 
 
-@dataclass
 class MemorySearchQuery(BaseModel):
     """Model for memory search queries"""
-    query: str = ""
-    project: Optional[str] = None
-    memory_types: List[MemoryType] = field(default_factory=list)
-    min_importance: float = 0.0
-    max_results: int = 20
-    similarity_threshold: float = 0.3
-    tags: List[str] = field(default_factory=list)
-    metadata_filters: Dict[str, Any] = field(default_factory=dict)
-    user_id: Optional[str] = None
-    session_id: Optional[str] = None
-    date_from: Optional[datetime] = None
-    date_to: Optional[datetime] = None
-    
-    def validate(self) -> None:
-        """Validate search query"""
-        validate_required_field(self.query, "query")
-        validate_string_length(self.query, "query", min_length=1, max_length=1000)
-        
-        validate_numeric_range(self.min_importance, "min_importance", min_value=0.0, max_value=1.0)
-        validate_numeric_range(self.similarity_threshold, "similarity_threshold", min_value=0.0, max_value=1.0)
-        validate_numeric_range(self.max_results, "max_results", min_value=1, max_value=100)
-        
-        if self.date_from and self.date_to and self.date_from > self.date_to:
-            raise ValidationError("date_from must be before date_to")
+    query: str = Field(..., description="Search query")
+    project: Optional[str] = Field(default=None, description="Project to search in")
+    memory_types: Optional[List[MemoryType]] = Field(default=None, description="Filter by memory types")
+    min_importance: float = Field(default=0.0, ge=0.0, le=1.0, description="Minimum importance")
+    max_results: int = Field(default=20, ge=1, le=100, description="Maximum number of results")
+    similarity_threshold: float = Field(default=0.3, ge=0.0, le=1.0, description="Minimum similarity score")
+    tags: List[str] = Field(default_factory=list, description="Filter by tags")
+    user_id: Optional[str] = Field(default=None, description="Filter by user ID")
+    session_id: Optional[str] = Field(default=None, description="Filter by session ID")
+    date_from: Optional[datetime] = Field(default=None, description="Start date filter")
+    date_to: Optional[datetime] = Field(default=None, description="End date filter")
 
 
-@dataclass
 class MemorySearchResult(BaseModel):
     """Model for memory search results"""
-    memories: List[Memory] = field(default_factory=list)
-    total_count: int = 0
-    query: str = ""
-    search_time_ms: float = 0.0
-    similarity_scores: List[float] = field(default_factory=list)
-    
-    def validate(self) -> None:
-        """Validate search result"""
-        validate_numeric_range(self.total_count, "total_count", min_value=0)
-        validate_numeric_range(self.search_time_ms, "search_time_ms", min_value=0)
-        
-        if len(self.memories) != len(self.similarity_scores):
-            raise ValidationError("memories and similarity_scores must have the same length")
+    memories: List[Memory] = Field(default_factory=list, description="Found memories")
+    total_count: int = Field(default=0, description="Total number of memories found")
+    query: str = Field(..., description="Original search query")
+    search_time_ms: float = Field(default=0.0, description="Search execution time in milliseconds")
+    similarity_scores: List[float] = Field(default_factory=list, description="Similarity scores for results")
 
 
-@dataclass
 class MemoryContext(BaseModel):
     """Model for memory context queries"""
-    project: str = ""
-    types: List[MemoryType] = field(default_factory=list)
-    limit: int = 50
-    min_importance: float = 0.0
-    user_id: Optional[str] = None
-    session_id: Optional[str] = None
-    
-    def validate(self) -> None:
-        """Validate context query"""
-        validate_required_field(self.project, "project")
-        validate_string_length(self.project, "project", min_length=1, max_length=100)
-        validate_list_not_empty(self.types, "types")
-        validate_numeric_range(self.limit, "limit", min_value=1, max_value=200)
-        validate_numeric_range(self.min_importance, "min_importance", min_value=0.0, max_value=1.0)
+    project: str = Field(..., description="Project name")
+    types: List[MemoryType] = Field(default_factory=list, description="Memory types to include")
+    limit: int = Field(default=50, ge=1, le=1000, description="Maximum number of memories per type")
+    min_importance: float = Field(default=0.0, ge=0.0, le=1.0, description="Minimum importance")
 
 
-@dataclass
 class MemoryContextResult(BaseModel):
     """Model for memory context results"""
-    project: str = ""
-    context: Dict[str, List[Memory]] = field(default_factory=dict)
-    total_memories: int = 0
-    retrieval_time_ms: float = 0.0
-    
-    def validate(self) -> None:
-        """Validate context result"""
-        validate_required_field(self.project, "project")
-        validate_numeric_range(self.total_memories, "total_memories", min_value=0)
-        validate_numeric_range(self.retrieval_time_ms, "retrieval_time_ms", min_value=0)
+    project: str = Field(..., description="Project name")
+    context: Dict[str, List[Memory]] = Field(default_factory=dict, description="Memories grouped by type")
+    total_memories: int = Field(default=0, description="Total number of memories")
+    retrieval_time_ms: float = Field(default=0.0, description="Retrieval time in milliseconds")
+
+
+class MemoryStats(BaseModel):
+    """Model for memory statistics"""
+    total_memories: int = Field(default=0, description="Total number of memories")
+    total_projects: int = Field(default=0, description="Total number of projects")
+    memories_by_type: Dict[str, int] = Field(default_factory=dict, description="Count by memory type")
+    memories_by_project: Dict[str, int] = Field(default_factory=dict, description="Count by project")
+    avg_importance: float = Field(default=0.0, description="Average importance")
+    last_activity: Optional[datetime] = Field(default=None, description="Last memory activity")
+
+
+class MemoryHealth(BaseModel):
+    """Model for memory system health"""
+    status: str = Field(..., description="Health status")
+    total_memories: int = Field(default=0, description="Total memories")
+    storage_type: str = Field(default="unknown", description="Storage type")
+    auto_save_enabled: bool = Field(default=False, description="Auto-save status")
+    ml_triggers_enabled: bool = Field(default=False, description="ML triggers status")
+    last_activity: str = Field(default="never", description="Last activity timestamp")
+    error: Optional[str] = Field(default=None, description="Error message if unhealthy")

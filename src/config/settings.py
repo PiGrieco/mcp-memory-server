@@ -1,248 +1,334 @@
 """
-Main configuration settings for MCP Memory Server
+Configuration management for MCP Memory Server
 """
 
 import os
-from dataclasses import dataclass, field
+import yaml
 from pathlib import Path
-from typing import List, Optional, Dict, Any
-from urllib.parse import quote_plus
-
-from .environment import get_environment, get_env_config, Environment
-
-
-@dataclass
-class DatabaseConfig:
-    """Database configuration"""
-    # MongoDB connection
-    uri: Optional[str] = field(default_factory=lambda: os.getenv("MONGODB_URI"))
-    host: str = field(default_factory=lambda: os.getenv("MONGODB_HOST", "localhost"))
-    port: int = field(default_factory=lambda: int(os.getenv("MONGODB_PORT", "27017")))
-    username: Optional[str] = field(default_factory=lambda: os.getenv("MONGODB_USERNAME"))
-    password: Optional[str] = field(default_factory=lambda: os.getenv("MONGODB_PASSWORD"))
-    database_name: str = field(default_factory=lambda: os.getenv("MONGODB_DATABASE", "mcp_memory"))
-    collection_name: str = field(default_factory=lambda: os.getenv("MONGODB_COLLECTION", "memories"))
-    
-    # Connection pooling
-    max_pool_size: int = field(default_factory=lambda: int(os.getenv("MONGODB_MAX_POOL_SIZE", "10")))
-    min_pool_size: int = field(default_factory=lambda: int(os.getenv("MONGODB_MIN_POOL_SIZE", "1")))
-    max_idle_time_ms: int = field(default_factory=lambda: int(os.getenv("MONGODB_MAX_IDLE_TIME_MS", "30000")))
-    server_selection_timeout_ms: int = field(default_factory=lambda: int(os.getenv("MONGODB_SERVER_SELECTION_TIMEOUT_MS", "5000")))
-    
-    # SSL/TLS
-    use_ssl: bool = field(default_factory=lambda: os.getenv("MONGODB_USE_SSL", "false").lower() == "true")
-    ssl_cert_path: Optional[str] = field(default_factory=lambda: os.getenv("MONGODB_SSL_CERT_PATH"))
-    
-    @property
-    def url(self) -> str:
-        """Get MongoDB connection URL"""
-        # If URI is provided (for MongoDB Atlas), use it directly
-        if self.uri:
-            return self.uri
-
-        # Otherwise, build URL from components
-        if self.username and self.password:
-            # URL encode username and password
-            username = quote_plus(self.username)
-            password = quote_plus(self.password)
-            auth = f"{username}:{password}@"
-        else:
-            auth = ""
-
-        ssl_params = ""
-        if self.use_ssl:
-            ssl_params = "?ssl=true"
-            if self.ssl_cert_path:
-                ssl_params += f"&ssl_cert_reqs=CERT_REQUIRED&ssl_ca_certs={self.ssl_cert_path}"
-
-        return f"mongodb://{auth}{self.host}:{self.port}/{self.database_name}{ssl_params}"
+from typing import Dict, Any, Optional, List
+from dataclasses import dataclass, field
+from pydantic import BaseModel, Field
 
 
-@dataclass
-class EmbeddingConfig:
-    """Embedding service configuration"""
-    provider: str = field(default_factory=lambda: os.getenv("EMBEDDING_PROVIDER", "sentence_transformers"))
-    model_name: str = field(default_factory=lambda: os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2"))
-    model_cache_dir: str = field(default_factory=lambda: os.getenv("MODEL_CACHE_DIR", "./models"))
-    batch_size: int = field(default_factory=lambda: int(os.getenv("EMBEDDING_BATCH_SIZE", "32")))
-    max_text_length: int = field(default_factory=lambda: int(os.getenv("MAX_TEXT_LENGTH", "512")))
-    
-    # OpenAI settings (if using OpenAI embeddings)
-    openai_api_key: Optional[str] = field(default_factory=lambda: os.getenv("OPENAI_API_KEY"))
-    openai_model: str = field(default_factory=lambda: os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-ada-002"))
-    
-    # Hugging Face settings
-    hf_token: Optional[str] = field(default_factory=lambda: os.getenv("HUGGINGFACE_TOKEN"))
-    
-    # Performance settings
-    device: str = field(default_factory=lambda: os.getenv("EMBEDDING_DEVICE", "cpu"))
-    normalize_embeddings: bool = field(default_factory=lambda: os.getenv("NORMALIZE_EMBEDDINGS", "true").lower() == "true")
-
-
-@dataclass
-class ServerConfig:
+class ServerConfig(BaseModel):
     """Server configuration"""
-    name: str = field(default_factory=lambda: os.getenv("SERVER_NAME", "mcp-memory-server"))
-    version: str = field(default_factory=lambda: os.getenv("SERVER_VERSION", "1.0.0"))
-    host: str = field(default_factory=lambda: os.getenv("SERVER_HOST", "0.0.0.0"))
-    port: int = field(default_factory=lambda: int(os.getenv("SERVER_PORT", "8000")))
-    
-    # Performance
-    workers: int = field(default_factory=lambda: int(os.getenv("SERVER_WORKERS", "1")))
-    max_connections: int = field(default_factory=lambda: int(os.getenv("MAX_CONNECTIONS", "1000")))
-    keepalive_timeout: int = field(default_factory=lambda: int(os.getenv("KEEPALIVE_TIMEOUT", "5")))
-    
-    # Security
-    cors_origins: List[str] = field(default_factory=lambda: os.getenv("CORS_ORIGINS", "*").split(","))
-    api_key: Optional[str] = field(default_factory=lambda: os.getenv("API_KEY"))
-    
-    # Health checks
-    health_check_interval: int = field(default_factory=lambda: int(os.getenv("HEALTH_CHECK_INTERVAL", "30")))
+    name: str = "MCP Memory Server"
+    version: str = "2.0.0"
+    host: str = "localhost"
+    port: int = 8000
+    mode: str = "universal"  # universal, mcp_only, http_only
+    debug: bool = False
 
 
-@dataclass
-class MemoryConfig:
-    """Memory management configuration"""
-    default_project: str = field(default_factory=lambda: os.getenv("DEFAULT_PROJECT", "default"))
-    max_search_results: int = field(default_factory=lambda: int(os.getenv("MAX_SEARCH_RESULTS", "20")))
-    default_importance: float = field(default_factory=lambda: float(os.getenv("DEFAULT_IMPORTANCE", "0.5")))
-    max_text_length: int = field(default_factory=lambda: int(os.getenv("MAX_TEXT_LENGTH", "10000")))
-    similarity_threshold: float = field(default_factory=lambda: float(os.getenv("SIMILARITY_THRESHOLD", "0.3")))
-    
-    # Memory types
-    memory_types: List[str] = field(default_factory=lambda: [
-        "conversation", "function", "context", "knowledge", "decision", "error", "warning"
-    ])
-    
-    # Auto-trigger settings
-    auto_save_enabled: bool = field(default_factory=lambda: os.getenv("AUTO_SAVE_ENABLED", "true").lower() == "true")
-    trigger_threshold: float = field(default_factory=lambda: float(os.getenv("TRIGGER_THRESHOLD", "0.7")))
-    min_text_length: int = field(default_factory=lambda: int(os.getenv("MIN_TEXT_LENGTH", "50")))
+class EnvironmentConfig(BaseModel):
+    """Environment configuration"""
+    name: str = "development"  # development, staging, production
+    log_level: str = "INFO"
+    enable_metrics: bool = True
+    enable_health_checks: bool = True
 
 
-@dataclass
-class SecurityConfig:
+class MemoryConfig(BaseModel):
+    """Memory configuration"""
+    storage: str = "mongodb"  # mongodb, postgresql, sqlite
+    auto_save: bool = True
+    ml_triggers: bool = True
+    trigger_threshold: float = 0.7
+    min_text_length: int = 10
+    max_text_length: int = 10000
+    default_project: str = "default"
+    retention_days: int = 365
+
+
+class DatabaseConfig(BaseModel):
+    """Database configuration"""
+    mongodb: Dict[str, Any] = Field(default_factory=lambda: {
+        "uri": "mongodb://localhost:27017",
+        "database": "mcp_memory",
+        "collection": "memories",
+        "max_pool_size": 10,
+        "min_pool_size": 1,
+        "max_idle_time_ms": 30000,
+        "server_selection_timeout_ms": 5000
+    })
+
+
+class EmbeddingConfig(BaseModel):
+    """Embedding configuration"""
+    provider: str = "sentence_transformers"  # sentence_transformers, huggingface
+    model_name: str = "all-MiniLM-L6-v2"
+    model_cache_dir: str = "./models"
+    device: str = "cpu"  # cpu, cuda, mps
+    max_text_length: int = 512
+    normalize_embeddings: bool = True
+
+
+class MLTriggersConfig(BaseModel):
+    """ML Triggers configuration"""
+    enabled: bool = True
+    model_path: str = "./models/trigger_model.pkl"
+    confidence_threshold: float = 0.8
+    retrain_interval_hours: int = 24
+
+
+class SecurityConfig(BaseModel):
     """Security configuration"""
-    secret_key: str = field(default_factory=lambda: os.getenv("SECRET_KEY", "your-secret-key-change-in-production"))
-    jwt_algorithm: str = field(default_factory=lambda: os.getenv("JWT_ALGORITHM", "HS256"))
-    jwt_expiration_hours: int = field(default_factory=lambda: int(os.getenv("JWT_EXPIRATION_HOURS", "24")))
-    
-    # Rate limiting
-    rate_limit_enabled: bool = field(default_factory=lambda: os.getenv("RATE_LIMIT_ENABLED", "true").lower() == "true")
-    rate_limit_requests: int = field(default_factory=lambda: int(os.getenv("RATE_LIMIT_REQUESTS", "100")))
-    rate_limit_window: int = field(default_factory=lambda: int(os.getenv("RATE_LIMIT_WINDOW", "3600")))  # 1 hour
-    
-    # Encryption
-    encryption_enabled: bool = field(default_factory=lambda: os.getenv("ENCRYPTION_ENABLED", "false").lower() == "true")
-    encryption_key: Optional[str] = field(default_factory=lambda: os.getenv("ENCRYPTION_KEY"))
+    enable_auth: bool = False
+    jwt_secret: str = "your-secret-key"
+    api_key_required: bool = False
+    cors_origins: List[str] = Field(default_factory=lambda: ["*"])
+
+
+class PlatformConfig(BaseModel):
+    """Platform-specific configuration"""
+    name: str = "Platform"
+    auto_trigger: bool = True
+    ide_integration: bool = False
+    code_analysis: bool = False
+    file_watching: bool = False
+    conversation_mode: bool = False
+    context_integration: bool = False
+    api_enabled: bool = False
+    webhook_support: bool = False
+    supported_languages: List[str] = Field(default_factory=list)
+    max_context_length: int = 4000
+
+
+class PlatformsConfig(BaseModel):
+    """Platforms configuration"""
+    cursor: PlatformConfig = Field(default_factory=lambda: PlatformConfig(
+        name="Cursor IDE",
+        auto_trigger=True,
+        ide_integration=True,
+        code_analysis=True,
+        file_watching=True,
+        supported_languages=["python", "javascript", "typescript", "java", "cpp"]
+    ))
+    claude: PlatformConfig = Field(default_factory=lambda: PlatformConfig(
+        name="Claude Desktop",
+        auto_trigger=True,
+        conversation_mode=True,
+        context_integration=True,
+        max_context_length=4000
+    ))
+    universal: PlatformConfig = Field(default_factory=lambda: PlatformConfig(
+        name="Universal Platform",
+        auto_trigger=True,
+        api_enabled=True,
+        webhook_support=True
+    ))
+
+
+class LoggingConfig(BaseModel):
+    """Logging configuration"""
+    level: str = "INFO"
+    format: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    file: str = "./logs/mcp_memory.log"
+    max_size_mb: int = 100
+    backup_count: int = 5
+
+
+class PathsConfig(BaseModel):
+    """Paths configuration"""
+    data_dir: str = "./data"
+    logs_dir: str = "./logs"
+    models_dir: str = "./models"
+    plugins_dir: str = "./plugins"
+    exports_dir: str = "./exports"
+
+
+class PluginsConfig(BaseModel):
+    """Plugins configuration"""
+    directory: str = "./plugins"
+    auto_load: bool = True
+    enable_hot_reload: bool = False
+    builtin_plugins: List[str] = Field(default_factory=lambda: [
+        "memory_analytics",
+        "backup_manager", 
+        "notification_service",
+        "export_service"
+    ])
+
+
+class CacheConfig(BaseModel):
+    """Cache configuration"""
+    redis_enabled: bool = False
+    redis: Dict[str, Any] = Field(default_factory=lambda: {
+        "host": "localhost",
+        "port": 6379,
+        "db": 0,
+        "password": None
+    })
+    memory_ttl: int = 3600  # 1 hour
+    search_ttl: int = 1800  # 30 minutes
+    embedding_ttl: int = 7200  # 2 hours
+    cleanup_interval: int = 300  # 5 minutes
+
+
+class BackupConfig(BaseModel):
+    """Backup configuration"""
+    enabled: bool = True
+    schedule: str = "0 2 * * *"  # Daily at 2 AM
+    retention_days: int = 30
+    compression: bool = True
+    storage: Dict[str, Any] = Field(default_factory=lambda: {
+        "type": "local",  # local, s3, gcs
+        "path": "./backups"
+    })
+
+
+class NotificationsConfig(BaseModel):
+    """Notifications configuration"""
+    enabled: bool = False
+    providers: Dict[str, Any] = Field(default_factory=lambda: {
+        "email": {
+            "enabled": False,
+            "smtp_host": "smtp.gmail.com",
+            "smtp_port": 587,
+            "username": "",
+            "password": ""
+        },
+        "webhook": {
+            "enabled": False,
+            "url": "",
+            "headers": {}
+        }
+    })
+
+
+class MonitoringConfig(BaseModel):
+    """Monitoring configuration"""
+    enabled: bool = True
+    metrics_port: int = 9090
+    health_check_interval: int = 30
+    alert_thresholds: Dict[str, Any] = Field(default_factory=lambda: {
+        "memory_usage_percent": 80,
+        "response_time_ms": 1000,
+        "error_rate_percent": 5
+    })
+
+
+class ExportConfig(BaseModel):
+    """Export configuration"""
+    formats: List[str] = Field(default_factory=lambda: ["json", "csv", "markdown"])
+    include_embeddings: bool = False
+    batch_size: int = 1000
+    compression: bool = True
 
 
 @dataclass
-class MLTriggerConfig:
-    """ML-based trigger system configuration"""
-    # Operating mode: deterministic, ml_only, hybrid, learning
-    mode: str = field(default_factory=lambda: os.getenv("ML_TRIGGER_MODE", "hybrid"))
-    
-    # ML model configuration
-    ml_confidence_threshold: float = field(default_factory=lambda: float(os.getenv("ML_CONFIDENCE_THRESHOLD", "0.7")))
-    model_cache_dir: str = field(default_factory=lambda: os.getenv("ML_MODEL_CACHE_DIR", "./models/ml_triggers"))
-    
-    # Training configuration
-    training_enabled: bool = field(default_factory=lambda: os.getenv("ML_TRAINING_ENABLED", "true").lower() == "true")
-    retrain_interval: int = field(default_factory=lambda: int(os.getenv("ML_RETRAIN_INTERVAL", "50")))  # samples
-    
-    # Feature extraction
-    feature_extraction_timeout: float = field(default_factory=lambda: float(os.getenv("FEATURE_EXTRACTION_TIMEOUT", "5.0")))
-    max_conversation_history: int = field(default_factory=lambda: int(os.getenv("MAX_CONVERSATION_HISTORY", "10")))
-    
-    # User behavior tracking
-    user_behavior_tracking: bool = field(default_factory=lambda: os.getenv("USER_BEHAVIOR_TRACKING", "true").lower() == "true")
-    behavior_history_limit: int = field(default_factory=lambda: int(os.getenv("BEHAVIOR_HISTORY_LIMIT", "1000")))
-    
-    # Model parameters
-    model_type: str = field(default_factory=lambda: os.getenv("ML_MODEL_TYPE", "huggingface"))  # huggingface, random_forest, gradient_boosting
-    model_params: Dict[str, Any] = field(default_factory=dict)
-    
-    # Hugging Face model configuration
-    huggingface_model_name: str = field(default_factory=lambda: os.getenv("HUGGINGFACE_MODEL_NAME", "PiGrieco/mcp-memory-auto-trigger-model"))
-    huggingface_token: Optional[str] = field(default_factory=lambda: os.getenv("HUGGINGFACE_TOKEN"))
-    use_gpu: bool = field(default_factory=lambda: os.getenv("ML_USE_GPU", "false").lower() == "true")
-
-
-@dataclass
-class Config:
-    """Main configuration class"""
+class Settings:
+    """Main settings class"""
+    server: ServerConfig = field(default_factory=ServerConfig)
+    environment: EnvironmentConfig = field(default_factory=EnvironmentConfig)
+    memory: MemoryConfig = field(default_factory=MemoryConfig)
     database: DatabaseConfig = field(default_factory=DatabaseConfig)
     embedding: EmbeddingConfig = field(default_factory=EmbeddingConfig)
-    server: ServerConfig = field(default_factory=ServerConfig)
-    memory: MemoryConfig = field(default_factory=MemoryConfig)
+    ml_triggers: MLTriggersConfig = field(default_factory=MLTriggersConfig)
     security: SecurityConfig = field(default_factory=SecurityConfig)
-    ml_trigger: MLTriggerConfig = field(default_factory=MLTriggerConfig)
-    
-    # Environment
-    environment: Environment = field(default_factory=get_environment)
-    env_config: Dict[str, Any] = field(default_factory=get_env_config)
-    
-    # Paths
-    base_dir: Path = field(default_factory=lambda: Path(__file__).parent.parent.parent)
-    logs_dir: Path = field(default_factory=lambda: Path(__file__).parent.parent.parent / "logs")
-    data_dir: Path = field(default_factory=lambda: Path(__file__).parent.parent.parent / "data")
-    models_dir: Path = field(default_factory=lambda: Path(__file__).parent.parent.parent / "models")
+    platforms: PlatformsConfig = field(default_factory=PlatformsConfig)
+    logging: LoggingConfig = field(default_factory=LoggingConfig)
+    paths: PathsConfig = field(default_factory=PathsConfig)
+    plugins: PluginsConfig = field(default_factory=PluginsConfig)
+    cache: CacheConfig = field(default_factory=CacheConfig)
+    backup: BackupConfig = field(default_factory=BackupConfig)
+    notifications: NotificationsConfig = field(default_factory=NotificationsConfig)
+    monitoring: MonitoringConfig = field(default_factory=MonitoringConfig)
+    export: ExportConfig = field(default_factory=ExportConfig)
     
     def __post_init__(self):
         """Post-initialization setup"""
-        # Create necessary directories
-        self.logs_dir.mkdir(exist_ok=True)
-        self.data_dir.mkdir(exist_ok=True)
-        self.models_dir.mkdir(exist_ok=True)
-        
-        # Apply environment-specific overrides
-        self._apply_env_overrides()
-        
-        # Validate configuration
-        self._validate()
+        self._load_from_yaml()
+        self._load_from_env()
+        self._create_directories()
     
-    def _apply_env_overrides(self):
-        """Apply environment-specific configuration overrides"""
-        env_config = self.env_config
-        
-        # Override database pool size
-        if "database_pool_size" in env_config:
-            self.database.max_pool_size = env_config["database_pool_size"]
+    def _load_from_yaml(self):
+        """Load configuration from YAML file"""
+        config_file = Path("config/settings.yaml")
+        if config_file.exists():
+            try:
+                with open(config_file, 'r') as f:
+                    config_data = yaml.safe_load(f)
+                    self._update_from_dict(config_data)
+            except Exception as e:
+                print(f"Warning: Could not load YAML config: {e}")
     
-    def _validate(self):
-        """Validate configuration"""
-        # Validate required fields for production
-        if self.environment == Environment.PRODUCTION:
-            if not self.database.username or not self.database.password:
-                raise ValueError("Database credentials required for production")
-            
-            if self.security.secret_key == "your-secret-key-change-in-production":
-                raise ValueError("Secret key must be changed for production")
+    def _load_from_env(self):
+        """Load configuration from environment variables"""
+        # Server settings
+        if os.getenv("SERVER_HOST"):
+            self.server.host = os.getenv("SERVER_HOST")
+        if os.getenv("SERVER_PORT"):
+            self.server.port = int(os.getenv("SERVER_PORT"))
+        if os.getenv("SERVER_MODE"):
+            self.server.mode = os.getenv("SERVER_MODE")
         
-        # Validate embedding configuration
-        if self.embedding.provider == "openai" and not self.embedding.openai_api_key:
-            raise ValueError("OpenAI API key required when using OpenAI embeddings")
+        # Database settings
+        if os.getenv("MONGODB_URI"):
+            self.database.mongodb["uri"] = os.getenv("MONGODB_URI")
+        if os.getenv("MONGODB_DATABASE"):
+            self.database.mongodb["database"] = os.getenv("MONGODB_DATABASE")
         
-        # Validate paths
-        if not self.base_dir.exists():
-            raise ValueError(f"Base directory does not exist: {self.base_dir}")
+        # Environment settings
+        if os.getenv("ENVIRONMENT"):
+            self.environment.name = os.getenv("ENVIRONMENT")
+        if os.getenv("LOG_LEVEL"):
+            self.environment.log_level = os.getenv("LOG_LEVEL")
+        
+        # Embedding settings
+        if os.getenv("EMBEDDING_PROVIDER"):
+            self.embedding.provider = os.getenv("EMBEDDING_PROVIDER")
+        if os.getenv("EMBEDDING_MODEL"):
+            self.embedding.model_name = os.getenv("EMBEDDING_MODEL")
+        
+        # Cache settings
+        if os.getenv("REDIS_ENABLED"):
+            self.cache.redis_enabled = os.getenv("REDIS_ENABLED").lower() == "true"
+        if os.getenv("REDIS_HOST"):
+            self.cache.redis["host"] = os.getenv("REDIS_HOST")
+        if os.getenv("REDIS_PORT"):
+            self.cache.redis["port"] = int(os.getenv("REDIS_PORT"))
+    
+    def _update_from_dict(self, config_data: Dict[str, Any]):
+        """Update settings from dictionary"""
+        for key, value in config_data.items():
+            if hasattr(self, key):
+                attr = getattr(self, key)
+                if hasattr(attr, 'model_validate'):
+                    # Pydantic model
+                    setattr(self, key, attr.__class__.model_validate(value))
+                else:
+                    # Regular attribute
+                    setattr(self, key, value)
+    
+    def _create_directories(self):
+        """Create necessary directories"""
+        directories = [
+            self.paths.data_dir,
+            self.paths.logs_dir,
+            self.paths.models_dir,
+            self.paths.plugins_dir,
+            self.paths.exports_dir
+        ]
+        
+        for directory in directories:
+            Path(directory).mkdir(parents=True, exist_ok=True)
 
 
-# Global configuration instance
-_config: Optional[Config] = None
+# Global settings instance
+_settings: Optional[Settings] = None
 
 
-def get_config() -> Config:
-    """Get global configuration instance"""
-    global _config
-    if _config is None:
-        _config = Config()
-    return _config
+def get_settings() -> Settings:
+    """Get global settings instance"""
+    global _settings
+    if _settings is None:
+        _settings = Settings()
+    return _settings
 
 
-def reload_config() -> Config:
-    """Reload configuration from environment"""
-    global _config
-    _config = Config()
-    return _config
+def reload_settings() -> Settings:
+    """Reload settings from configuration files"""
+    global _settings
+    _settings = Settings()
+    return _settings

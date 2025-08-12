@@ -1,0 +1,243 @@
+# Staging Environment Configuration
+# Mirror of production for testing before deployment
+
+# Server Configuration
+server:
+  name: "MCP Memory Server (Staging)"
+  version: "2.0.0"
+  mode: "universal"
+  host: "0.0.0.0"
+  port: 8000
+  debug: false
+  log_level: "INFO"
+
+# Environment Configuration
+environment:
+  name: "staging"
+  debug: false
+  testing: false
+
+# Database Configuration (Staging - Similar to Production)
+database:
+  mongodb:
+    uri: "mongodb://mongodb:27017"
+    database: "mcp_memory_staging"
+    username: "${MONGODB_USERNAME}"
+    password: "${MONGODB_PASSWORD}"
+    auth_source: "admin"
+    max_pool_size: 20
+    min_pool_size: 5
+    max_idle_time: 30000
+    server_selection_timeout: 5000
+    socket_timeout: 5000
+    connect_timeout: 5000
+    # Staging optimizations
+    read_preference: "primary"
+    write_concern: "majority"
+    retry_writes: true
+
+# Embedding Service Configuration (Staging)
+embedding:
+  model_name: "sentence-transformers/all-MiniLM-L6-v2"
+  model_path: "/app/models/embeddings"
+  cache_size: 5000
+  batch_size: 32
+  max_length: 512
+  device: "auto"
+  download_if_missing: false
+
+# Memory Service Configuration (Staging)
+memory:
+  auto_save:
+    enabled: true
+    threshold: 0.7
+    min_content_length: 50
+    max_content_length: 10000
+  search:
+    max_results: 15
+    similarity_threshold: 0.5
+    include_embeddings: false
+  retention:
+    max_memories: 100000  # 100K memories for staging
+    cleanup_interval: 43200  # 12 hours
+
+# Plugin System Configuration (Staging)
+plugins:
+  directory: "/app/plugins"
+  auto_load: true
+  enabled_plugins: ["memory_analytics", "backup_manager"]
+  disabled_plugins: ["notification_service"]  # Disable notifications in staging
+  plugin_config:
+    memory_analytics:
+      analytics_enabled: true
+      metrics_retention_days: 30
+      insights_enabled: true
+    backup_manager:
+      auto_backup: true
+      backup_interval: 86400  # 24 hours
+
+# Cache Configuration (Staging - Redis)
+cache:
+  redis_enabled: true
+  redis_host: "redis"
+  redis_port: 6379
+  redis_password: "${REDIS_PASSWORD}"
+  redis_db: 1  # Use different DB for staging
+  memory_ttl: 3600  # 1 hour
+  search_ttl: 1800  # 30 minutes
+  max_memory_size: 5000
+
+# Backup Configuration (Staging)
+backup:
+  enabled: true
+  schedule: "0 3 * * *"  # Daily at 3 AM
+  retention_days: 30
+  compression: true
+  storage:
+    type: "s3"
+    path: "s3://mcp-memory-staging-backups"
+    credentials:
+      access_key: "${AWS_ACCESS_KEY_ID}"
+      secret_key: "${AWS_SECRET_ACCESS_KEY}"
+      region: "${AWS_REGION}"
+
+# Notification Configuration (Staging - Limited)
+notifications:
+  enabled: false  # Disable notifications in staging
+  providers:
+    email:
+      enabled: false
+      smtp_host: "${SMTP_HOST}"
+      smtp_port: 587
+      username: "${SMTP_USERNAME}"
+      password: "${SMTP_PASSWORD}"
+      from_email: "${FROM_EMAIL}"
+      to_emails: ["${STAGING_EMAIL}"]
+      tls: true
+    webhook:
+      enabled: false
+      url: "${STAGING_WEBHOOK_URL}"
+      headers:
+        Authorization: "Bearer ${WEBHOOK_TOKEN}"
+      timeout: 30
+      retry_attempts: 2
+
+# Export Configuration (Staging)
+export:
+  formats: ["json", "csv"]
+  compression: true
+  include_embeddings: false
+  batch_size: 200
+  max_file_size: 52428800  # 50MB
+  storage:
+    type: "s3"
+    bucket: "mcp-memory-staging-exports"
+
+# Monitoring Configuration (Staging)
+monitoring:
+  enabled: true
+  metrics_port: 9090
+  health_check_interval: 60
+  log_metrics: true
+  alerting:
+    enabled: false  # Disable alerts in staging
+    webhook_url: ""
+
+# Paths Configuration (Staging)
+paths:
+  data_dir: "/app/data"
+  logs_dir: "/app/logs"
+  models_dir: "/app/models"
+  plugins_dir: "/app/plugins"
+  exports_dir: "/app/exports"
+  backups_dir: "/app/backups"
+
+# Security Configuration (Staging - Similar to Production)
+security:
+  api_key_required: true
+  api_key: "${STAGING_API_KEY}"
+  cors_enabled: true
+  cors_origins: ["https://staging.yourdomain.com", "https://app-staging.yourdomain.com"]
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 200
+    burst_limit: 400
+  # Security settings
+  ssl_required: true
+  session_timeout: 1800  # 30 minutes
+  max_login_attempts: 3
+  password_policy:
+    min_length: 10
+    require_uppercase: true
+    require_lowercase: true
+    require_numbers: true
+    require_special: false
+
+# Performance Configuration (Staging)
+performance:
+  max_concurrent_requests: 200
+  request_timeout: 45
+  memory_limit: "2GB"
+  worker_processes: 4
+  # Load balancing
+  load_balancer:
+    enabled: true
+    algorithm: "round_robin"
+    health_check_path: "/health"
+    health_check_interval: 60
+
+# Logging Configuration (Staging)
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_rotation: true
+  max_file_size: "50MB"
+  backup_count: 5
+  console_output: false
+  file_output: true
+  # Structured logging
+  structured_logging: true
+  log_format: "json"
+  # Log aggregation
+  log_aggregation:
+    enabled: true
+    endpoint: "${STAGING_LOG_ENDPOINT}"
+    batch_size: 50
+    flush_interval: 10
+
+# Staging Specific Settings
+staging:
+  # Data management
+  data_management:
+    auto_cleanup: true
+    cleanup_interval: 86400  # 24 hours
+    max_data_age: 604800  # 7 days
+    anonymize_data: true
+  
+  # Feature flags
+  feature_flags:
+    enabled: true
+    new_features: true
+    experimental_features: true
+    beta_features: true
+  
+  # Performance testing
+  performance_testing:
+    enabled: true
+    load_testing: true
+    stress_testing: false
+    benchmark_mode: false
+  
+  # Monitoring and alerting
+  monitoring:
+    detailed_metrics: true
+    performance_profiling: true
+    error_tracking: true
+    user_analytics: true
+  
+  # Deployment
+  deployment:
+    auto_deploy: false
+    manual_approval: true
+    rollback_enabled: true
+    health_check_timeout: 300  # 5 minutes 

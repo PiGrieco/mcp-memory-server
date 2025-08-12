@@ -1,0 +1,442 @@
+#!/usr/bin/env python3
+"""
+MCP Memory Server - HTTP/Network Mode
+Serves the MCP Memory Server over HTTP for remote access
+"""
+
+import asyncio
+import json
+import logging
+import os
+import sys
+from datetime import datetime
+from typing import Any, Dict
+
+# Add the src directory to the path
+sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
+
+from aiohttp import web, web_request
+from aiohttp.web import middleware
+# import aiohttp_cors  # Not needed since we're using custom CORS middleware
+
+# Import the original MCP server functionality
+from mcp_memory_server import async_main as mcp_main, initialize_full_memory_server
+
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+# Global MCP server instance
+mcp_server = None
+full_server = None
+
+async def initialize_mcp_server():
+    """Initialize the MCP server for HTTP mode"""
+    global mcp_server, full_server
+    
+    try:
+        # Initialize full server
+        full_server, has_full_server = initialize_full_memory_server()
+        if not has_full_server:
+            raise Exception("Failed to initialize full server")
+        
+        logger.info("✅ MCP Memory Server initialized for HTTP mode")
+        return True
+    except Exception as e:
+        logger.error(f"❌ Failed to initialize MCP server: {e}")
+        return False
+
+async def handle_mcp_request(request_data: Dict[str, Any]) -> Dict[str, Any]:
+    """Handle MCP requests and return responses"""
+    global full_server
+    
+    try:
+        method = request_data.get("method")
+        params = request_data.get("params", {})
+        request_id = request_data.get("id")
+        
+        logger.info(f"🔄 Processing MCP request: {method}")
+        
+        if method == "initialize":
+            return {
+                "jsonrpc": "2.0",
+                "id": request_id,
+                "result": {
+                    "protocolVersion": "2024-11-05",
+                    "capabilities": {
+                        "tools": {
+                            "listChanged": True
+                        },
+                        "resources": {},
+                        "prompts": {}
+                    },
+                    "serverInfo": {
+                        "name": "memory-server-http",
+                        "version": "1.0.0",
+                        "description": "Memory server for remote access (HTTP)"
+                    }
+                }
+            }
+
+        elif method == "initialized":
+            # Cursor sends this after initialize - this is a notification, no response needed
+            logger.info("🔄 Received initialized notification")
+            return None  # No response for notifications
+        
+        elif method == "notifications/initialized":
+            # Client sending initialized notification - no response needed
+            logger.info("🔄 Received notifications/initialized")
+            return None
+        
+        elif method == "prompts/list":
+            # Client asking for prompts - we don't have any
+            logger.info("🔄 Received prompts/list request")
+            return {
+                "jsonrpc": "2.0",
+                "id": request_id,
+                "result": {
+                    "prompts": []
+                }
+            }
+        
+        elif method == "resources/list":
+            # Client asking for resources - we don't have any
+            logger.info("🔄 Received resources/list request")
+            return {
+                "jsonrpc": "2.0", 
+                "id": request_id,
+                "result": {
+                    "resources": []
+                }
+            }
+
+        elif method == "tools/list":
+            return {
+                "jsonrpc": "2.0",
+                "id": request_id,
+                "result": {
+                    "tools": [
+                        {
+                            "name": "save_memory",
+                            "description": "Save important information to memory",
+                            "inputSchema": {
+                                "type": "object",
+                                "properties": {
+                                    "content": {"type": "string"},
+                                    "project": {"type": "string"},
+                                    "importance": {"type": "number"}
+                                },
+                                "required": ["content"]
+                            }
+                        },
+                        {
+                            "name": "search_memories",
+                            "description": "Search for relevant memories",
+                            "inputSchema": {
+                                "type": "object",
+                                "properties": {
+                                    "query": {"type": "string"},
+                                    "max_results": {"type": "number"},
+                                    "similarity_threshold": {"type": "number"}
+                                },
+                                "required": ["query"]
+                            }
+                        },
+                        {
+                            "name": "list_memories",
+                            "description": "List all saved memories",
+                            "inputSchema": {"type": "object", "properties": {}}
+                        },
+                        {
+                            "name": "memory_status",
+                            "description": "Check memory system status",
+                            "inputSchema": {"type": "object", "properties": {}}
+                        }
+                    ]
+                }
+            }
+        
+        elif method == "tools/call":
+            tool_name = params.get("name")
+            arguments = params.get("arguments", {})
+            
+            # Log arguments for debugging
+            logger.info(f"🔧 Tool call: {tool_name}")
+            logger.info(f"📋 Arguments: {arguments}")
+            
+            # Handle tool calls using the full server
+            if tool_name == "save_memory":
+                result = await full_server._handle_save_memory(arguments)
+                # Ensure result is in correct format for MCP
+                if result and len(result) > 0 and hasattr(result[0], 'text'):
+                    # Result is already in correct format
+                    pass
+                else:
+                    # Convert to proper MCP format
+                    result = [type('Result', (), {'text': str(result)})()]
+            elif tool_name == "search_memories":
+                result = await full_server._handle_search_memories(arguments)
+            elif tool_name == "list_memories":
+                # Use a common word that should match most memories
+                result = await full_server._handle_search_memories({
+                    "query": "memory",
+                    "max_results": arguments.get("limit", 50),
+                    "similarity_threshold": 0.1  # Very low threshold to get most memories
+                })
+            elif tool_name == "memory_status":
+                # Get memory count using the working search method
+                try:
+                    # Get memory count by searching with common word (max 100 results)
+                    count_result = await full_server._handle_search_memories({
+                        "query": "memory",
+                        "max_results": 100,
+                        "similarity_threshold": 0.1
+                    })
+
+                    # Parse the result to get memory count
+                    if count_result and len(count_result) > 0:
+                        result_text = count_result[0].text
+                        import json
+                        result_data = json.loads(result_text)
+                        total_memories = len(result_data.get("data", {}).get("memories", []))
+                    else:
+                        total_memories = 0
+
+                    # Create status response
+                    default_project = os.getenv("PROJECT_NAME", os.getenv("DEFAULT_PROJECT", "default"))
+                    status = {
+                        "success": True,
+                        "message": "Memory system status",
+                        "data": {
+                            "total_memories": total_memories,
+                            "project": default_project,
+                            "database_connected": True,
+                            "embedding_model": os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2"),
+                            "server_mode": os.getenv("ENVIRONMENT", "production")
+                        }
+                    }
+                    result = [type('Result', (), {'text': str(status)})()]
+                except Exception as e:
+                    status = {
+                        "success": False,
+                        "message": f"Status check failed: {str(e)}",
+                        "data": {
+                            "total_memories": 0,
+                            "database_connected": False
+                        }
+                    }
+                    result = [type('Result', (), {'text': str(status)})()]
+            else:
+                raise Exception(f"Unknown tool: {tool_name}")
+            
+            # Format response properly for MCP protocol
+            if result and len(result) > 0:
+                content = result[0].text if hasattr(result[0], 'text') else str(result[0])
+            else:
+                content = "Operation completed"
+
+            return {
+                "jsonrpc": "2.0",
+                "id": request_id,
+                "result": {
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": content
+                        }
+                    ]
+                }
+            }
+        
+        else:
+            raise Exception(f"Unknown method: {method}")
+    
+    except Exception as e:
+        logger.error(f"❌ Error handling MCP request: {e}")
+        return {
+            "jsonrpc": "2.0",
+            "id": request_data.get("id"),
+            "error": {
+                "code": -32603,
+                "message": str(e)
+            }
+        }
+
+async def mcp_handler(request):
+    """HTTP handler for MCP requests"""
+    try:
+        # Log request details for debugging
+        logger.info(f"📥 Request method: {request.method}")
+        logger.info(f"📥 Request headers: {dict(request.headers)}")
+        logger.info(f"📥 Request content type: {request.content_type}")
+        
+        # Parse JSON request
+        request_data = await request.json()
+        logger.info(f"📥 Received request: {request_data.get('method', 'unknown')} - {request_data}")
+        
+        # Process MCP request
+        response = await handle_mcp_request(request_data)
+        
+        logger.info(f"📤 Sending response: {response}")
+        
+        # Return JSON response (handle None for notifications)
+        if response is None:
+            return web.Response(status=204)  # No Content for notifications
+        
+        # Create response with proper headers for MCP
+        json_response = web.json_response(response)
+        json_response.headers['Content-Type'] = 'application/json'
+        json_response.headers['Cache-Control'] = 'no-cache'
+        return json_response
+    
+    except Exception as e:
+        logger.error(f"❌ HTTP handler error: {e}")
+        import traceback
+        traceback.print_exc()
+        return web.json_response({
+            "jsonrpc": "2.0",
+            "id": None,
+            "error": {
+                "code": -32700,
+                "message": f"Parse error: {str(e)}"
+            }
+        }, status=400)
+
+async def health_handler(request):
+    """Health check endpoint"""
+    return web.json_response({
+        "status": "healthy",
+        "service": "mcp-memory-server",
+        "timestamp": datetime.now().isoformat(),
+        "version": "1.0.0"
+    })
+
+async def info_handler(request):
+    """Server info endpoint"""
+    return web.json_response({
+        "name": "MCP Memory Server",
+        "version": "1.0.0",
+        "mode": "HTTP",
+        "endpoints": {
+            "mcp": "/mcp",
+            "health": "/health",
+            "info": "/info"
+        },
+        "project": os.getenv("PROJECT_NAME", os.getenv("DEFAULT_PROJECT", "default")),
+        "database": os.getenv("DATABASE_NAME", "mcp_memory_production"),
+        "environment": os.getenv("ENVIRONMENT", "production"),
+        "embedding_model": os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
+    })
+
+async def mcp_capabilities_handler(request):
+    """MCP capabilities endpoint for easier discovery"""
+    return web.json_response({
+        "protocolVersion": "2024-11-05",
+        "capabilities": {
+            "tools": {
+                "listChanged": True
+            },
+            "resources": {},
+            "prompts": {}
+        },
+        "serverInfo": {
+            "name": "memory-server-http", 
+            "version": "1.0.0",
+            "description": "Memory server for remote access (HTTP)"
+        },
+        "tools": [
+            {
+                "name": "save_memory",
+                "description": "Save important information to memory"
+            },
+            {
+                "name": "search_memories", 
+                "description": "Search for relevant memories"
+            },
+            {
+                "name": "list_memories",
+                "description": "List all saved memories"
+            },
+            {
+                "name": "memory_status",
+                "description": "Check memory system status"
+            }
+        ]
+    })
+
+@middleware
+async def cors_middleware(request, handler):
+    """CORS middleware for cross-origin requests"""
+    # Handle preflight OPTIONS requests
+    if request.method == 'OPTIONS':
+        response = web.Response()
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, PUT, DELETE'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With, Accept, Origin'
+        response.headers['Access-Control-Max-Age'] = '86400'
+        return response
+    
+    response = await handler(request)
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, PUT, DELETE'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With, Accept, Origin'
+    response.headers['Access-Control-Expose-Headers'] = 'Content-Type'
+    return response
+
+async def create_app():
+    """Create the HTTP application"""
+    app = web.Application(middlewares=[cors_middleware])
+    
+    # Add routes
+    app.router.add_post('/mcp', mcp_handler)
+    app.router.add_get('/mcp/capabilities', mcp_capabilities_handler)
+    app.router.add_get('/health', health_handler)
+    app.router.add_get('/info', info_handler)
+    app.router.add_options('/mcp', lambda r: web.Response())
+    
+    return app
+
+async def main():
+    """Main HTTP server function"""
+    print("🌐 Starting MCP Memory Server - HTTP Mode")
+    print("=" * 50)
+    
+    # Initialize MCP server
+    if not await initialize_mcp_server():
+        print("❌ Failed to initialize MCP server")
+        sys.exit(1)
+    
+    # Create web application
+    app = await create_app()
+    
+    # Start HTTP server
+    host = os.getenv("HOST", "0.0.0.0")
+    port = int(os.getenv("PORT", "8000"))
+    
+    print(f"🚀 Starting HTTP server on {host}:{port}")
+    print(f"📡 MCP endpoint: http://{host}:{port}/mcp")
+    print(f"🏥 Health check: http://{host}:{port}/health")
+    print(f"ℹ️  Server info: http://{host}:{port}/info")
+    print("=" * 50)
+    
+    runner = web.AppRunner(app)
+    await runner.setup()
+    
+    site = web.TCPSite(runner, host, port)
+    await site.start()
+    
+    print("✅ MCP Memory Server is running!")
+    print("Press Ctrl+C to stop")
+    
+    # Keep the server running
+    try:
+        await asyncio.Future()  # Run forever
+    except KeyboardInterrupt:
+        print("\n🛑 Shutting down server...")
+        await runner.cleanup()
+
+if __name__ == "__main__":
+    asyncio.run(main())
