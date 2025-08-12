@@ -18,13 +18,13 @@ NC='\033[0m' # No Color
 
 # Installation configuration
 REPO_URL="https://github.com/PiGrieco/mcp-memory-server.git"
-REPO_BRANCH="production-ready-v2"
+REPO_BRANCH="feature/complete-architecture-refactor"
 INSTALL_DIR="$HOME/mcp-memory-server"
 
 # Check if we're running from existing installation or need to clone
-if [ -f "$(dirname "${BASH_SOURCE[0]}")/mcp_base_server.py" ]; then
+if [ -f "$(dirname "${BASH_SOURCE[0]}")/../../main.py" ]; then
     # Running from existing installation
-    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
     echo -e "${BLUE}📍 Using existing installation: $SCRIPT_DIR${NC}"
 else
     # Need to clone repository
@@ -35,8 +35,7 @@ else
     SCRIPT_DIR="$INSTALL_DIR"
 fi
 
-SERVER_PATH="$SCRIPT_DIR/claude_mcp_server.py"
-CONFIG_TEMPLATE="$SCRIPT_DIR/config/templates/claude_template.json"
+SERVER_PATH="$SCRIPT_DIR/servers/legacy/claude_mcp_server.py"
 
 echo -e "${BLUE}📍 Installation directory: $SCRIPT_DIR${NC}"
 
@@ -93,7 +92,7 @@ echo -e "${GREEN}✅ All dependencies installed${NC}"
 echo -e "\n${BLUE}🧠 Step 4: Testing ML model access and installation...${NC}"
 
 echo -e "${YELLOW}Testing MCP server...${NC}"
-timeout 10s python mcp_base_server.py > /dev/null 2>&1 || {
+timeout 10s python servers/legacy/mcp_base_server.py > /dev/null 2>&1 || {
     echo -e "${YELLOW}⚠️ Server test timeout (normal for first run)${NC}"
 }
 
@@ -150,7 +149,7 @@ cat > "$CLAUDE_MCP_CONFIG" << EOF
   "mcpServers": {
     "mcp-memory-claude": {
       "command": "$SCRIPT_DIR/venv/bin/python",
-      "args": ["$SCRIPT_DIR/claude_mcp_server.py"],
+      "args": ["$SCRIPT_DIR/servers/legacy/claude_mcp_server.py"],
       "env": {
         "ML_MODEL_TYPE": "huggingface",
         "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
@@ -172,26 +171,26 @@ echo -e "${GREEN}✅ Claude Desktop configuration created${NC}"
 echo -e "\n${BLUE}🚀 Step 6: Creating convenience scripts...${NC}"
 
 # Create start script
-cat > "$SCRIPT_DIR/start_claude.sh" << 'EOF'
+cat > "$SCRIPT_DIR/scripts/servers/start_claude_server.sh" << 'EOF'
 #!/bin/bash
 # Claude Desktop MCP Memory Server Startup Script
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/../.."
 source venv/bin/activate
 
 echo "🔮 Starting Claude Desktop MCP Memory Server..."
-echo "📍 Server: claude_mcp_server.py"
+echo "📍 Server: servers/legacy/claude_mcp_server.py"
 echo "⚡ ML model will auto-load on first message"
 echo "🔮 Optimized for Claude Desktop native MCP integration"
 echo ""
 
-python claude_mcp_server.py
+python servers/legacy/claude_mcp_server.py
 EOF
 
-chmod +x "$SCRIPT_DIR/start_claude.sh"
+chmod +x "$SCRIPT_DIR/scripts/servers/start_claude_server.sh"
 
 # Create update script
-cat > "$SCRIPT_DIR/update_claude.sh" << EOF
+cat > "$SCRIPT_DIR/scripts/utils/update_claude.sh" << EOF
 #!/bin/bash
 # Claude Desktop MCP Memory Server Update Script
 
@@ -208,7 +207,7 @@ pip install -r requirements.txt --upgrade --quiet
 echo "✅ Claude update completed successfully"
 EOF
 
-chmod +x "$SCRIPT_DIR/update_claude.sh"
+chmod +x "$SCRIPT_DIR/scripts/utils/update_claude.sh"
 
 echo -e "${GREEN}✅ Convenience scripts created${NC}"
 
@@ -226,8 +225,8 @@ echo "3. 💬 Start a new conversation to test the integration"
 
 echo -e "\n${BLUE}🚀 Quick Start Commands:${NC}"
 echo "  cd $SCRIPT_DIR"
-echo "  ./start_claude.sh              # Start Claude MCP server"
-echo "  ./update_claude.sh             # Update to latest version"
+echo "  ./scripts/servers/start_claude_server.sh    # Start Claude MCP server"
+echo "  ./scripts/utils/update_claude.sh             # Update to latest version"
 
 echo -e "\n${BLUE}🧪 TEST THE CLAUDE INTEGRATION:${NC}"
 echo "Try these in Claude Desktop:"
@@ -244,13 +243,13 @@ echo "• 🎯 Platform: Optimized for Claude Desktop MCP protocol"
 
 echo -e "\n${BLUE}🔧 MANUAL COMMANDS:${NC}"
 echo "  cd $SCRIPT_DIR && source venv/bin/activate"
-echo "  python claude_mcp_server.py    # Direct server start"
+echo "  python servers/legacy/claude_mcp_server.py    # Direct server start"
 
 echo -e "\n${BLUE}📁 FILES CREATED:${NC}"
 echo "  • MCP Server: $SERVER_PATH"
 echo "  • Claude Config: $CLAUDE_MCP_CONFIG"
-echo "  • Start Script: $SCRIPT_DIR/start_claude.sh"
-echo "  • Update Script: $SCRIPT_DIR/update_claude.sh"
+echo "  • Start Script: $SCRIPT_DIR/scripts/servers/start_claude_server.sh"
+echo "  • Update Script: $SCRIPT_DIR/scripts/utils/update_claude.sh"
 
 echo -e "\n${BLUE}🔮 CLAUDE FEATURES:${NC}"
 echo "  • 🧠 Infinite AI memory with ML auto-triggers"
@@ -264,5 +263,5 @@ echo -e "${PURPLE}🔮 Claude can now remember everything and provide better ass
 
 if [ "$SCRIPT_DIR" != "$(pwd)" ]; then
     echo -e "\n${YELLOW}💡 TIP: Add to your shell profile for easy access:${NC}"
-    echo "  alias claude-memory='cd $SCRIPT_DIR && ./start_claude.sh'"
+    echo "  alias claude-memory='cd $SCRIPT_DIR && ./scripts/servers/start_claude_server.sh'"
 fi

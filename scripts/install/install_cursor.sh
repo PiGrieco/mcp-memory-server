@@ -17,13 +17,13 @@ NC='\033[0m' # No Color
 
 # Installation configuration
 REPO_URL="https://github.com/PiGrieco/mcp-memory-server.git"
-REPO_BRANCH="production-ready-v2"
+REPO_BRANCH="feature/complete-architecture-refactor"
 INSTALL_DIR="$HOME/mcp-memory-server"
 
 # Check if we're running from existing installation or need to clone
-if [ -f "$(dirname "${BASH_SOURCE[0]}")/mcp_base_server.py" ]; then
+if [ -f "$(dirname "${BASH_SOURCE[0]}")/../../main.py" ]; then
     # Running from existing installation
-    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
     echo -e "${BLUE}📍 Using existing installation: $SCRIPT_DIR${NC}"
 else
     # Need to clone repository
@@ -34,8 +34,8 @@ else
     SCRIPT_DIR="$INSTALL_DIR"
 fi
 
-SERVER_PATH="$SCRIPT_DIR/cursor_mcp_server.py"
-CONFIG_PATH="$SCRIPT_DIR/cursor_config.json"
+SERVER_PATH="$SCRIPT_DIR/servers/legacy/cursor_mcp_server.py"
+CONFIG_PATH="$SCRIPT_DIR/config/cursor_config.json"
 
 # Step 1: Check prerequisites
 echo -e "\n${BLUE}🔍 Step 1: Checking prerequisites...${NC}"
@@ -134,7 +134,7 @@ timeout 30s $PYTHON_CMD "$SERVER_PATH" --test 2>/dev/null || {
 # Step 6: Create startup script
 echo -e "\n${BLUE}🚀 Step 6: Creating startup script...${NC}"
 
-STARTUP_SCRIPT="$SCRIPT_DIR/start_cursor_server.sh"
+STARTUP_SCRIPT="$SCRIPT_DIR/scripts/servers/start_cursor_server.sh"
 cat > "$STARTUP_SCRIPT" << EOF
 #!/bin/bash
 # Cursor MCP Memory Server Startup Script
