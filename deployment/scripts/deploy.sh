@@ -56,8 +56,8 @@ check_prerequisites() {
         exit 1
     fi
     
-    # Check Docker Compose
-    if ! command -v docker-compose &> /dev/null; then
+    # Check Docker Compose (new version)
+    if ! docker compose version &> /dev/null; then
         echo -e "${RED}❌ Docker Compose not found. Please install Docker Compose.${NC}"
         exit 1
     fi
@@ -116,10 +116,10 @@ EOF
     # Start services based on profile
     if [ "$profile" = "full" ]; then
         echo -e "${YELLOW}Starting full deployment with monitoring...${NC}"
-        docker-compose --profile monitoring --profile production up -d
+        docker compose --profile monitoring --profile production up -d
     else
         echo -e "${YELLOW}Starting basic deployment...${NC}"
-        docker-compose up -d
+        docker compose up -d
     fi
     
     echo -e "${GREEN}✅ Docker deployment completed${NC}"
@@ -129,7 +129,7 @@ EOF
 start_services() {
     echo -e "\n${BLUE}🚀 Starting services...${NC}"
     cd "$DOCKER_DIR"
-    docker-compose up -d
+    docker compose up -d
     echo -e "${GREEN}✅ Services started${NC}"
 }
 
@@ -137,7 +137,7 @@ start_services() {
 stop_services() {
     echo -e "\n${BLUE}🛑 Stopping services...${NC}"
     cd "$DOCKER_DIR"
-    docker-compose down
+    docker compose down
     echo -e "${GREEN}✅ Services stopped${NC}"
 }
 
@@ -145,7 +145,7 @@ stop_services() {
 restart_services() {
     echo -e "\n${BLUE}🔄 Restarting services...${NC}"
     cd "$DOCKER_DIR"
-    docker-compose restart
+    docker compose restart
     echo -e "${GREEN}✅ Services restarted${NC}"
 }
 
@@ -153,26 +153,26 @@ restart_services() {
 show_status() {
     echo -e "\n${BLUE}📊 Service Status:${NC}"
     cd "$DOCKER_DIR"
-    docker-compose ps
+    docker compose ps
     
     echo -e "\n${BLUE}🔍 Health Checks:${NC}"
     
     # Check MongoDB
-    if docker-compose ps mongodb | grep -q "Up"; then
+    if docker compose ps mongodb | grep -q "Up"; then
         echo -e "${GREEN}✅ MongoDB: Running${NC}"
     else
         echo -e "${RED}❌ MongoDB: Not running${NC}"
     fi
     
     # Check Redis
-    if docker-compose ps redis | grep -q "Up"; then
+    if docker compose ps redis | grep -q "Up"; then
         echo -e "${GREEN}✅ Redis: Running${NC}"
     else
         echo -e "${RED}❌ Redis: Not running${NC}"
     fi
     
     # Check MCP Server
-    if docker-compose ps mcp-memory-server | grep -q "Up"; then
+    if docker compose ps mcp-memory-server | grep -q "Up"; then
         echo -e "${GREEN}✅ MCP Server: Running${NC}"
         # Test HTTP endpoint
         if curl -s http://localhost:8000/health > /dev/null; then
@@ -190,7 +190,7 @@ show_logs() {
     local service=${1:-mcp-memory-server}
     echo -e "\n${BLUE}📝 Logs for $service:${NC}"
     cd "$DOCKER_DIR"
-    docker-compose logs -f "$service"
+    docker compose logs -f "$service"
 }
 
 # Function to create backup
@@ -206,10 +206,10 @@ create_backup() {
     cd "$DOCKER_DIR"
     
     # Backup MongoDB data
-    docker-compose exec -T mongodb mongodump --archive --gzip > "$backup_dir/mongodb_$backup_file"
+    docker compose exec -T mongodb mongodump --archive --gzip > "$backup_dir/mongodb_$backup_file"
     
     # Backup Redis data
-    docker-compose exec -T redis redis-cli --rdb /data/dump.rdb
+    docker compose exec -T redis redis-cli --rdb /data/dump.rdb
     docker cp mcp-redis:/data/dump.rdb "$backup_dir/redis_$timestamp.rdb"
     
     # Backup application data
@@ -239,7 +239,7 @@ clean_up() {
     cd "$DOCKER_DIR"
     
     # Stop and remove containers
-    docker-compose down -v
+    docker compose down -v
     
     # Remove volumes
     docker volume prune -f

@@ -76,10 +76,14 @@ class CursorMCPServer(MCPMemoryServer):
     def _add_cursor_tools(self):
         """Add Cursor-specific MCP tools"""
         
+        # Store the original list_tools handler
+        original_list_tools = self.server._list_tools_handler
+        
         @self.server.list_tools()
         async def handle_cursor_tools() -> List[Tool]:
             """Extended tool list for Cursor IDE"""
-            base_tools = await super(CursorMCPServer, self).server._list_tools_handler()
+            # Get base tools from parent
+            base_tools = await original_list_tools()
             
             cursor_tools = [
                 Tool(

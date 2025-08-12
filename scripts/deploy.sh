@@ -12,6 +12,9 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
+# Docker path for macOS
+DOCKER_PATH="/Applications/Docker.app/Contents/Resources/bin/docker"
+
 echo "🚀 MCP Memory Server - Quick Deployment"
 echo "======================================"
 
@@ -28,20 +31,26 @@ fi
 # Check prerequisites
 echo -e "\n${BLUE}🔍 Checking prerequisites...${NC}"
 
-# Check Docker
-if ! command -v docker &> /dev/null; then
+# Check Docker (handle macOS path)
+if [ -f "$DOCKER_PATH" ]; then
+    echo -e "${GREEN}✅ Docker found at: $DOCKER_PATH${NC}"
+    DOCKER_CMD="$DOCKER_PATH"
+elif command -v docker &> /dev/null; then
+    echo -e "${GREEN}✅ Docker found in PATH${NC}"
+    DOCKER_CMD="docker"
+else
     echo -e "${RED}❌ Docker not found. Please install Docker.${NC}"
     exit 1
 fi
 
-# Check Docker Compose
-if ! command -v docker-compose &> /dev/null; then
+# Check Docker Compose (new version)
+if ! $DOCKER_CMD compose version &> /dev/null; then
     echo -e "${RED}❌ Docker Compose not found. Please install Docker Compose.${NC}"
     exit 1
 fi
 
 # Check if Docker is running
-if ! docker info &> /dev/null; then
+if ! $DOCKER_CMD info &> /dev/null; then
     echo -e "${RED}❌ Docker is not running. Please start Docker.${NC}"
     exit 1
 fi
@@ -92,11 +101,11 @@ cd deployment/docker
 
 # Stop any existing containers
 echo -e "${YELLOW}🛑 Stopping existing containers...${NC}"
-docker-compose down 2>/dev/null || true
+$DOCKER_CMD compose down 2>/dev/null || true
 
 # Start services
 echo -e "${YELLOW}🚀 Starting services...${NC}"
-docker-compose up -d
+$DOCKER_CMD compose up -d
 
 # Wait for services to be ready
 echo -e "${YELLOW}⏳ Waiting for services to be ready...${NC}"
@@ -104,26 +113,26 @@ sleep 30
 
 # Check service status
 echo -e "\n${BLUE}📊 Service Status:${NC}"
-docker-compose ps
+$DOCKER_CMD compose ps
 
 echo -e "\n${BLUE}🔍 Health Checks:${NC}"
 
 # Check MongoDB
-if docker-compose ps mongodb | grep -q "Up"; then
+if $DOCKER_CMD compose ps mongodb | grep -q "Up"; then
     echo -e "${GREEN}✅ MongoDB: Running${NC}"
 else
     echo -e "${RED}❌ MongoDB: Not running${NC}"
 fi
 
 # Check Redis
-if docker-compose ps redis | grep -q "Up"; then
+if $DOCKER_CMD compose ps redis | grep -q "Up"; then
     echo -e "${GREEN}✅ Redis: Running${NC}"
 else
     echo -e "${RED}❌ Redis: Not running${NC}"
 fi
 
 # Check MCP Server
-if docker-compose ps mcp-memory-server | grep -q "Up"; then
+if $DOCKER_CMD compose ps mcp-memory-server | grep -q "Up"; then
     echo -e "${GREEN}✅ MCP Server: Running${NC}"
     # Test HTTP endpoint
     if curl -s http://localhost:8000/health > /dev/null; then
@@ -146,15 +155,15 @@ echo -e "  • MongoDB: localhost:27017"
 echo -e "  • Redis: localhost:6379"
 
 echo -e "\n${BLUE}🔧 Management Commands:${NC}"
-echo -e "  • View logs: docker-compose logs -f"
-echo -e "  • Stop services: docker-compose down"
-echo -e "  • Restart services: docker-compose restart"
-echo -e "  • View status: docker-compose ps"
+echo -e "  • View logs: $DOCKER_CMD compose logs -f"
+echo -e "  • Stop services: $DOCKER_CMD compose down"
+echo -e "  • Restart services: $DOCKER_CMD compose restart"
+echo -e "  • View status: $DOCKER_CMD compose ps"
 
 echo -e "\n${BLUE}📝 Next Steps:${NC}"
 echo -e "  1. Test the API: curl http://localhost:8000/health"
-echo -e "  2. Check logs: docker-compose logs mcp-memory-server"
+echo -e "  2. Check logs: $DOCKER_CMD compose logs mcp-memory-server"
 echo -e "  3. Configure your IDE (Cursor/Claude) to use the MCP server"
-echo -e "  4. Monitor performance: docker stats"
+echo -e "  4. Monitor performance: $DOCKER_CMD stats"
 
 echo -e "\n${GREEN}✅ Your MCP Memory Server is ready! 🧠✨${NC}" 

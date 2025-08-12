@@ -106,11 +106,7 @@ except Exception as e:
 # Step 4: Create Cursor configuration
 echo -e "\n${BLUE}⚙️ Step 4: Configuring Cursor MCP integration...${NC}"
 
-# Update config file with correct path
-sed "s|/Users/piermatteogrieco/mcp-memory-server-production/cursor_mcp_server.py|$SERVER_PATH|g" "$CONFIG_PATH" > "$CONFIG_PATH.tmp"
-mv "$CONFIG_PATH.tmp" "$CONFIG_PATH"
-
-# Copy configuration to Cursor
+# Create the configuration with proper path replacement
 CURSOR_MCP_CONFIG="$CURSOR_CONFIG_DIR/mcp_settings.json"
 
 if [ -f "$CURSOR_MCP_CONFIG" ]; then
@@ -119,7 +115,35 @@ if [ -f "$CURSOR_MCP_CONFIG" ]; then
 fi
 
 echo -e "${YELLOW}📝 Installing Cursor MCP configuration...${NC}"
-cp "$CONFIG_PATH" "$CURSOR_MCP_CONFIG"
+
+# Create configuration with proper path replacement
+cat > "$CURSOR_MCP_CONFIG" << EOF
+{
+  "mcpServers": {
+    "mcp-memory-cursor": {
+      "command": "$SCRIPT_DIR/venv/bin/python",
+      "args": ["$SCRIPT_DIR/servers/legacy/cursor_mcp_server.py"],
+      "env": {
+        "ML_MODEL_TYPE": "huggingface",
+        "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
+        "AUTO_TRIGGER_ENABLED": "true",
+        "PRELOAD_ML_MODEL": "true",
+        "CURSOR_MODE": "true",
+        "LOG_LEVEL": "INFO",
+        "MEMORY_STORAGE": "file",
+        "SKIP_DATABASE": "true",
+        "ML_CONFIDENCE_THRESHOLD": "0.7",
+        "TRIGGER_THRESHOLD": "0.15",
+        "SIMILARITY_THRESHOLD": "0.3",
+        "MEMORY_THRESHOLD": "0.7",
+        "SEMANTIC_THRESHOLD": "0.8",
+        "ML_TRIGGER_MODE": "hybrid",
+        "INSTALL_DIR": "$SCRIPT_DIR"
+      }
+    }
+  }
+}
+EOF
 
 echo -e "${GREEN}✅ Cursor configuration updated${NC}"
 
