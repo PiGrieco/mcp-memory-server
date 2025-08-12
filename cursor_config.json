@@ -1,9 +1,0 @@
-{
-  "mcpServers": {
-    "mcp-memory": {
-      "command": "/Users/pigrieco/mcp-memory-server/mcp-memory-server/venv/bin/python",
-      "args": ["/Users/pigrieco/mcp-memory-server/mcp-memory-server/cursor_mcp_server.py"],
-      "env": {}
-    }
-  }
-}
