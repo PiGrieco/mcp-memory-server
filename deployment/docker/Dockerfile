@@ -34,13 +34,13 @@ RUN pip install --upgrade pip && \
 # Copy application code
 COPY . .
 
-# Create logs directory and set permissions
-RUN mkdir -p /app/logs
+# Create necessary directories
+RUN mkdir -p /app/logs /app/data /app/exports /app/backups
 
 # Create non-root user for security
 RUN useradd --create-home --shell /bin/bash mcp && \
     chown -R mcp:mcp /app && \
-    chmod -R 755 /app/logs
+    chmod -R 755 /app/logs /app/data /app/exports /app/backups
 USER mcp
 
 # Expose port for HTTP/network mode
@@ -48,7 +48,7 @@ EXPOSE 8000
 
 # Health check for HTTP mode
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/health || python -c "import sys; sys.exit(0)"
+    CMD curl -f http://localhost:8000/health || exit 1
 
-# Default command - MCP standard mode (can be overridden for HTTP mode)
-CMD ["python", "mcp_memory_server.py"]
+# Default command - HTTP server mode
+CMD ["python", "servers/http_server.py"]

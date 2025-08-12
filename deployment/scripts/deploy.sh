@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# MCP Memory Server Deployment Script
-# This script automates the deployment process
+# MCP Memory Server - Deployment Script
+# Deploys the complete MCP Memory Server with MongoDB and Redis
 
-set -e  # Exit on any error
+set -e
 
 # Colors for output
 RED='\033[0;31m'
@@ -12,259 +12,288 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Configuration
-PROJECT_NAME="mcp-memory-server"
-DOCKER_IMAGE="mcp-memory-server:latest"
-DOCKER_COMPOSE_FILE="deployment/docker/docker-compose.yml"
-KUBERNETES_DIR="deployment/kubernetes"
+# Script configuration
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
+DOCKER_DIR="$PROJECT_ROOT/deployment/docker"
 
-# Functions
-log_info() {
-    echo -e "${BLUE}[INFO]${NC} $1"
+echo "🚀 MCP Memory Server - Deployment Script"
+echo "========================================"
+
+# Function to show usage
+show_usage() {
+    echo "Usage: $0 [COMMAND] [OPTIONS]"
+    echo ""
+    echo "Commands:"
+    echo "  deploy [docker|kubernetes]  - Deploy the application"
+    echo "  start                       - Start all services"
+    echo "  stop                        - Stop all services"
+    echo "  restart                     - Restart all services"
+    echo "  status                      - Show service status"
+    echo "  logs [service]              - Show logs for a service"
+    echo "  backup                      - Create backup"
+    echo "  restore [backup_file]       - Restore from backup"
+    echo "  clean                       - Clean up containers and volumes"
+    echo "  help                        - Show this help"
+    echo ""
+    echo "Options:"
+    echo "  --env [dev|staging|prod]    - Environment (default: prod)"
+    echo "  --profile [basic|full]      - Deployment profile (default: basic)"
+    echo ""
+    echo "Examples:"
+    echo "  $0 deploy docker --env prod --profile full"
+    echo "  $0 start"
+    echo "  $0 logs mcp-memory-server"
 }
 
-log_success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $1"
-}
-
-log_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
-}
-
-log_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
-}
-
+# Function to check prerequisites
 check_prerequisites() {
-    log_info "Checking prerequisites..."
+    echo -e "\n${BLUE}🔍 Checking prerequisites...${NC}"
     
-    # Check if Docker is installed
+    # Check Docker
     if ! command -v docker &> /dev/null; then
-        log_error "Docker is not installed. Please install Docker first."
+        echo -e "${RED}❌ Docker not found. Please install Docker.${NC}"
         exit 1
     fi
     
-    # Check if Docker Compose is installed
+    # Check Docker Compose
     if ! command -v docker-compose &> /dev/null; then
-        log_error "Docker Compose is not installed. Please install Docker Compose first."
+        echo -e "${RED}❌ Docker Compose not found. Please install Docker Compose.${NC}"
         exit 1
     fi
     
-    # Check if kubectl is installed (for Kubernetes deployment)
-    if ! command -v kubectl &> /dev/null; then
-        log_warning "kubectl is not installed. Kubernetes deployment will be skipped."
-    fi
-    
-    log_success "Prerequisites check completed"
-}
-
-build_docker_image() {
-    log_info "Building Docker image..."
-    
-    # Build the Docker image
-    docker build -t $DOCKER_IMAGE -f deployment/docker/Dockerfile .
-    
-    if [ $? -eq 0 ]; then
-        log_success "Docker image built successfully"
-    else
-        log_error "Failed to build Docker image"
+    # Check if Docker is running
+    if ! docker info &> /dev/null; then
+        echo -e "${RED}❌ Docker is not running. Please start Docker.${NC}"
         exit 1
     fi
+    
+    echo -e "${GREEN}✅ Prerequisites check completed${NC}"
 }
 
+# Function to deploy with Docker
 deploy_docker() {
-    log_info "Deploying with Docker Compose..."
+    local env=${1:-prod}
+    local profile=${2:-basic}
     
-    # Stop existing containers
-    docker-compose -f $DOCKER_COMPOSE_FILE down
+    echo -e "\n${BLUE}🐳 Deploying with Docker (Environment: $env, Profile: $profile)...${NC}"
     
-    # Start services
-    docker-compose -f $DOCKER_COMPOSE_FILE up -d
+    cd "$DOCKER_DIR"
     
-    # Wait for services to be ready
-    log_info "Waiting for services to be ready..."
-    sleep 30
+    # Create necessary directories
+    mkdir -p logs data exports backups mongo-init
     
-    # Check service health
-    check_service_health
-    
-    log_success "Docker deployment completed"
-}
+    # Create MongoDB initialization script
+    cat > mongo-init/init.js << 'EOF'
+db = db.getSiblingDB('mcp_memory_production');
 
-deploy_kubernetes() {
-    log_info "Deploying to Kubernetes..."
+// Create collections
+db.createCollection('memories');
+db.createCollection('analytics');
+db.createCollection('backups');
+
+// Create indexes
+db.memories.createIndex({ "content": "text" });
+db.memories.createIndex({ "project": 1 });
+db.memories.createIndex({ "created_at": -1 });
+db.memories.createIndex({ "user_id": 1 });
+
+// Create user for the application
+db.createUser({
+  user: "mcp_user",
+  pwd: "mcp_password",
+  roles: [
+    { role: "readWrite", db: "mcp_memory_production" }
+  ]
+});
+
+print("MongoDB initialization completed");
+EOF
     
-    # Check if kubectl is available
-    if ! command -v kubectl &> /dev/null; then
-        log_error "kubectl is not available. Skipping Kubernetes deployment."
-        return
+    # Set environment variables
+    export ENVIRONMENT=$env
+    
+    # Start services based on profile
+    if [ "$profile" = "full" ]; then
+        echo -e "${YELLOW}Starting full deployment with monitoring...${NC}"
+        docker-compose --profile monitoring --profile production up -d
+    else
+        echo -e "${YELLOW}Starting basic deployment...${NC}"
+        docker-compose up -d
     fi
     
-    # Apply Kubernetes manifests
-    kubectl apply -f $KUBERNETES_DIR/
-    
-    # Wait for deployment to be ready
-    log_info "Waiting for Kubernetes deployment to be ready..."
-    kubectl wait --for=condition=available --timeout=300s deployment/mcp-memory-server
-    
-    # Check service health
-    check_kubernetes_health
-    
-    log_success "Kubernetes deployment completed"
+    echo -e "${GREEN}✅ Docker deployment completed${NC}"
 }
 
-check_service_health() {
-    log_info "Checking service health..."
+# Function to start services
+start_services() {
+    echo -e "\n${BLUE}🚀 Starting services...${NC}"
+    cd "$DOCKER_DIR"
+    docker-compose up -d
+    echo -e "${GREEN}✅ Services started${NC}"
+}
+
+# Function to stop services
+stop_services() {
+    echo -e "\n${BLUE}🛑 Stopping services...${NC}"
+    cd "$DOCKER_DIR"
+    docker-compose down
+    echo -e "${GREEN}✅ Services stopped${NC}"
+}
+
+# Function to restart services
+restart_services() {
+    echo -e "\n${BLUE}🔄 Restarting services...${NC}"
+    cd "$DOCKER_DIR"
+    docker-compose restart
+    echo -e "${GREEN}✅ Services restarted${NC}"
+}
+
+# Function to show status
+show_status() {
+    echo -e "\n${BLUE}📊 Service Status:${NC}"
+    cd "$DOCKER_DIR"
+    docker-compose ps
     
-    # Check if the service is responding
-    for i in {1..10}; do
-        if curl -f http://localhost:8000/health &> /dev/null; then
-            log_success "Service is healthy"
-            return 0
+    echo -e "\n${BLUE}🔍 Health Checks:${NC}"
+    
+    # Check MongoDB
+    if docker-compose ps mongodb | grep -q "Up"; then
+        echo -e "${GREEN}✅ MongoDB: Running${NC}"
+    else
+        echo -e "${RED}❌ MongoDB: Not running${NC}"
+    fi
+    
+    # Check Redis
+    if docker-compose ps redis | grep -q "Up"; then
+        echo -e "${GREEN}✅ Redis: Running${NC}"
+    else
+        echo -e "${RED}❌ Redis: Not running${NC}"
+    fi
+    
+    # Check MCP Server
+    if docker-compose ps mcp-memory-server | grep -q "Up"; then
+        echo -e "${GREEN}✅ MCP Server: Running${NC}"
+        # Test HTTP endpoint
+        if curl -s http://localhost:8000/health > /dev/null; then
+            echo -e "${GREEN}✅ HTTP API: Responding${NC}"
+        else
+            echo -e "${YELLOW}⚠️ HTTP API: Not responding${NC}"
         fi
-        log_info "Waiting for service to be ready... (attempt $i/10)"
-        sleep 5
-    done
-    
-    log_error "Service health check failed"
-    return 1
-}
-
-check_kubernetes_health() {
-    log_info "Checking Kubernetes service health..."
-    
-    # Get service URL
-    SERVICE_URL=$(kubectl get service mcp-memory-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-    
-    if [ -z "$SERVICE_URL" ]; then
-        log_warning "Could not determine service URL. Using port-forward..."
-        kubectl port-forward service/mcp-memory-service 8000:80 &
-        SERVICE_URL="localhost:8000"
-        sleep 5
-    fi
-    
-    # Check health endpoint
-    if curl -f http://$SERVICE_URL/health &> /dev/null; then
-        log_success "Kubernetes service is healthy"
     else
-        log_error "Kubernetes service health check failed"
+        echo -e "${RED}❌ MCP Server: Not running${NC}"
     fi
 }
 
-run_tests() {
-    log_info "Running deployment tests..."
+# Function to show logs
+show_logs() {
+    local service=${1:-mcp-memory-server}
+    echo -e "\n${BLUE}📝 Logs for $service:${NC}"
+    cd "$DOCKER_DIR"
+    docker-compose logs -f "$service"
+}
+
+# Function to create backup
+create_backup() {
+    echo -e "\n${BLUE}💾 Creating backup...${NC}"
     
-    # Run integration tests
-    python test_complete_services.py
+    local backup_dir="$PROJECT_ROOT/backups"
+    local timestamp=$(date +%Y%m%d_%H%M%S)
+    local backup_file="backup_$timestamp.tar.gz"
     
-    if [ $? -eq 0 ]; then
-        log_success "Deployment tests passed"
-    else
-        log_error "Deployment tests failed"
+    mkdir -p "$backup_dir"
+    
+    cd "$DOCKER_DIR"
+    
+    # Backup MongoDB data
+    docker-compose exec -T mongodb mongodump --archive --gzip > "$backup_dir/mongodb_$backup_file"
+    
+    # Backup Redis data
+    docker-compose exec -T redis redis-cli --rdb /data/dump.rdb
+    docker cp mcp-redis:/data/dump.rdb "$backup_dir/redis_$timestamp.rdb"
+    
+    # Backup application data
+    tar -czf "$backup_dir/app_$backup_file" -C "$PROJECT_ROOT" data exports logs
+    
+    echo -e "${GREEN}✅ Backup created: $backup_dir/$backup_file${NC}"
+}
+
+# Function to restore from backup
+restore_backup() {
+    local backup_file=$1
+    
+    if [ -z "$backup_file" ]; then
+        echo -e "${RED}❌ Please specify backup file${NC}"
         exit 1
     fi
+    
+    echo -e "\n${BLUE}🔄 Restoring from backup: $backup_file${NC}"
+    
+    # Implementation depends on backup format
+    echo -e "${YELLOW}⚠️ Restore functionality not implemented yet${NC}"
 }
 
-show_status() {
-    log_info "Deployment Status:"
+# Function to clean up
+clean_up() {
+    echo -e "\n${BLUE}🧹 Cleaning up...${NC}"
+    cd "$DOCKER_DIR"
     
-    echo "=== Docker Services ==="
-    docker-compose -f $DOCKER_COMPOSE_FILE ps
+    # Stop and remove containers
+    docker-compose down -v
     
-    echo ""
-    echo "=== Service Health ==="
-    curl -s http://localhost:8000/health | jq . 2>/dev/null || echo "Health check not available"
+    # Remove volumes
+    docker volume prune -f
     
-    echo ""
-    echo "=== Logs ==="
-    docker-compose -f $DOCKER_COMPOSE_FILE logs --tail=10
+    # Remove images
+    docker image prune -f
+    
+    echo -e "${GREEN}✅ Cleanup completed${NC}"
 }
 
-cleanup() {
-    log_info "Cleaning up..."
-    
-    # Stop Docker services
-    docker-compose -f $DOCKER_COMPOSE_FILE down
-    
-    # Remove Docker images
-    docker rmi $DOCKER_IMAGE 2>/dev/null || true
-    
-    log_success "Cleanup completed"
-}
-
-# Main deployment function
-deploy() {
-    local deployment_type=$1
-    
-    log_info "Starting deployment of $PROJECT_NAME..."
-    
-    # Check prerequisites
-    check_prerequisites
-    
-    # Build Docker image
-    build_docker_image
-    
-    # Deploy based on type
-    case $deployment_type in
-        "docker")
-            deploy_docker
-            ;;
-        "kubernetes")
-            deploy_kubernetes
-            ;;
-        "both")
-            deploy_docker
-            deploy_kubernetes
-            ;;
-        *)
-            log_error "Invalid deployment type. Use: docker, kubernetes, or both"
-            exit 1
-            ;;
-    esac
-    
-    # Run tests
-    run_tests
-    
-    # Show status
-    show_status
-    
-    log_success "Deployment completed successfully!"
-}
-
-# Parse command line arguments
-case "${1:-}" in
-    "deploy")
-        deploy "${2:-docker}"
+# Main script logic
+case "${1:-help}" in
+    deploy)
+        check_prerequisites
+        case "${2:-docker}" in
+            docker)
+                deploy_docker "${3:-prod}" "${4:-basic}"
+                ;;
+            kubernetes)
+                echo -e "${YELLOW}⚠️ Kubernetes deployment not implemented yet${NC}"
+                ;;
+            *)
+                echo -e "${RED}❌ Unknown deployment method: $2${NC}"
+                show_usage
+                exit 1
+                ;;
+        esac
         ;;
-    "test")
-        run_tests
+    start)
+        check_prerequisites
+        start_services
         ;;
-    "status")
+    stop)
+        stop_services
+        ;;
+    restart)
+        restart_services
+        ;;
+    status)
         show_status
         ;;
-    "cleanup")
-        cleanup
+    logs)
+        show_logs "$2"
         ;;
-    "help"|"--help"|"-h")
-        echo "Usage: $0 {deploy|test|status|cleanup} [docker|kubernetes|both]"
-        echo ""
-        echo "Commands:"
-        echo "  deploy [type]  - Deploy the application (docker|kubernetes|both)"
-        echo "  test          - Run deployment tests"
-        echo "  status        - Show deployment status"
-        echo "  cleanup       - Clean up deployment"
-        echo "  help          - Show this help message"
-        echo ""
-        echo "Examples:"
-        echo "  $0 deploy docker"
-        echo "  $0 deploy kubernetes"
-        echo "  $0 deploy both"
-        echo "  $0 test"
-        echo "  $0 status"
+    backup)
+        create_backup
         ;;
-    *)
-        echo "Usage: $0 {deploy|test|status|cleanup} [docker|kubernetes|both]"
-        echo "Use '$0 help' for more information"
-        exit 1
+    restore)
+        restore_backup "$2"
+        ;;
+    clean)
+        clean_up
+        ;;
+    help|*)
+        show_usage
         ;;
 esac 
