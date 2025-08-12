@@ -41,7 +41,11 @@ CONFIG_PATH="$SCRIPT_DIR/config/cursor_config.json"
 echo -e "\n${BLUE}🔍 Step 1: Checking prerequisites...${NC}"
 
 # Check Python
-if command -v python3 &> /dev/null; then
+if command -v python3.11 &> /dev/null; then
+    PYTHON_VERSION=$(python3.11 --version 2>&1 | cut -d' ' -f2)
+    echo -e "${GREEN}✅ Python $PYTHON_VERSION found${NC}"
+    PYTHON_CMD="python3.11"
+elif command -v python3 &> /dev/null; then
     PYTHON_VERSION=$(python3 --version 2>&1 | cut -d' ' -f2)
     echo -e "${GREEN}✅ Python $PYTHON_VERSION found${NC}"
     PYTHON_CMD="python3"
@@ -50,7 +54,7 @@ elif command -v python &> /dev/null; then
     echo -e "${GREEN}✅ Python $PYTHON_VERSION found${NC}"
     PYTHON_CMD="python"
 else
-    echo -e "${RED}❌ Python not found. Please install Python 3.8+${NC}"
+    echo -e "${RED}❌ Python not found. Please install Python 3.10+${NC}"
     exit 1
 fi
 

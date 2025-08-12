@@ -76,14 +76,117 @@ class CursorMCPServer(MCPMemoryServer):
     def _add_cursor_tools(self):
         """Add Cursor-specific MCP tools"""
         
-        # Store the original list_tools handler
-        original_list_tools = self.server._list_tools_handler
-        
         @self.server.list_tools()
         async def handle_cursor_tools() -> List[Tool]:
             """Extended tool list for Cursor IDE"""
-            # Get base tools from parent
-            base_tools = await original_list_tools()
+            # Get base tools from parent class
+            base_tools = [
+                Tool(
+                    name="save_memory",
+                    description="Save important information to memory with ML auto-detection",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "content": {
+                                "type": "string",
+                                "description": "Content to save to memory"
+                            },
+                            "context": {
+                                "type": "object",
+                                "description": "Additional context information",
+                                "properties": {
+                                    "importance": {"type": "number", "minimum": 0, "maximum": 1},
+                                    "tags": {"type": "array", "items": {"type": "string"}},
+                                    "category": {"type": "string"}
+                                }
+                            }
+                        },
+                        "required": ["content"]
+                    }
+                ),
+                Tool(
+                    name="search_memory",
+                    description="Search through saved memories using semantic similarity",
+                    inputSchema={
+                        "type": "object", 
+                        "properties": {
+                            "query": {
+                                "type": "string",
+                                "description": "Search query for finding relevant memories"
+                            },
+                            "limit": {
+                                "type": "integer",
+                                "description": "Maximum number of results to return",
+                                "default": 5,
+                                "minimum": 1,
+                                "maximum": 20
+                            },
+                            "min_similarity": {
+                                "type": "number",
+                                "description": "Minimum similarity threshold",
+                                "default": 0.1,
+                                "minimum": 0,
+                                "maximum": 1
+                            }
+                        },
+                        "required": ["query"]
+                    }
+                ),
+                Tool(
+                    name="analyze_message",
+                    description="Analyze message for auto-triggers using ML model",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "description": "Message to analyze for auto-triggers"
+                            },
+                            "platform_context": {
+                                "type": "object",
+                                "description": "Platform-specific context",
+                                "properties": {
+                                    "platform": {"type": "string"},
+                                    "session_id": {"type": "string"},
+                                    "user_id": {"type": "string"}
+                                }
+                            }
+                        },
+                        "required": ["message"]
+                    }
+                ),
+                Tool(
+                    name="get_memory_stats",
+                    description="Get memory usage and ML model statistics",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {}
+                    }
+                ),
+                Tool(
+                    name="list_memories",
+                    description="List all saved memories with optional filtering",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "limit": {
+                                "type": "integer",
+                                "default": 10,
+                                "minimum": 1,
+                                "maximum": 100
+                            },
+                            "category": {
+                                "type": "string",
+                                "description": "Filter by category"
+                            },
+                            "tag": {
+                                "type": "string", 
+                                "description": "Filter by tag"
+                            }
+                        }
+                    }
+                )
+            ]
             
             cursor_tools = [
                 Tool(
