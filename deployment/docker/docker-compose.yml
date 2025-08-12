@@ -5,72 +5,94 @@
 version: '3.8'
 
 services:
-  # Standard MCP server (stdio mode)
-  mcp-memory-server:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: mcp-memory-server
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: mcp-mongodb
     restart: unless-stopped
-
-    # Environment variables from .env file
-    env_file:
-      - .env
-
-    # Additional environment variables
     environment:
-      - ENVIRONMENT=production
-      - PYTHONPATH=/app
-
-    # Volumes for persistent data and configuration
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: mcp_memory_production
     volumes:
-      - ./logs:/app/logs
-      - ./.env:/app/.env:ro
-
-    # Network configuration
+      - mongodb_data:/data/db
+      - ./mongo-init:/docker-entrypoint-initdb.d
+    ports:
+      - "27017:27017"
     networks:
       - mcp-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
-  # HTTP MCP server (network mode)
-  mcp-memory-server-http:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: mcp-memory-server-http
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: mcp-redis
     restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass redis123
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - mcp-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
-    # Environment variables from .env file
-    env_file:
-      - .env
+  # MCP Memory Server (HTTP mode)
+  mcp-memory-server:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile
+    container_name: mcp-memory-server
+    restart: unless-stopped
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
-    # Additional environment variables
+    # Environment variables
     environment:
       - ENVIRONMENT=production
       - PYTHONPATH=/app
       - HOST=0.0.0.0
       - PORT=8000
-      - PROJECT_NAME=cursor_project
-      - DATABASE_NAME=mcp_memory_production
-      - MONGODB_URI=mongodb://localhost:27017/mcp_memory_production
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/mcp_memory_production?authSource=admin
       - MONGODB_DATABASE=mcp_memory_production
       - MONGODB_COLLECTION=memories
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=redis123
       - EMBEDDING_MODEL=all-MiniLM-L6-v2
+      - CACHE_ENABLED=true
+      - CACHE_TYPE=redis
 
     # Expose HTTP port
     ports:
       - "8000:8000"
 
-    # Volumes for persistent data and configuration
+    # Volumes for persistent data
     volumes:
       - ./logs:/app/logs
-      - ./.env:/app/.env:ro
+      - ./data:/app/data
+      - ./exports:/app/exports
+      - ./backups:/app/backups
 
     # Network configuration
     networks:
       - mcp-network
 
     # Override command for HTTP mode
-    command: ["python", "mcp_memory_server_http.py"]
+    command: ["python", "servers/http_server.py"]
     
     # Resource limits
     deploy:
@@ -84,7 +106,7 @@ services:
     
     # Health check
     healthcheck:
-      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -97,29 +119,75 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  # Optional: Local MongoDB for development
-  # Uncomment if you want to use local MongoDB instead of MongoDB Atlas
-  # mongodb:
-  #   image: mongo:7.0
-  #   container_name: mcp-mongodb
-  #   restart: unless-stopped
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: admin
-  #     MONGO_INITDB_ROOT_PASSWORD: password
-  #     MONGO_INITDB_DATABASE: mcp_memory_production
-  #   volumes:
-  #     - mongodb_data:/data/db
-  #     - ./mongo-init:/docker-entrypoint-initdb.d
-  #   ports:
-  #     - "27017:27017"
-  #   networks:
-  #     - mcp-network
+  # Nginx Reverse Proxy (Optional)
+  nginx:
+    image: nginx:alpine
+    container_name: mcp-nginx
+    restart: unless-stopped
+    depends_on:
+      - mcp-memory-server
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    networks:
+      - mcp-network
+    profiles:
+      - production
+
+  # Prometheus Monitoring (Optional)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: mcp-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - mcp-network
+    profiles:
+      - monitoring
+
+  # Grafana Dashboard (Optional)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: mcp-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/dashboards.json:/etc/grafana/provisioning/dashboards/dashboards.json:ro
+    networks:
+      - mcp-network
+    profiles:
+      - monitoring
 
 networks:
   mcp-network:
     driver: bridge
 
 volumes:
-  # Uncomment if using local MongoDB
-  # mongodb_data:
+  mongodb_data:
+    driver: local
+  redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
   logs:
+    driver: local
