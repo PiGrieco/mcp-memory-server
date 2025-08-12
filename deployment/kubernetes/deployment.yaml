@@ -1,0 +1,166 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-memory-server
+  labels:
+    app: mcp-memory-server
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mcp-memory-server
+  template:
+    metadata:
+      labels:
+        app: mcp-memory-server
+    spec:
+      containers:
+      - name: mcp-memory-server
+        image: mcp-memory-server:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: ENVIRONMENT
+          value: "production"
+        - name: MONGODB_URI
+          value: "mongodb://mongodb-service:27017"
+        - name: MONGODB_DATABASE
+          value: "mcp_memory"
+        - name: LOG_LEVEL
+          value: "INFO"
+        - name: REDIS_ENABLED
+          value: "true"
+        - name: REDIS_HOST
+          value: "redis-service"
+        - name: REDIS_PORT
+          value: "6379"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        volumeMounts:
+        - name: mcp-data
+          mountPath: /app/data
+        - name: mcp-logs
+          mountPath: /app/logs
+        - name: mcp-models
+          mountPath: /app/models
+        - name: mcp-plugins
+          mountPath: /app/plugins
+        - name: mcp-exports
+          mountPath: /app/exports
+        - name: mcp-backups
+          mountPath: /app/backups
+      volumes:
+      - name: mcp-data
+        persistentVolumeClaim:
+          claimName: mcp-data-pvc
+      - name: mcp-logs
+        persistentVolumeClaim:
+          claimName: mcp-logs-pvc
+      - name: mcp-models
+        persistentVolumeClaim:
+          claimName: mcp-models-pvc
+      - name: mcp-plugins
+        persistentVolumeClaim:
+          claimName: mcp-plugins-pvc
+      - name: mcp-exports
+        persistentVolumeClaim:
+          claimName: mcp-exports-pvc
+      - name: mcp-backups
+        persistentVolumeClaim:
+          claimName: mcp-backups-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-memory-service
+spec:
+  selector:
+    app: mcp-memory-server
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8000
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mcp-data-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mcp-logs-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mcp-models-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mcp-plugins-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mcp-exports-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mcp-backups-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi 

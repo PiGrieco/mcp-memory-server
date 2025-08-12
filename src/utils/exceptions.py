@@ -2,125 +2,98 @@
 Custom exceptions for MCP Memory Server
 """
 
-from typing import Optional, Dict, Any
-
 
 class MCPMemoryError(Exception):
     """Base exception for MCP Memory Server"""
-    
-    def __init__(self, message: str, error_code: Optional[str] = None, details: Optional[Dict[str, Any]] = None):
-        self.message = message
-        self.error_code = error_code
-        self.details = details or {}
-        super().__init__(message)
-    
-    def to_dict(self) -> Dict[str, Any]:
-        """Convert exception to dictionary"""
-        return {
-            "error": self.message,
-            "error_code": self.error_code,
-            "details": self.details
-        }
-
-
-class DatabaseError(MCPMemoryError):
-    """Database operation error"""
-    
-    def __init__(self, message: str, operation: Optional[str] = None, details: Optional[Dict[str, Any]] = None):
-        super().__init__(message, "DATABASE_ERROR", details)
-        self.operation = operation
-
-
-class EmbeddingError(MCPMemoryError):
-    """Embedding service error"""
-    
-    def __init__(self, message: str, model: Optional[str] = None, details: Optional[Dict[str, Any]] = None):
-        super().__init__(message, "EMBEDDING_ERROR", details)
-        self.model = model
-
-
-class ValidationError(MCPMemoryError):
-    """Data validation error"""
-    
-    def __init__(self, message: str, field: Optional[str] = None, value: Optional[Any] = None):
-        details = {}
-        if field:
-            details["field"] = field
-        if value is not None:
-            details["value"] = str(value)
-        
-        super().__init__(message, "VALIDATION_ERROR", details)
-        self.field = field
-        self.value = value
-
-
-class NotFoundError(MCPMemoryError):
-    """Resource not found error"""
-    
-    def __init__(self, resource: str, identifier: str):
-        message = f"{resource} not found: {identifier}"
-        details = {"resource": resource, "identifier": identifier}
-        super().__init__(message, "NOT_FOUND", details)
-        self.resource = resource
-        self.identifier = identifier
-
-
-class ConfigurationError(MCPMemoryError):
-    """Configuration error"""
-    
-    def __init__(self, message: str, setting: Optional[str] = None):
-        details = {}
-        if setting:
-            details["setting"] = setting
-        
-        super().__init__(message, "CONFIGURATION_ERROR", details)
-        self.setting = setting
-
-
-class AuthenticationError(MCPMemoryError):
-    """Authentication error"""
-    
-    def __init__(self, message: str = "Authentication failed"):
-        super().__init__(message, "AUTHENTICATION_ERROR")
-
-
-class AuthorizationError(MCPMemoryError):
-    """Authorization error"""
-    
-    def __init__(self, message: str = "Access denied"):
-        super().__init__(message, "AUTHORIZATION_ERROR")
-
-
-class RateLimitError(MCPMemoryError):
-    """Rate limit exceeded error"""
-    
-    def __init__(self, message: str = "Rate limit exceeded", retry_after: Optional[int] = None):
-        details = {}
-        if retry_after:
-            details["retry_after"] = retry_after
-        
-        super().__init__(message, "RATE_LIMIT_ERROR", details)
-        self.retry_after = retry_after
-
-
-class ServiceUnavailableError(MCPMemoryError):
-    """Service unavailable error"""
-
-    def __init__(self, service: str, message: Optional[str] = None):
-        if not message:
-            message = f"{service} service is unavailable"
-
-        details = {"service": service}
-        super().__init__(message, "SERVICE_UNAVAILABLE", details)
-        self.service = service
+    pass
 
 
 class MemoryServiceError(MCPMemoryError):
-    """Memory service specific error"""
+    """Exception raised by memory service operations"""
+    pass
 
-    def __init__(self, message: str, operation: Optional[str] = None):
-        details = {}
-        if operation:
-            details["operation"] = operation
-        super().__init__(message, "MEMORY_SERVICE_ERROR", details)
-        self.operation = operation
+
+class DatabaseServiceError(MCPMemoryError):
+    """Exception raised by database service operations"""
+    pass
+
+
+class EmbeddingServiceError(MCPMemoryError):
+    """Exception raised by embedding service operations"""
+    pass
+
+
+class ValidationError(MCPMemoryError):
+    """Exception raised for validation errors"""
+    pass
+
+
+class ConfigurationError(MCPMemoryError):
+    """Exception raised for configuration errors"""
+    pass
+
+
+class NotFoundError(MCPMemoryError):
+    """Exception raised when a resource is not found"""
+    pass
+
+
+class AuthenticationError(MCPMemoryError):
+    """Exception raised for authentication errors"""
+    pass
+
+
+class AuthorizationError(MCPMemoryError):
+    """Exception raised for authorization errors"""
+    pass
+
+
+class RateLimitError(MCPMemoryError):
+    """Exception raised when rate limit is exceeded"""
+    pass
+
+
+class ServiceUnavailableError(MCPMemoryError):
+    """Exception raised when a service is unavailable"""
+    pass
+
+
+# New exceptions for advanced services
+class PluginServiceError(MCPMemoryError):
+    """Exception raised by plugin service operations"""
+    pass
+
+
+class CacheServiceError(MCPMemoryError):
+    """Exception raised by cache service operations"""
+    pass
+
+
+class BackupServiceError(MCPMemoryError):
+    """Exception raised by backup service operations"""
+    pass
+
+
+class NotificationServiceError(MCPMemoryError):
+    """Exception raised by notification service operations"""
+    pass
+
+
+class ExportServiceError(MCPMemoryError):
+    """Exception raised by export service operations"""
+    pass
+
+
+class MonitoringServiceError(MCPMemoryError):
+    """Exception raised by monitoring service operations"""
+    pass
+
+
+class AdapterError(MCPMemoryError):
+    """Exception raised by platform adapter operations"""
+    pass
+
+
+class HookError(MCPMemoryError):
+    """Exception raised by plugin hook operations"""
+    pass

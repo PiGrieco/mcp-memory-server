@@ -1,0 +1,233 @@
+# Prometheus Configuration for MCP Memory Server
+# Monitoring configuration with custom metrics and alerting
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'mcp-memory-cluster'
+    environment: 'production'
+
+# Alerting rules
+rule_files:
+  - "alerts.yml"
+
+# Alert manager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    scrape_interval: 30s
+
+  # MCP Memory Server
+  - job_name: 'mcp-memory-server'
+    static_configs:
+      - targets: ['mcp-memory-server:8000']
+    scrape_interval: 10s
+    metrics_path: '/metrics'
+    scrape_timeout: 5s
+    honor_labels: true
+    
+    # Relabeling rules
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        regex: '([^:]+)(?::\d+)?'
+        replacement: '${1}'
+      
+      - source_labels: [__address__]
+        target_label: service
+        regex: '([^:]+)'
+        replacement: 'mcp-memory-server'
+
+  # MongoDB
+  - job_name: 'mongodb'
+    static_configs:
+      - targets: ['mongodb:27017']
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+    
+    # MongoDB exporter configuration
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        regex: '([^:]+)(?::\d+)?'
+        replacement: '${1}'
+      
+      - source_labels: [__address__]
+        target_label: service
+        regex: '([^:]+)'
+        replacement: 'mongodb'
+
+  # Redis
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+    
+    # Redis exporter configuration
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        regex: '([^:]+)(?::\d+)?'
+        replacement: '${1}'
+      
+      - source_labels: [__address__]
+        target_label: service
+        regex: '([^:]+)'
+        replacement: 'redis'
+
+  # Nginx
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx:80']
+    scrape_interval: 30s
+    metrics_path: '/nginx_status'
+    
+    # Nginx exporter configuration
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        regex: '([^:]+)(?::\d+)?'
+        replacement: '${1}'
+      
+      - source_labels: [__address__]
+        target_label: service
+        regex: '([^:]+)'
+        replacement: 'nginx'
+
+  # Node Exporter (system metrics)
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 30s
+    
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        regex: '([^:]+)(?::\d+)?'
+        replacement: '${1}'
+      
+      - source_labels: [__address__]
+        target_label: service
+        regex: '([^:]+)'
+        replacement: 'node-exporter'
+
+  # Grafana
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['grafana:3000']
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+    
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        regex: '([^:]+)(?::\d+)?'
+        replacement: '${1}'
+      
+      - source_labels: [__address__]
+        target_label: service
+        regex: '([^:]+)'
+        replacement: 'grafana'
+
+  # Custom metrics from MCP Memory Server
+  - job_name: 'mcp-memory-custom'
+    static_configs:
+      - targets: ['mcp-memory-server:8000']
+    scrape_interval: 5s
+    metrics_path: '/custom-metrics'
+    
+    # Custom metrics configuration
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        regex: '([^:]+)(?::\d+)?'
+        replacement: '${1}'
+      
+      - source_labels: [__address__]
+        target_label: service
+        regex: '([^:]+)'
+        replacement: 'mcp-memory-custom'
+      
+      # Add custom labels
+      - target_label: environment
+        replacement: 'production'
+      
+      - target_label: version
+        replacement: '2.0.0'
+
+# Service discovery (optional)
+# - job_name: 'kubernetes-pods'
+#   kubernetes_sd_configs:
+#     - role: pod
+#   relabel_configs:
+#     - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+#       action: keep
+#       regex: true
+#     - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+#       action: replace
+#       target_label: __metrics_path__
+#       regex: (.+)
+#     - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+#       action: replace
+#       regex: ([^:]+)(?::\d+)?;(\d+)
+#       replacement: $1:$2
+#       target_label: __address__
+
+# Recording rules for common queries
+recording_rules:
+  - record: mcp_memory_requests_total
+    expr: sum(rate(mcp_memory_requests_total[5m])) by (instance, service)
+  
+  - record: mcp_memory_response_time_avg
+    expr: avg(rate(mcp_memory_response_time_sum[5m])) by (instance, service) / avg(rate(mcp_memory_response_time_count[5m])) by (instance, service)
+  
+  - record: mcp_memory_error_rate
+    expr: sum(rate(mcp_memory_errors_total[5m])) by (instance, service) / sum(rate(mcp_memory_requests_total[5m])) by (instance, service)
+  
+  - record: mcp_memory_memory_usage_percent
+    expr: (mcp_memory_memory_used_bytes / mcp_memory_memory_total_bytes) * 100
+  
+  - record: mcp_memory_cache_hit_rate
+    expr: sum(rate(mcp_memory_cache_hits_total[5m])) by (instance) / (sum(rate(mcp_memory_cache_hits_total[5m])) by (instance) + sum(rate(mcp_memory_cache_misses_total[5m])) by (instance))
+  
+  - record: mcp_memory_database_connections_active
+    expr: mcp_memory_database_connections_active
+  
+  - record: mcp_memory_embedding_generation_duration_avg
+    expr: avg(rate(mcp_memory_embedding_generation_duration_sum[5m])) by (instance) / avg(rate(mcp_memory_embedding_generation_duration_count[5m])) by (instance)
+
+# Storage configuration
+storage:
+  tsdb:
+    path: /prometheus/data
+    retention.time: 30d
+    retention.size: 10GB
+    wal:
+      retention.period: 2h
+      retention.size: 1GB
+
+# Remote write configuration (optional)
+# remote_write:
+#   - url: "http://remote-storage:9201/write"
+#     remote_timeout: 30s
+#     write_relabel_configs:
+#       - source_labels: [__name__]
+#         regex: 'mcp_memory_.*'
+#         action: keep
+
+# Remote read configuration (optional)
+# remote_read:
+#   - url: "http://remote-storage:9201/read"
+#     remote_timeout: 30s
+#     read_recent: true 

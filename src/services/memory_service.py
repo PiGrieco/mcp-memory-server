@@ -8,15 +8,15 @@ import time
 from datetime import datetime
 from typing import List, Optional, Dict, Any
 
-from ..config import get_config
-from ..models import (
+from ..config.settings import Settings
+from ..models.memory import (
     Memory, MemoryCreate, MemoryUpdate, MemorySearchQuery, 
     MemorySearchResult, MemoryContext, MemoryContextResult,
     MemoryType, MemoryImportance
 )
 from ..utils.exceptions import MemoryServiceError, ValidationError
-from .database_service import database_service
-from .embedding_service import embedding_service
+from .database_service import DatabaseService
+from .embedding_service import EmbeddingService
 
 logger = logging.getLogger(__name__)
 
@@ -24,8 +24,10 @@ logger = logging.getLogger(__name__)
 class MemoryService:
     """Production memory service with intelligent triggers and management"""
     
-    def __init__(self):
-        self.config = get_config()
+    def __init__(self, settings: Settings):
+        self.settings = settings
+        self.database_service = DatabaseService(settings.database)
+        self.embedding_service = EmbeddingService(settings.embedding)
         self._initialized = False
         
         # Metrics
@@ -41,9 +43,9 @@ class MemoryService:
             return
         
         try:
-            # Ensure dependencies are initialized
-            await database_service.initialize()
-            await embedding_service.initialize()
+            # Initialize dependencies
+            await self.database_service.initialize()
+            await self.embedding_service.initialize()
             
             self._initialized = True
             logger.info("Memory service initialized successfully")
@@ -70,26 +72,38 @@ class MemoryService:
         if not success:
             self._error_count += 1
     
-    async def create_memory(self, memory_create: MemoryCreate, auto_embed: bool = True) -> Memory:
+    async def create_memory(
+        self, 
+        content: str,
+        project: str = "default",
+        importance: float = 0.5,
+        tags: List[str] = None,
+        metadata: Dict[str, Any] = None,
+        context: Dict[str, Any] = None
+    ) -> Memory:
         """Create a new memory with optional automatic embedding"""
         await self._ensure_initialized()
         
         try:
             start_time = time.time()
             
-            # Generate embedding if requested
-            if auto_embed:
-                try:
-                    embedding = await embedding_service.generate_embedding(memory_create.content)
-                    memory_create.embedding = embedding
-                    logger.info(f"Generated embedding with {len(embedding)} dimensions")
-                except Exception as e:
-                    logger.error(f"Failed to generate embedding: {e}")
-                    # Continue without embedding for now
-                    memory_create.embedding = None
+            # Generate embedding
+            embedding = await self.embedding_service.generate_embedding(content)
+            
+            # Create memory object
+            memory_create = MemoryCreate(
+                project=project,
+                content=content,
+                memory_type=MemoryType.CONVERSATION,
+                importance=importance,
+                tags=tags or [],
+                metadata=metadata or {},
+                context=context or {},
+                embedding=embedding
+            )
             
             # Create memory in database
-            memory = await database_service.create_memory(memory_create)
+            memory = await self.database_service.create_memory(memory_create)
             
             duration = time.time() - start_time
             self._update_metrics("create", success=True, duration=duration)
@@ -106,10 +120,8 @@ class MemoryService:
         self, 
         content: str, 
         context: Optional[Dict[str, Any]] = None,
-        project: Optional[str] = None,
-        user_id: Optional[str] = None,
-        session_id: Optional[str] = None
-    ) -> Optional[Memory]:
+        project: Optional[str] = None
+    ) -> Dict[str, Any]:
         """
         Automatically save memory if content triggers the threshold
         This is the core auto-trigger functionality
@@ -118,53 +130,76 @@ class MemoryService:
         
         try:
             # Check if content should trigger memory save
-            should_save = await embedding_service.should_trigger_memory_save(content, context)
+            should_save = await self.embedding_service.should_trigger_memory_save(content, context)
             
             if not should_save:
                 logger.debug("Content did not trigger memory save threshold")
-                return None
+                return {
+                    "saved": False,
+                    "threshold": self.settings.memory.trigger_threshold,
+                    "trigger_type": "none"
+                }
             
             # Analyze importance
-            importance = await embedding_service.analyze_memory_importance(content, context)
+            importance = await self.embedding_service.analyze_memory_importance(content, context)
             
             # Determine memory type from context
             memory_type = MemoryType.CONVERSATION
+            trigger_type = "ml_trigger"
+            
             if context:
                 if context.get("type") == "function_result":
                     memory_type = MemoryType.FUNCTION
+                    trigger_type = "function_result"
                 elif context.get("level") == "error":
                     memory_type = MemoryType.ERROR
+                    trigger_type = "error"
                 elif context.get("level") == "warning":
                     memory_type = MemoryType.WARNING
+                    trigger_type = "warning"
                 elif "decision" in content.lower():
                     memory_type = MemoryType.DECISION
+                    trigger_type = "decision"
                 elif any(keyword in content.lower() for keyword in ["knowledge", "fact", "information"]):
                     memory_type = MemoryType.KNOWLEDGE
+                    trigger_type = "knowledge"
             
             # Create memory
-            memory_create = MemoryCreate(
-                project=project or self.config.memory.default_project,
+            memory = await self.create_memory(
                 content=content,
-                memory_type=memory_type,
+                project=project or self.settings.memory.default_project,
                 importance=importance,
-                context=context or {},
-                user_id=user_id,
-                session_id=session_id,
-                source="auto_trigger"
+                context=context or {}
             )
             
-            memory = await self.create_memory(memory_create)
             self._update_metrics("auto_save", success=True)
             
             logger.info(f"Auto-saved memory {memory.id} with importance {importance:.2f}")
-            return memory
+            return {
+                "saved": True,
+                "memory_id": memory.id,
+                "importance": importance,
+                "trigger_type": trigger_type,
+                "threshold": self.settings.memory.trigger_threshold
+            }
             
         except Exception as e:
             self._update_metrics("auto_save", success=False)
             logger.error(f"Auto-save failed: {e}")
-            return None
+            return {
+                "saved": False,
+                "error": str(e),
+                "trigger_type": "error"
+            }
     
-    async def search_memories(self, search_query: MemorySearchQuery) -> MemorySearchResult:
+    async def search_memories(
+        self,
+        query: str,
+        project: Optional[str] = None,
+        max_results: int = 20,
+        similarity_threshold: float = 0.3,
+        tags: List[str] = None
+    ) -> List[Memory]:
         """Search memories with semantic similarity"""
         await self._ensure_initialized()
         
@@ -172,107 +207,67 @@ class MemoryService:
             start_time = time.time()
             
             # Generate embedding for search query
-            query_embedding = await embedding_service.generate_embedding(search_query.query)
+            query_embedding = await self.embedding_service.generate_embedding(query)
             
             # Get candidate memories from database
-            candidates = await database_service.search_memories(
-                project=search_query.project,
-                memory_types=[mt.value for mt in search_query.memory_types] if search_query.memory_types else None,
-                min_importance=search_query.min_importance,
-                limit=search_query.max_results * 2,  # Get more candidates for similarity filtering
-                text_query=search_query.query,
-                tags=search_query.tags,
-                user_id=search_query.user_id,
-                session_id=search_query.session_id,
-                date_from=search_query.date_from,
-                date_to=search_query.date_to
+            candidates = await self.database_service.search_memories(
+                project=project,
+                limit=max_results * 2,  # Get more candidates for similarity filtering
+                text_query=query,
+                tags=tags or []
             )
             
             # Calculate similarity scores
             scored_memories = []
             for memory in candidates:
                 if memory.embedding:
-                    similarity = embedding_service.calculate_similarity(
+                    similarity = self.embedding_service.calculate_similarity(
                         query_embedding, memory.embedding
                     )
-                    if similarity >= search_query.similarity_threshold:
+                    if similarity >= similarity_threshold:
                         memory.similarity_score = similarity
                         scored_memories.append(memory)
             
             # Sort by similarity and limit results
             scored_memories.sort(key=lambda m: m.similarity_score or 0, reverse=True)
-            final_memories = scored_memories[:search_query.max_results]
-            
-            # Update access counts
-            for memory in final_memories:
-                memory.increment_access()
-                await database_service.update_memory(
-                    memory.id, 
-                    MemoryUpdate(metadata={"access_count": memory.access_count, "last_accessed": memory.last_accessed})
-                )
+            final_memories = scored_memories[:max_results]
             
             search_time = time.time() - start_time
             self._update_metrics("search", success=True, duration=search_time)
             
-            result = MemorySearchResult(
-                memories=final_memories,
-                total_count=len(final_memories),
-                query=search_query.query,
-                search_time_ms=search_time * 1000,
-                similarity_scores=[m.similarity_score or 0 for m in final_memories]
-            )
-            
             logger.debug(f"Search completed: {len(final_memories)} results in {search_time:.3f}s")
-            return result
+            return final_memories
             
         except Exception as e:
             self._update_metrics("search", success=False)
             logger.error(f"Memory search failed: {e}")
             raise MemoryServiceError(f"Memory search failed: {e}")
     
-    async def get_memory_context(self, context_query: MemoryContext) -> MemoryContextResult:
-        """Get memory context for a project"""
+    async def list_memories(
+        self,
+        project: str = "default",
+        limit: int = 50,
+        offset: int = 0
+    ) -> List[Memory]:
+        """List memories for a project"""
         await self._ensure_initialized()
         
         try:
-            start_time = time.time()
-            
-            context = {}
-            total_memories = 0
-            
-            for memory_type in context_query.types:
-                memories = await database_service.get_project_memories(
-                    project=context_query.project,
-                    memory_types=[memory_type.value],
-                    limit=context_query.limit,
-                    min_importance=context_query.min_importance
-                )
-                
-                context[memory_type.value] = memories
-                total_memories += len(memories)
-            
-            retrieval_time = (time.time() - start_time) * 1000
-            
-            result = MemoryContextResult(
-                project=context_query.project,
-                context=context,
-                total_memories=total_memories,
-                retrieval_time_ms=retrieval_time
+            return await self.database_service.list_memories(
+                project=project,
+                limit=limit,
+                offset=offset
             )
-            
-            logger.debug(f"Context retrieved: {total_memories} memories in {retrieval_time:.2f}ms")
-            return result
-            
         except Exception as e:
-            logger.error(f"Context retrieval failed: {e}")
-            raise MemoryServiceError(f"Context retrieval failed: {e}")
+            logger.error(f"Failed to list memories: {e}")
+            raise MemoryServiceError(f"Failed to list memories: {e}")
     
     async def get_memory(self, memory_id: str) -> Optional[Memory]:
         """Get a memory by ID"""
         await self._ensure_initialized()
         
         try:
-            return await database_service.get_memory(memory_id)
+            return await self.database_service.get_memory(memory_id)
         except Exception as e:
             logger.error(f"Failed to get memory {memory_id}: {e}")
             raise MemoryServiceError(f"Failed to get memory: {e}")
@@ -284,11 +279,10 @@ class MemoryService:
         try:
             # Re-generate embedding if content changed
             if updates.content is not None:
-                embedding = await embedding_service.generate_embedding(updates.content)
-                if not hasattr(updates, 'embedding'):
-                    updates.embedding = embedding
+                embedding = await self.embedding_service.generate_embedding(updates.content)
+                updates.embedding = embedding
             
-            return await database_service.update_memory(memory_id, updates)
+            return await self.database_service.update_memory(memory_id, updates)
         except Exception as e:
             logger.error(f"Failed to update memory {memory_id}: {e}")
             raise MemoryServiceError(f"Failed to update memory: {e}")
@@ -298,30 +292,79 @@ class MemoryService:
         await self._ensure_initialized()
         
         try:
-            return await database_service.delete_memory(memory_id)
+            return await self.database_service.delete_memory(memory_id)
         except Exception as e:
             logger.error(f"Failed to delete memory {memory_id}: {e}")
             raise MemoryServiceError(f"Failed to delete memory: {e}")
     
+    async def get_status(self) -> Dict[str, Any]:
+        """Get memory service status"""
+        try:
+            if not self._initialized:
+                return {
+                    "status": "not_initialized",
+                    "total_memories": 0,
+                    "total_projects": 0,
+                    "storage_type": self.settings.memory.storage,
+                    "auto_save_enabled": self.settings.memory.auto_save,
+                    "ml_triggers_enabled": self.settings.memory.ml_triggers,
+                    "last_activity": "never"
+                }
+            
+            # Get basic stats
+            total_memories = await self.database_service.count_memories()
+            total_projects = await self.database_service.count_projects()
+            
+            return {
+                "status": "healthy",
+                "total_memories": total_memories,
+                "total_projects": total_projects,
+                "storage_type": self.settings.memory.storage,
+                "auto_save_enabled": self.settings.memory.auto_save,
+                "ml_triggers_enabled": self.settings.memory.ml_triggers,
+                "last_activity": datetime.now().isoformat()
+            }
+        except Exception as e:
+            return {
+                "status": "unhealthy",
+                "error": str(e),
+                "total_memories": 0,
+                "total_projects": 0,
+                "storage_type": self.settings.memory.storage,
+                "auto_save_enabled": self.settings.memory.auto_save,
+                "ml_triggers_enabled": self.settings.memory.ml_triggers,
+                "last_activity": "error"
+            }
+    
     async def get_metrics(self) -> Dict[str, Any]:
         """Get memory service metrics"""
-        db_metrics = await database_service.get_metrics()
-        embedding_metrics = await embedding_service.get_metrics()
-        
-        avg_search_time = (
-            self._total_search_time / self._search_count 
-            if self._search_count > 0 else 0.0
-        )
-        
-        return {
-            "operation_count": self._operation_count,
-            "search_count": self._search_count,
-            "auto_save_count": self._auto_save_count,
-            "avg_search_time_ms": avg_search_time * 1000,
-            "error_count": self._error_count,
-            "database_metrics": db_metrics,
-            "embedding_metrics": embedding_metrics
-        }
+        try:
+            db_metrics = await self.database_service.get_metrics()
+            embedding_metrics = await self.embedding_service.get_metrics()
+            
+            avg_search_time = (
+                self._total_search_time / self._search_count 
+                if self._search_count > 0 else 0.0
+            )
+            
+            return {
+                "operation_count": self._operation_count,
+                "search_count": self._search_count,
+                "auto_save_count": self._auto_save_count,
+                "avg_search_time_ms": avg_search_time * 1000,
+                "error_count": self._error_count,
+                "database_metrics": db_metrics,
+                "embedding_metrics": embedding_metrics
+            }
+        except Exception as e:
+            logger.error(f"Failed to get metrics: {e}")
+            return {
+                "error": str(e),
+                "operation_count": self._operation_count,
+                "search_count": self._search_count,
+                "auto_save_count": self._auto_save_count,
+                "error_count": self._error_count
+            }
     
     async def health_check(self) -> Dict[str, Any]:
         """Perform health check"""
@@ -330,8 +373,8 @@ class MemoryService:
                 return {"status": "not_initialized"}
             
             # Check dependencies
-            db_health = await database_service.health_check()
-            embedding_health = await embedding_service.health_check()
+            db_health = await self.database_service.health_check()
+            embedding_health = await self.embedding_service.health_check()
             
             overall_status = "healthy" if (
                 db_health.get("status") == "healthy" and 
@@ -348,7 +391,3 @@ class MemoryService:
                 "status": "unhealthy",
                 "error": str(e)
             }
-
-
-# Global memory service instance
-memory_service = MemoryService()

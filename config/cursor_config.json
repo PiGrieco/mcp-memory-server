@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "mcp-memory": {
+      "command": "/Users/m1pro/Documents/GitHub/mcp-memory-server/venv/bin/python",
+      "args": ["/Users/m1pro/Documents/GitHub/mcp-memory-server/simple_mcp_server.py"],
+      "env": {
+        "ENVIRONMENT": "development",
+        "MONGODB_URI": "mongodb://localhost:27017",
+        "MONGODB_DATABASE": "mcp_memory",
+        "MONGODB_COLLECTION": "memories"
+      }
+    }
+  }
+}

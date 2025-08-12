@@ -1,0 +1,177 @@
+# Development Environment Configuration
+# Optimized for local development and debugging
+
+# Server Configuration
+server:
+  name: "MCP Memory Server (Development)"
+  version: "2.0.0"
+  mode: "universal"
+  host: "localhost"
+  port: 8000
+  debug: true
+  log_level: "DEBUG"
+
+# Environment Configuration
+environment:
+  name: "development"
+  debug: true
+  testing: false
+
+# Database Configuration (Local Development)
+database:
+  mongodb:
+    uri: "mongodb://localhost:27017"
+    database: "mcp_memory_dev"
+    collection: "memories"
+    username: ""
+    password: ""
+    auth_source: "admin"
+    max_pool_size: 5
+    min_pool_size: 1
+    max_idle_time_ms: 30000
+    server_selection_timeout_ms: 5000
+    socket_timeout: 5000
+    connect_timeout: 5000
+
+# Embedding Service Configuration (Development)
+embedding:
+  model_name: "sentence-transformers/all-MiniLM-L6-v2"
+  model_path: "./models/embeddings"
+  cache_size: 100
+  batch_size: 16
+  max_length: 256
+  device: "cpu"  # Use CPU for development
+  download_if_missing: true
+
+# Memory Service Configuration (Development)
+memory:
+  auto_save: true
+  storage: "mongodb"
+  ml_triggers: true
+  trigger_threshold: 0.6
+  min_text_length: 20
+  max_text_length: 5000
+  default_project: "default"
+  retention_days: 365
+
+# Plugin System Configuration (Development)
+plugins:
+  directory: "./plugins"
+  auto_load: true
+  enabled_plugins: ["memory_analytics"]
+  disabled_plugins: []
+  plugin_config:
+    memory_analytics:
+      analytics_enabled: true
+      metrics_retention_days: 7
+      insights_enabled: true
+
+# Cache Configuration (Development - Local Only)
+cache:
+  redis_enabled: false
+  redis_host: "localhost"
+  redis_port: 6379
+  redis_password: ""
+  redis_db: 0
+  memory_ttl: 1800  # 30 minutes
+  search_ttl: 900   # 15 minutes
+  max_memory_size: 100
+
+# Backup Configuration (Development)
+backup:
+  enabled: false  # Disable automatic backups in development
+  schedule: "0 2 * * *"
+  retention_days: 7
+  compression: true
+  storage:
+    type: "local"
+    path: "./backups/dev"
+
+# Notification Configuration (Development)
+notifications:
+  enabled: false  # Disable notifications in development
+  providers:
+    email:
+      enabled: false
+      smtp_host: "smtp.gmail.com"
+      smtp_port: 587
+      username: ""
+      password: ""
+      from_email: ""
+      to_emails: []
+    webhook:
+      enabled: false
+      url: ""
+      headers: {}
+      timeout: 30
+
+# Export Configuration (Development)
+export:
+  formats: ["json", "csv"]
+  compression: false
+  include_embeddings: true
+  batch_size: 50
+  max_file_size: 5242880  # 5MB
+
+# Monitoring Configuration (Development)
+monitoring:
+  enabled: true
+  metrics_port: 9090
+  health_check_interval: 60
+  log_metrics: true
+  alerting:
+    enabled: false
+    webhook_url: ""
+
+# Paths Configuration (Development)
+paths:
+  data_dir: "./data/dev"
+  logs_dir: "./logs/dev"
+  models_dir: "./models"
+  plugins_dir: "./plugins"
+  exports_dir: "./exports/dev"
+  backups_dir: "./backups/dev"
+
+# Security Configuration (Development - Relaxed)
+security:
+  api_key_required: false
+  api_key: ""
+  cors_enabled: true
+  cors_origins: ["*"]
+  rate_limiting:
+    enabled: false
+    requests_per_minute: 1000
+
+# Performance Configuration (Development)
+performance:
+  max_concurrent_requests: 50
+  request_timeout: 60
+  memory_limit: "512MB"
+  worker_processes: 1
+
+# Logging Configuration (Development - Verbose)
+logging:
+  level: "DEBUG"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_rotation: true
+  max_file_size: "5MB"
+  backup_count: 3
+  console_output: true
+  file_output: true
+
+# Development Specific Settings
+development:
+  hot_reload: true
+  auto_restart: true
+  profile_performance: true
+  mock_external_services: true
+  seed_test_data: true
+  enable_debugger: true
+  verbose_errors: true
+  development_tools:
+    enabled: true
+    endpoints:
+      - "/dev/debug"
+      - "/dev/profile"
+      - "/dev/metrics"
+      - "/dev/logs" 

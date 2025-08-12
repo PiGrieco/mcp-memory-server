@@ -1,0 +1,159 @@
+# MCP Memory Server Configuration Example
+# Copy this file to settings.yaml and modify as needed
+
+# Server Configuration
+server:
+  name: "MCP Memory Server"
+  version: "2.0.0"
+  mode: "universal"  # universal, cursor, claude, custom
+  host: "localhost"
+  port: 8000
+  debug: false
+  log_level: "INFO"
+
+# Environment Configuration
+environment:
+  name: "development"  # development, testing, production
+  debug: true
+  testing: false
+
+# Database Configuration
+database:
+  mongodb:
+    uri: "mongodb://localhost:27017"
+    database: "mcp_memory"
+    username: ""
+    password: ""
+    auth_source: "admin"
+    max_pool_size: 10
+    min_pool_size: 1
+    max_idle_time: 30000
+    server_selection_timeout: 5000
+    socket_timeout: 5000
+    connect_timeout: 5000
+
+# Embedding Service Configuration
+embedding:
+  model_name: "sentence-transformers/all-MiniLM-L6-v2"
+  model_path: "./models/embeddings"
+  cache_size: 1000
+  batch_size: 32
+  max_length: 512
+  device: "auto"  # auto, cpu, cuda
+  download_if_missing: true
+
+# Memory Service Configuration
+memory:
+  auto_save:
+    enabled: true
+    threshold: 0.7
+    min_content_length: 50
+    max_content_length: 10000
+  search:
+    max_results: 10
+    similarity_threshold: 0.5
+    include_embeddings: false
+  retention:
+    max_memories: 10000
+    cleanup_interval: 86400  # 24 hours
+
+# Plugin System Configuration
+plugins:
+  directory: "./plugins"
+  auto_load: true
+  enabled_plugins: []
+  disabled_plugins: []
+  plugin_config: {}
+
+# Cache Configuration
+cache:
+  redis_enabled: false
+  redis_host: "localhost"
+  redis_port: 6379
+  redis_password: ""
+  redis_db: 0
+  memory_ttl: 3600  # 1 hour
+  search_ttl: 1800  # 30 minutes
+  max_memory_size: 1000
+
+# Backup Configuration
+backup:
+  enabled: true
+  schedule: "0 2 * * *"  # Daily at 2 AM (cron format)
+  retention_days: 30
+  compression: true
+  storage:
+    type: "local"
+    path: "./backups"
+
+# Notification Configuration
+notifications:
+  enabled: false
+  providers:
+    email:
+      enabled: false
+      smtp_host: "smtp.gmail.com"
+      smtp_port: 587
+      username: ""
+      password: ""
+      from_email: ""
+      to_emails: []
+    webhook:
+      enabled: false
+      url: ""
+      headers: {}
+      timeout: 30
+
+# Export Configuration
+export:
+  formats: ["json", "csv", "markdown"]
+  compression: true
+  include_embeddings: false
+  batch_size: 100
+  max_file_size: 10485760  # 10MB
+
+# Monitoring Configuration
+monitoring:
+  enabled: true
+  metrics_port: 9090
+  health_check_interval: 30
+  log_metrics: true
+  alerting:
+    enabled: false
+    webhook_url: ""
+
+# Paths Configuration
+paths:
+  data_dir: "./data"
+  logs_dir: "./logs"
+  models_dir: "./models"
+  plugins_dir: "./plugins"
+  exports_dir: "./exports"
+  backups_dir: "./backups"
+
+# Security Configuration
+security:
+  api_key_required: false
+  api_key: ""
+  cors_enabled: true
+  cors_origins: ["*"]
+  rate_limiting:
+    enabled: false
+    requests_per_minute: 100
+
+# Performance Configuration
+performance:
+  max_concurrent_requests: 100
+  request_timeout: 30
+  memory_limit: "1GB"
+  worker_processes: 4
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_rotation: true
+  max_file_size: "10MB"
+  backup_count: 5
+  console_output: true
+  file_output: true 

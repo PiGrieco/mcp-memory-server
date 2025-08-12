@@ -1,0 +1,288 @@
+{
+  "dashboards": [
+    {
+      "id": null,
+      "title": "MCP Memory Server Overview",
+      "tags": ["mcp-memory", "overview"],
+      "style": "dark",
+      "timezone": "browser",
+      "panels": [
+        {
+          "id": 1,
+          "title": "Request Rate",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "rate(mcp_memory_requests_total[5m])",
+              "legendFormat": "{{instance}} - {{service}}"
+            }
+          ],
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+        },
+        {
+          "id": 2,
+          "title": "Response Time",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "rate(mcp_memory_response_time_sum[5m]) / rate(mcp_memory_response_time_count[5m])",
+              "legendFormat": "{{instance}} - {{service}}"
+            }
+          ],
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+        },
+        {
+          "id": 3,
+          "title": "Error Rate",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "rate(mcp_memory_errors_total[5m])",
+              "legendFormat": "{{instance}} - {{service}}"
+            }
+          ],
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+        },
+        {
+          "id": 4,
+          "title": "Memory Usage",
+          "type": "gauge",
+          "targets": [
+            {
+              "expr": "(mcp_memory_memory_used_bytes / mcp_memory_memory_total_bytes) * 100",
+              "legendFormat": "Memory Usage %"
+            }
+          ],
+          "gridPos": {"h": 8, "w": 6, "x": 12, "y": 8}
+        },
+        {
+          "id": 5,
+          "title": "Cache Hit Rate",
+          "type": "gauge",
+          "targets": [
+            {
+              "expr": "sum(rate(mcp_memory_cache_hits_total[5m])) by (instance) / (sum(rate(mcp_memory_cache_hits_total[5m])) by (instance) + sum(rate(mcp_memory_cache_misses_total[5m])) by (instance)) * 100",
+              "legendFormat": "Cache Hit Rate %"
+            }
+          ],
+          "gridPos": {"h": 8, "w": 6, "x": 18, "y": 8}
+        }
+      ],
+      "time": {
+        "from": "now-1h",
+        "to": "now"
+      },
+      "refresh": "10s"
+    },
+    {
+      "id": null,
+      "title": "Database Performance",
+      "tags": ["mcp-memory", "database"],
+      "style": "dark",
+      "timezone": "browser",
+      "panels": [
+        {
+          "id": 1,
+          "title": "Database Connections",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "mcp_memory_database_connections_active",
+              "legendFormat": "Active Connections"
+            },
+            {
+              "expr": "mcp_memory_database_connections_idle",
+              "legendFormat": "Idle Connections"
+            }
+          ],
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+        },
+        {
+          "id": 2,
+          "title": "Database Operations",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "rate(mcp_memory_database_operations_total[5m])",
+              "legendFormat": "{{operation}}"
+            }
+          ],
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+        },
+        {
+          "id": 3,
+          "title": "Database Response Time",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "rate(mcp_memory_database_response_time_sum[5m]) / rate(mcp_memory_database_response_time_count[5m])",
+              "legendFormat": "{{operation}}"
+            }
+          ],
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+        },
+        {
+          "id": 4,
+          "title": "Database Errors",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "rate(mcp_memory_database_errors_total[5m])",
+              "legendFormat": "{{error_type}}"
+            }
+          ],
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+        }
+      ],
+      "time": {
+        "from": "now-1h",
+        "to": "now"
+      },
+      "refresh": "10s"
+    },
+    {
+      "id": null,
+      "title": "Embedding Service",
+      "tags": ["mcp-memory", "embeddings"],
+      "style": "dark",
+      "timezone": "browser",
+      "panels": [
+        {
+          "id": 1,
+          "title": "Embedding Generation Rate",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "rate(mcp_memory_embedding_generation_total[5m])",
+              "legendFormat": "Embeddings Generated"
+            }
+          ],
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+        },
+        {
+          "id": 2,
+          "title": "Embedding Generation Duration",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "rate(mcp_memory_embedding_generation_duration_sum[5m]) / rate(mcp_memory_embedding_generation_duration_count[5m])",
+              "legendFormat": "Generation Time (ms)"
+            }
+          ],
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+        },
+        {
+          "id": 3,
+          "title": "Cache Performance",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "rate(mcp_memory_embedding_cache_hits_total[5m])",
+              "legendFormat": "Cache Hits"
+            },
+            {
+              "expr": "rate(mcp_memory_embedding_cache_misses_total[5m])",
+              "legendFormat": "Cache Misses"
+            }
+          ],
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+        },
+        {
+          "id": 4,
+          "title": "Model Memory Usage",
+          "type": "gauge",
+          "targets": [
+            {
+              "expr": "mcp_memory_embedding_model_memory_bytes",
+              "legendFormat": "Model Memory (MB)"
+            }
+          ],
+          "gridPos": {"h": 8, "w": 6, "x": 12, "y": 8}
+        },
+        {
+          "id": 5,
+          "title": "Model Load Status",
+          "type": "stat",
+          "targets": [
+            {
+              "expr": "mcp_memory_embedding_model_loaded",
+              "legendFormat": "Model Loaded"
+            }
+          ],
+          "gridPos": {"h": 8, "w": 6, "x": 18, "y": 8}
+        }
+      ],
+      "time": {
+        "from": "now-1h",
+        "to": "now"
+      },
+      "refresh": "10s"
+    },
+    {
+      "id": null,
+      "title": "System Resources",
+      "tags": ["mcp-memory", "system"],
+      "style": "dark",
+      "timezone": "browser",
+      "panels": [
+        {
+          "id": 1,
+          "title": "CPU Usage",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "100 - (avg by (instance) (irate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+              "legendFormat": "CPU Usage %"
+            }
+          ],
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+        },
+        {
+          "id": 2,
+          "title": "Memory Usage",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100",
+              "legendFormat": "Memory Usage %"
+            }
+          ],
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+        },
+        {
+          "id": 3,
+          "title": "Disk Usage",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "(node_filesystem_size_bytes - node_filesystem_free_bytes) / node_filesystem_size_bytes * 100",
+              "legendFormat": "Disk Usage %"
+            }
+          ],
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+        },
+        {
+          "id": 4,
+          "title": "Network Traffic",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "rate(node_network_receive_bytes_total[5m])",
+              "legendFormat": "Network Receive ({{device}})"
+            },
+            {
+              "expr": "rate(node_network_transmit_bytes_total[5m])",
+              "legendFormat": "Network Transmit ({{device}})"
+            }
+          ],
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+        }
+      ],
+      "time": {
+        "from": "now-1h",
+        "to": "now"
+      },
+      "refresh": "10s"
+    }
+  ]
+} 

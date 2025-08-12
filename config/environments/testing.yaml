@@ -1,0 +1,214 @@
+# Testing Environment Configuration
+# Optimized for automated testing and CI/CD
+
+# Server Configuration
+server:
+  name: "MCP Memory Server (Testing)"
+  version: "2.0.0"
+  mode: "universal"
+  host: "localhost"
+  port: 8001  # Different port to avoid conflicts
+  debug: true
+  log_level: "DEBUG"
+
+# Environment Configuration
+environment:
+  name: "testing"
+  debug: true
+  testing: true
+
+# Database Configuration (Testing - Isolated)
+database:
+  mongodb:
+    uri: "mongodb://localhost:27017"
+    database: "mcp_memory_test"
+    username: ""
+    password: ""
+    auth_source: "admin"
+    max_pool_size: 2
+    min_pool_size: 1
+    max_idle_time: 10000
+    server_selection_timeout: 2000
+    socket_timeout: 2000
+    connect_timeout: 2000
+
+# Embedding Service Configuration (Testing)
+embedding:
+  model_name: "sentence-transformers/all-MiniLM-L6-v2"
+  model_path: "./models/embeddings_test"
+  cache_size: 50
+  batch_size: 8
+  max_length: 128
+  device: "cpu"  # Always use CPU for testing
+  download_if_missing: true
+
+# Memory Service Configuration (Testing)
+memory:
+  auto_save:
+    enabled: false  # Disable auto-save for testing
+    threshold: 0.5
+    min_content_length: 10
+    max_content_length: 1000
+  search:
+    max_results: 3
+    similarity_threshold: 0.3
+    include_embeddings: true
+  retention:
+    max_memories: 100
+    cleanup_interval: 300  # 5 minutes
+
+# Plugin System Configuration (Testing)
+plugins:
+  directory: "./plugins"
+  auto_load: false  # Disable auto-load for testing
+  enabled_plugins: []
+  disabled_plugins: ["memory_analytics", "backup_manager", "notification_service"]
+  plugin_config: {}
+
+# Cache Configuration (Testing - Disabled)
+cache:
+  redis_enabled: false
+  redis_host: "localhost"
+  redis_port: 6379
+  redis_password: ""
+  redis_db: 1  # Use different DB for testing
+  memory_ttl: 300  # 5 minutes
+  search_ttl: 180   # 3 minutes
+  max_memory_size: 10
+
+# Backup Configuration (Testing - Disabled)
+backup:
+  enabled: false
+  schedule: "0 2 * * *"
+  retention_days: 1
+  compression: false
+  storage:
+    type: "local"
+    path: "./backups/test"
+
+# Notification Configuration (Testing - Mock)
+notifications:
+  enabled: false
+  providers:
+    email:
+      enabled: false
+      smtp_host: "localhost"
+      smtp_port: 1025  # Use local test SMTP
+      username: ""
+      password: ""
+      from_email: "test@example.com"
+      to_emails: []
+    webhook:
+      enabled: false
+      url: "http://localhost:8080/webhook"
+      headers: {}
+      timeout: 5
+
+# Export Configuration (Testing)
+export:
+  formats: ["json"]
+  compression: false
+  include_embeddings: true
+  batch_size: 10
+  max_file_size: 1048576  # 1MB
+
+# Monitoring Configuration (Testing)
+monitoring:
+  enabled: false
+  metrics_port: 9091  # Different port
+  health_check_interval: 10
+  log_metrics: false
+  alerting:
+    enabled: false
+    webhook_url: ""
+
+# Paths Configuration (Testing)
+paths:
+  data_dir: "./data/test"
+  logs_dir: "./logs/test"
+  models_dir: "./models/test"
+  plugins_dir: "./plugins"
+  exports_dir: "./exports/test"
+  backups_dir: "./backups/test"
+
+# Security Configuration (Testing - Relaxed)
+security:
+  api_key_required: false
+  api_key: "test_api_key"
+  cors_enabled: true
+  cors_origins: ["*"]
+  rate_limiting:
+    enabled: false
+    requests_per_minute: 10000
+
+# Performance Configuration (Testing)
+performance:
+  max_concurrent_requests: 10
+  request_timeout: 10
+  memory_limit: "256MB"
+  worker_processes: 1
+
+# Logging Configuration (Testing)
+logging:
+  level: "DEBUG"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_rotation: false
+  max_file_size: "1MB"
+  backup_count: 1
+  console_output: true
+  file_output: false  # Don't write to files during testing
+
+# Testing Specific Settings
+testing:
+  # Test data management
+  test_data:
+    auto_cleanup: true
+    cleanup_interval: 300  # 5 minutes
+    seed_data: true
+    fixtures_path: "./tests/fixtures"
+  
+  # Mock services
+  mock_services:
+    enabled: true
+    external_apis: true
+    database: false  # Use real database for integration tests
+    cache: true
+    notifications: true
+  
+  # Test isolation
+  isolation:
+    database_per_test: false
+    cache_per_test: true
+    file_per_test: true
+    cleanup_after_test: true
+  
+  # Performance testing
+  performance_testing:
+    enabled: false
+    benchmark_mode: false
+    load_testing: false
+    stress_testing: false
+  
+  # Coverage and reporting
+  coverage:
+    enabled: true
+    coverage_path: "./coverage"
+    html_report: true
+    xml_report: true
+    threshold: 80
+  
+  # Test reporting
+  reporting:
+    enabled: true
+    output_format: "junit"
+    output_path: "./test_reports"
+    detailed_logs: true
+  
+  # CI/CD integration
+  ci_cd:
+    enabled: true
+    parallel_execution: true
+    max_workers: 4
+    timeout: 300  # 5 minutes
+    retry_failed: true
+    max_retries: 2 
