@@ -29,3 +29,5 @@ models/
 data/*.json
 data/*.csv
 !data/*metadata.json
+
+backups/
