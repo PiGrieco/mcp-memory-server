@@ -11,9 +11,9 @@ services:
     container_name: mcp-mongodb
     restart: unless-stopped
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: password123
-      MONGO_INITDB_DATABASE: mcp_memory_production
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD:-password123}
+      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE:-mcp_memory_production}
     volumes:
       - mongodb_data:/data/db
       - ./mongo-init:/docker-entrypoint-initdb.d
@@ -33,7 +33,7 @@ services:
     image: redis:7-alpine
     container_name: mcp-redis
     restart: unless-stopped
-    command: redis-server --appendonly yes --requirepass redis123
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redis123}
     volumes:
       - redis_data:/data
     ports:
@@ -60,25 +60,24 @@ services:
       redis:
         condition: service_healthy
 
-    # Environment variables
+    # Environment variables from .env file
+    env_file:
+      - ../../.env
+
+    # Additional environment variables
     environment:
-      - ENVIRONMENT=production
+      - ENVIRONMENT=${ENVIRONMENT:-production}
       - PYTHONPATH=/app
-      - HOST=0.0.0.0
-      - PORT=8000
-      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/mcp_memory_production?authSource=admin
-      - MONGODB_DATABASE=mcp_memory_production
-      - MONGODB_COLLECTION=memories
+      - HOST=${HOST:-0.0.0.0}
+      - PORT=${PORT:-8000}
+      - MONGODB_URI=mongodb://${MONGODB_USERNAME:-admin}:${MONGODB_PASSWORD:-password123}@mongodb:27017/${MONGODB_DATABASE:-mcp_memory_production}?authSource=admin
       - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - REDIS_PASSWORD=redis123
-      - EMBEDDING_MODEL=all-MiniLM-L6-v2
-      - CACHE_ENABLED=true
-      - CACHE_TYPE=redis
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-redis123}
 
     # Expose HTTP port
     ports:
-      - "8000:8000"
+      - "${PORT:-8000}:8000"
 
     # Volumes for persistent data
     volumes:
@@ -98,7 +97,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G
+          memory: ${MEMORY_LIMIT:-2G}
           cpus: '1.0'
         reservations:
           memory: 512M
@@ -167,7 +166,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin123}
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/dashboards.json:/etc/grafana/provisioning/dashboards/dashboards.json:ro
