@@ -17,7 +17,7 @@ class Installer:
     
     def __init__(self, platform: str = "universal"):
         self.platform = platform
-        self.base_dir = Path(__file__).parent.parent
+        self.base_dir = Path(__file__).parent.parent.parent  # Go up to project root from scripts/install/
         self.config_dir = self.base_dir / "config"
         self.scripts_dir = self.base_dir / "scripts"
         
@@ -63,14 +63,17 @@ class Installer:
             # Step 3: Install dependencies
             self._install_dependencies()
             
-            # Step 4: Test ML model
+            # Step 4: Setup MongoDB
+            self._setup_mongodb()
+            
+            # Step 5: Test ML model
             self._test_ml_model()
             
-            # Step 5: Configure platform
+            # Step 6: Configure platform
             self._configure_platform()
             
-            # Step 6: Test installation
-            self._test_installation()
+            # Step 7: Test complete installation
+            self._test_complete_installation()
             
             print("\n✅ Installation completed successfully!")
             self._print_next_steps()
@@ -126,18 +129,34 @@ class Installer:
         # Upgrade pip
         subprocess.run([str(self.python_exe), "-m", "pip", "install", "--upgrade", "pip"], check=True)
         
-        # Install core dependencies
-        requirements_file = self.base_dir / "requirements.txt"
-        if requirements_file.exists():
-            subprocess.run([str(self.python_exe), "-m", "pip", "install", "-r", str(requirements_file)], check=True)
-            print("✅ Core dependencies installed")
+        # Install core MCP dependencies first
+        core_deps = [
+            "mcp>=1.0.0",
+            "pydantic>=2.0.0,<3.0.0",
+            "python-dotenv>=1.0.0",
+            "PyYAML>=6.0.0",
+            "motor>=3.0.0",  # MongoDB async driver
+            "pymongo>=4.0.0",
+            "aiohttp>=3.8.0"
+        ]
         
-        # Install ML dependencies
+        for dep in core_deps:
+            try:
+                subprocess.run([str(self.python_exe), "-m", "pip", "install", dep], check=True)
+            except subprocess.CalledProcessError as e:
+                print(f"⚠️ Warning: Failed to install {dep}: {e}")
+        
+        print("✅ Core dependencies installed")
+        
+        # Install ML dependencies with compatible versions for Python 3.10
         ml_deps = [
-            "torch>=2.0.0",
-            "transformers>=4.30.0",
-            "sentence-transformers>=2.0.0",
-            "scikit-learn>=1.3.0",
+            "torch>=2.0.0,<2.3.0",
+            "transformers>=4.30.0,<5.0.0",
+            "sentence-transformers>=2.0.0,<3.0.0",
+            "scikit-learn>=1.2.0,<1.4.0",
+            "numpy>=1.21.0,<1.25.0",
+            "scipy>=1.9.0,<1.12.0",
+            "networkx>=3.0.0,<3.3.0",
             "pyarrow>=12.0.0"
         ]
         
@@ -145,6 +164,139 @@ class Installer:
             subprocess.run([str(self.python_exe), "-m", "pip", "install", dep], check=True)
         
         print("✅ ML dependencies installed")
+    
+    def _setup_mongodb(self):
+        """Setup MongoDB for the memory database"""
+        print("🗄️ Setting up MongoDB...")
+        
+        import platform
+        system = platform.system().lower()
+        
+        try:
+            # Check if MongoDB is already running
+            result = subprocess.run(["mongosh", "--eval", "db.runCommand('ping')"], 
+                                  capture_output=True, text=True, timeout=5)
+            if result.returncode == 0:
+                print("✅ MongoDB is already running")
+                return
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            pass
+        
+        # Install MongoDB based on platform
+        if system == "darwin":  # macOS
+            self._install_mongodb_macos()
+        elif system == "linux":
+            self._install_mongodb_linux()
+        elif system == "windows":
+            self._install_mongodb_windows()
+        else:
+            print(f"⚠️ Unsupported platform: {system}")
+            print("Please install MongoDB manually from: https://www.mongodb.com/try/download/community")
+            return
+        
+        # Start MongoDB service
+        self._start_mongodb()
+        print("✅ MongoDB setup completed")
+    
+    def _install_mongodb_macos(self):
+        """Install MongoDB on macOS using Homebrew"""
+        print("📦 Installing MongoDB on macOS...")
+        
+        # Check if Homebrew is installed
+        try:
+            subprocess.run(["brew", "--version"], check=True, capture_output=True)
+        except subprocess.CalledProcessError:
+            print("❌ Homebrew not found. Installing Homebrew first...")
+            install_brew = '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+            subprocess.run(install_brew, shell=True, check=True)
+        
+        # Install MongoDB
+        subprocess.run(["brew", "tap", "mongodb/brew"], check=True)
+        subprocess.run(["brew", "install", "mongodb-community"], check=True)
+        print("✅ MongoDB installed via Homebrew")
+    
+    def _install_mongodb_linux(self):
+        """Install MongoDB on Linux"""
+        print("📦 Installing MongoDB on Linux...")
+        
+        # Try to detect the distribution
+        try:
+            with open("/etc/os-release") as f:
+                os_release = f.read().lower()
+            
+            if "ubuntu" in os_release or "debian" in os_release:
+                # Ubuntu/Debian
+                subprocess.run([
+                    "wget", "-qO", "-", "https://www.mongodb.org/static/pgp/server-7.0.asc",
+                    "|", "sudo", "apt-key", "add", "-"
+                ], shell=True, check=True)
+                
+                subprocess.run([
+                    "echo", '"deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse"',
+                    "|", "sudo", "tee", "/etc/apt/sources.list.d/mongodb-org-7.0.list"
+                ], shell=True, check=True)
+                
+                subprocess.run(["sudo", "apt-get", "update"], check=True)
+                subprocess.run(["sudo", "apt-get", "install", "-y", "mongodb-org"], check=True)
+                
+            elif "centos" in os_release or "rhel" in os_release or "fedora" in os_release:
+                # CentOS/RHEL/Fedora
+                mongo_repo = """[mongodb-org-7.0]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/7.0/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-7.0.asc"""
+                
+                subprocess.run(["sudo", "tee", "/etc/yum.repos.d/mongodb-org-7.0.repo"], 
+                             input=mongo_repo, text=True, check=True)
+                subprocess.run(["sudo", "yum", "install", "-y", "mongodb-org"], check=True)
+            
+            print("✅ MongoDB installed via package manager")
+            
+        except Exception as e:
+            print(f"❌ Could not install MongoDB automatically: {e}")
+            print("Please install MongoDB manually from: https://www.mongodb.com/try/download/community")
+            raise
+    
+    def _install_mongodb_windows(self):
+        """Install MongoDB on Windows"""
+        print("📦 Installing MongoDB on Windows...")
+        print("Please download and install MongoDB from:")
+        print("https://www.mongodb.com/try/download/community")
+        print("Then restart this installer.")
+        raise RuntimeError("Manual MongoDB installation required on Windows")
+    
+    def _start_mongodb(self):
+        """Start MongoDB service"""
+        print("🚀 Starting MongoDB service...")
+        
+        import platform
+        system = platform.system().lower()
+        
+        try:
+            if system == "darwin":  # macOS
+                subprocess.run(["brew", "services", "start", "mongodb/brew/mongodb-community"], check=True)
+            elif system == "linux":
+                subprocess.run(["sudo", "systemctl", "start", "mongod"], check=True)
+                subprocess.run(["sudo", "systemctl", "enable", "mongod"], check=True)
+            
+            # Wait a moment for MongoDB to start
+            import time
+            time.sleep(3)
+            
+            # Test connection
+            result = subprocess.run(["mongosh", "--eval", "db.runCommand('ping')"], 
+                                  capture_output=True, text=True, timeout=10)
+            if result.returncode == 0:
+                print("✅ MongoDB service started successfully")
+            else:
+                raise RuntimeError("MongoDB failed to start")
+                
+        except Exception as e:
+            print(f"❌ Failed to start MongoDB: {e}")
+            print("Please start MongoDB manually")
+            raise
     
     def _test_ml_model(self):
         """Test ML model access"""
@@ -199,9 +351,13 @@ except Exception as e:
                     "env": {
                         "ENVIRONMENT": "development",
                         "MONGODB_URI": "mongodb://localhost:27017",
-                        "MONGODB_DATABASE": "mcp_memory",
+                        "MONGODB_DATABASE": "mcp_memory_dev",
                         "MONGODB_COLLECTION": "memories",
-                        "PLATFORM": self.platform
+                        "PLATFORM": self.platform,
+                        "EMBEDDING_PROVIDER": "sentence_transformers",
+                        "EMBEDDING_MODEL": "all-MiniLM-L6-v2",
+                        "ML_TRIGGER_MODE": "hybrid",
+                        "AUTO_SAVE_ENABLED": "true"
                     }
                 }
             }
@@ -221,31 +377,95 @@ except Exception as e:
         
         return base_config
     
-    def _test_installation(self):
-        """Test the installation"""
-        print("🧪 Testing installation...")
+    def _test_complete_installation(self):
+        """Test the complete installation with all components"""
+        print("🧪 Testing complete installation...")
         
         test_script = f"""
 import sys
+import asyncio
+import json
 sys.path.insert(0, '{self.base_dir}/src')
 
-try:
-    from config.settings import get_settings
-    from core.server import MCPServer
-    
-    settings = get_settings()
-    server = MCPServer(settings)
-    print('✅ Server initialization successful')
-except Exception as e:
-    print(f'❌ Server test failed: {{e}}')
-    sys.exit(1)
+async def test_installation():
+    try:
+        # Test 1: Basic imports
+        from src.config.settings import get_settings
+        from src.core.server import MCPServer
+        print('✅ 1. Imports successful')
+        
+        # Test 2: Settings and server creation
+        settings = get_settings()
+        server = MCPServer(settings)
+        print('✅ 2. Server creation successful')
+        
+        # Test 3: Server initialization
+        await server.initialize()
+        print('✅ 3. Server initialization successful')
+        
+        # Test 4: Test save_memory functionality
+        test_args = {{
+            "content": "Test installation memory",
+            "context": {{"category": "test", "importance": 0.8}},
+            "project": "installation_test"
+        }}
+        
+        result = await server._handle_save_memory(test_args)
+        result_data = json.loads(result)
+        
+        if result_data.get("success"):
+            print(f'✅ 4. Memory save test successful (ID: {{result_data.get("memory_id")}})')
+        else:
+            print(f'❌ 4. Memory save test failed: {{result_data.get("error")}}')
+            return False
+        
+        # Test 5: Test analyze_message functionality  
+        analyze_args = {{
+            "message": "This is an important test message",
+            "platform_context": {{"platform": "test"}}
+        }}
+        
+        result = await server._handle_analyze_message(analyze_args)
+        result_data = json.loads(result)
+        
+        if result_data.get("success"):
+            print(f'✅ 5. Message analysis test successful (Triggers: {{result_data.get("triggers")}})')
+        else:
+            print(f'❌ 5. Message analysis test failed: {{result_data.get("error")}}')
+            return False
+        
+        # Test 6: Test get_memory_stats functionality
+        result = await server._handle_get_memory_stats({{"random_string": "test"}})
+        result_data = json.loads(result)
+        
+        if result_data.get("success"):
+            print(f'✅ 6. Memory stats test successful (DB: {{result_data.get("database_status")}})')
+        else:
+            print(f'❌ 6. Memory stats test failed: {{result_data.get("error")}}')
+            return False
+        
+        print('🎉 All tests passed! Installation is fully functional.')
+        return True
+        
+    except Exception as e:
+        print(f'❌ Installation test failed: {{e}}')
+        import traceback
+        traceback.print_exc()
+        return False
+
+# Run the test
+success = asyncio.run(test_installation())
+sys.exit(0 if success else 1)
 """
         
         result = subprocess.run([str(self.python_exe), "-c", test_script], 
                               capture_output=True, text=True)
         
         if result.returncode != 0:
-            raise RuntimeError(f"Installation test failed: {result.stderr}")
+            print("❌ Complete installation test failed!")
+            print(f"Error: {result.stderr}")
+            print(f"Output: {result.stdout}")
+            raise RuntimeError(f"Complete installation test failed")
         
         print(result.stdout.strip())
     

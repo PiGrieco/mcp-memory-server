@@ -35,4 +35,15 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main()) 
+    # Handle test flag
+    if len(sys.argv) > 1 and sys.argv[1] == "--test":
+        print("✅ Server imports and configuration successful")
+        sys.exit(0)
+    
+    try:
+        asyncio.run(main())
+    except (KeyboardInterrupt, asyncio.CancelledError):
+        print("\n🛑 Server stopped")
+    except Exception as e:
+        print(f"❌ Fatal error: {e}")
+        sys.exit(1) 

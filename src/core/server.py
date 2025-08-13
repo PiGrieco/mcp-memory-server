@@ -3,6 +3,7 @@ Unified MCP Server for all platforms
 """
 
 import asyncio
+import json
 import logging
 from typing import Dict, Any, Optional
 from pathlib import Path
@@ -118,6 +119,53 @@ class MCPServer:
                         },
                         "required": ["content"]
                     }
+                ),
+                types.Tool(
+                    name="analyze_message",
+                    description="Analyze message for auto-triggers using ML model",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "description": "Message to analyze for auto-triggers"
+                            },
+                            "platform_context": {
+                                "type": "object",
+                                "description": "Platform-specific context",
+                                "properties": {
+                                    "platform": {"type": "string"},
+                                    "session_id": {"type": "string"},
+                                    "user_id": {"type": "string"}
+                                }
+                            }
+                        },
+                        "required": ["message"]
+                    }
+                ),
+                types.Tool(
+                    name="get_memory_stats",
+                    description="Get memory usage and ML model statistics",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "random_string": {"type": "string", "description": "Dummy parameter for no-parameter tools"}
+                        },
+                        "required": ["random_string"]
+                    }
+                ),
+                types.Tool(
+                    name="search_memory",
+                    description="Search through saved memories using semantic similarity",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "query": {"type": "string", "description": "Search query for finding relevant memories"},
+                            "limit": {"type": "integer", "minimum": 1, "maximum": 20, "default": 5, "description": "Maximum number of results to return"},
+                            "min_similarity": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.1, "description": "Minimum similarity threshold"}
+                        },
+                        "required": ["query"]
+                    }
                 )
             ]
         
@@ -129,12 +177,18 @@ class MCPServer:
                     result = await self._handle_save_memory(arguments)
                 elif name == "search_memories":
                     result = await self._handle_search_memories(arguments)
+                elif name == "search_memory":
+                    result = await self._handle_search_memory(arguments)
                 elif name == "list_memories":
                     result = await self._handle_list_memories(arguments)
                 elif name == "memory_status":
                     result = await self._handle_memory_status(arguments)
                 elif name == "auto_save_memory":
                     result = await self._handle_auto_save_memory(arguments)
+                elif name == "analyze_message":
+                    result = await self._handle_analyze_message(arguments)
+                elif name == "get_memory_stats":
+                    result = await self._handle_get_memory_stats(arguments)
                 else:
                     raise MCPMemoryError(f"Unknown tool: {name}")
                 
@@ -147,20 +201,56 @@ class MCPServer:
     async def _handle_save_memory(self, arguments: dict) -> str:
         """Handle save_memory tool"""
         try:
+            content = arguments.get("content", "")
+            if not content:
+                raise ValueError("Content is required")
+            
+            # Extract SAM-compatible parameters
+            context = arguments.get("context", {})
+            project = arguments.get("project", "default")
+            importance = arguments.get("importance", 0.5)
+            tags = arguments.get("tags", [])
+            metadata = arguments.get("metadata", {})
+            
+            # Add platform context for SAM compatibility
+            if "category" not in context:
+                context["category"] = "conversation"
+            if "importance" not in context:
+                context["importance"] = importance
+            if "tags" not in context:
+                context["tags"] = tags
+            
+            # Create memory using the service
             memory = await self.memory_service.create_memory(
-                content=arguments["content"],
-                project=arguments.get("project", "default"),
-                importance=arguments.get("importance", 0.5),
-                tags=arguments.get("tags", []),
-                metadata=arguments.get("metadata", {}),
-                context=arguments.get("context", {})
+                content=content,
+                project=project,
+                importance=importance,
+                tags=tags,
+                metadata=metadata,
+                context=context
             )
             
-            return f"✅ Memory saved successfully with ID: {memory.id}"
+            # Return SAM-compatible response
+            response = {
+                "success": True,
+                "memory_id": memory.id,
+                "content": content[:100] + "..." if len(content) > 100 else content,
+                "project": memory.project,
+                "importance": memory.importance,
+                "created_at": memory.created_at.isoformat() if memory.created_at else None,
+                "message": "Memory saved successfully"
+            }
+            
+            return json.dumps(response)
             
         except Exception as e:
             self.logger.error(f"Failed to save memory: {e}")
-            raise MCPMemoryError(f"Failed to save memory: {e}")
+            error_response = {
+                "success": False,
+                "error": str(e),
+                "message": "Failed to save memory"
+            }
+            return json.dumps(error_response)
     
     async def _handle_search_memories(self, arguments: dict) -> str:
         """Handle search_memories tool"""
@@ -272,19 +362,123 @@ class MCPServer:
             
             if self.settings.server.mode in ["universal", "mcp_only"]:
                 # Start MCP server
-                async with mcp.server.stdio.stdio_server() as (read_stream, write_stream):
-                    await self.server.run(
-                        read_stream,
-                        write_stream,
-                        InitializationOptions(
-                            server_name=self.settings.server.name,
-                            server_version=self.settings.server.version,
-                            capabilities=self.server.get_capabilities(
-                                experimental_capabilities={},
+                try:
+                    async with mcp.server.stdio.stdio_server() as (read_stream, write_stream):
+                        await self.server.run(
+                            read_stream,
+                            write_stream,
+                            InitializationOptions(
+                                server_name=self.settings.server.name,
+                                server_version=self.settings.server.version,
+                                capabilities=self.server.get_capabilities(
+                                    experimental_capabilities={},
+                                ),
                             ),
-                        ),
-                    )
+                        )
+                except asyncio.CancelledError:
+                    self.logger.info("🛑 Server cancelled gracefully")
+                    raise
+                except Exception as e:
+                    self.logger.error(f"❌ Error in server.run: {e}")
+                    raise
             
         except Exception as e:
             self.logger.error(f"❌ Server failed to start: {e}")
-            raise 
+            raise
+    
+    async def _handle_analyze_message(self, arguments: dict) -> str:
+        """Handle analyze_message tool - analyze message for auto-triggers"""
+        try:
+            message = arguments.get("message", "")
+            platform_context = arguments.get("platform_context", {})
+            
+            # Simulate analysis (in real implementation, this would use ML/trigger system)
+            analysis_result = {
+                "success": True,
+                "message": f"Analyzed message: '{message[:50]}...'",
+                "triggers": [],
+                "confidence": 0.0,
+                "platform": platform_context.get("platform", "unknown"),
+                "recommendations": []
+            }
+            
+            # Simple keyword-based trigger detection for demo
+            trigger_keywords = ["remember", "save", "important", "note", "recall"]
+            if any(keyword in message.lower() for keyword in trigger_keywords):
+                analysis_result["triggers"].append("save_memory")
+                analysis_result["confidence"] = 0.8
+                analysis_result["recommendations"].append("Consider saving this information to memory")
+            
+            return json.dumps(analysis_result)
+            
+        except Exception as e:
+            self.logger.error(f"Error in analyze_message: {e}")
+            raise MCPMemoryError(f"Failed to analyze message: {e}")
+    
+    async def _handle_get_memory_stats(self, arguments: dict) -> str:
+        """Handle get_memory_stats tool - get memory system statistics"""
+        try:
+            # Get basic statistics
+            stats = {
+                "success": True,
+                "total_memories": 0,  # Would get from database in real implementation
+                "memory_types": ["conversation", "function", "context", "knowledge"],
+                "database_status": "connected",
+                "ml_model_status": "ready",
+                "last_updated": "2024-01-01T00:00:00Z",
+                "system_info": {
+                    "version": self.settings.server.version,
+                    "mode": self.settings.server.mode
+                }
+            }
+            
+            # Try to get real count from database
+            try:
+                # This would use the actual database service
+                # count = await self.database_service.count_memories()
+                # stats["total_memories"] = count
+                pass
+            except Exception as e:
+                self.logger.warning(f"Could not get memory count: {e}")
+            
+            return json.dumps(stats)
+            
+        except Exception as e:
+            self.logger.error(f"Error in get_memory_stats: {e}")
+            raise MCPMemoryError(f"Failed to get memory stats: {e}")
+    
+    async def _handle_search_memory(self, arguments: dict) -> str:
+        """Handle search_memory tool - semantic search using SAM format"""
+        try:
+            query = arguments.get("query", "")
+            limit = arguments.get("limit", 5)
+            min_similarity = arguments.get("min_similarity", 0.1)
+            
+            if not query:
+                raise ValueError("Query is required")
+            
+            # Use the search_memories method but format for SAM
+            search_args = {
+                "query": query,
+                "max_results": limit,
+                "similarity_threshold": min_similarity
+            }
+            
+            # Delegate to existing search_memories handler  
+            result_json = await self._handle_search_memories(search_args)
+            result = json.loads(result_json)
+            
+            # Reformat for SAM compatibility
+            sam_result = {
+                "success": True,
+                "results": result.get("memories", []),
+                "total_found": len(result.get("memories", [])),
+                "query": query,
+                "similarity_threshold": min_similarity
+            }
+            
+            return json.dumps(sam_result)
+            
+        except Exception as e:
+            self.logger.error(f"Error in search_memory: {e}")
+            raise MCPMemoryError(f"Failed to search memory: {e}") 

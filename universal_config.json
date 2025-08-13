@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "mcp-memory": {
+      "command": "/Users/piermatteogrieco/mcp-memory-server-3/venv/bin/python",
+      "args": [
+        "/Users/piermatteogrieco/mcp-memory-server-3/main.py"
+      ],
+      "env": {
+        "ENVIRONMENT": "development",
+        "MONGODB_URI": "mongodb://localhost:27017",
+        "MONGODB_DATABASE": "mcp_memory_dev",
+        "MONGODB_COLLECTION": "memories",
+        "PLATFORM": "universal",
+        "EMBEDDING_PROVIDER": "sentence_transformers",
+        "EMBEDDING_MODEL": "all-MiniLM-L6-v2",
+        "ML_TRIGGER_MODE": "hybrid",
+        "AUTO_SAVE_ENABLED": "true"
+      }
+    }
+  }
+}

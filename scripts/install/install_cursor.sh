@@ -34,8 +34,8 @@ else
     SCRIPT_DIR="$INSTALL_DIR"
 fi
 
-SERVER_PATH="$SCRIPT_DIR/servers/legacy/cursor_mcp_server.py"
-CONFIG_PATH="$SCRIPT_DIR/config/cursor_config.json"
+SERVER_PATH="$SCRIPT_DIR/main.py"
+CONFIG_PATH="$HOME/.cursor/mcp_settings.json"
 
 # Step 1: Check prerequisites
 echo -e "\n${BLUE}🔍 Step 1: Checking prerequisites...${NC}"
@@ -108,7 +108,76 @@ except Exception as e:
 "
 
 # Step 4: Create Cursor configuration
-echo -e "\n${BLUE}⚙️ Step 4: Configuring Cursor MCP integration...${NC}"
+echo -e "\n${BLUE}🗄️ Step 4: Setting up MongoDB...${NC}"
+
+# Check if MongoDB is installed and running
+if command -v mongosh &> /dev/null; then
+    echo -e "${GREEN}✅ MongoDB command line tools found${NC}"
+    
+    # Test MongoDB connection
+    if mongosh --eval "db.runCommand('ping')" --quiet &> /dev/null; then
+        echo -e "${GREEN}✅ MongoDB is running${NC}"
+    else
+        echo -e "${YELLOW}⚠️ MongoDB not running, attempting to start...${NC}"
+        
+        # Try to start MongoDB based on platform
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            # macOS
+            if command -v brew &> /dev/null; then
+                brew services start mongodb/brew/mongodb-community || {
+                    echo -e "${RED}❌ Failed to start MongoDB via Homebrew${NC}"
+                    echo -e "${YELLOW}Please install MongoDB: brew install mongodb/brew/mongodb-community${NC}"
+                    exit 1
+                }
+                echo -e "${GREEN}✅ MongoDB started via Homebrew${NC}"
+            else
+                echo -e "${RED}❌ Homebrew not found. Please install MongoDB manually${NC}"
+                exit 1
+            fi
+        elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+            # Linux
+            if command -v systemctl &> /dev/null; then
+                sudo systemctl start mongod || {
+                    echo -e "${RED}❌ Failed to start MongoDB service${NC}"
+                    echo -e "${YELLOW}Please install MongoDB or start it manually${NC}"
+                    exit 1
+                }
+                echo -e "${GREEN}✅ MongoDB started via systemctl${NC}"
+            else
+                echo -e "${RED}❌ systemctl not found. Please start MongoDB manually${NC}"
+                exit 1
+            fi
+        else
+            echo -e "${YELLOW}⚠️ Unsupported platform for automatic MongoDB start${NC}"
+            echo -e "${YELLOW}Please ensure MongoDB is running manually${NC}"
+        fi
+    fi
+else
+    echo -e "${RED}❌ MongoDB not found. Installing MongoDB...${NC}"
+    
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS with Homebrew
+        if command -v brew &> /dev/null; then
+            echo -e "${YELLOW}Installing MongoDB via Homebrew...${NC}"
+            brew tap mongodb/brew
+            brew install mongodb-community
+            brew services start mongodb/brew/mongodb-community
+            echo -e "${GREEN}✅ MongoDB installed and started${NC}"
+        else
+            echo -e "${RED}❌ Homebrew not found. Please install it first:${NC}"
+            echo -e "${YELLOW}/bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${RED}❌ Please install MongoDB manually from: https://www.mongodb.com/try/download/community${NC}"
+        exit 1
+    fi
+fi
+
+echo -e "${GREEN}✅ MongoDB setup completed${NC}"
+
+# Step 5: Configuring Cursor MCP integration
+echo -e "\n${BLUE}⚙️ Step 5: Configuring Cursor MCP integration...${NC}"
 
 # Create the configuration with proper path replacement
 CURSOR_MCP_CONFIG="$CURSOR_CONFIG_DIR/mcp_settings.json"
@@ -125,23 +194,23 @@ cat > "$CURSOR_MCP_CONFIG" << EOF
 {
   "mcpServers": {
     "mcp-memory-cursor": {
-      "command": "$SCRIPT_DIR/venv/bin/python",
-      "args": ["$SCRIPT_DIR/src/core/simple_mcp_server.py"],
+      "command": "$PYTHON_CMD",
+      "args": ["$SERVER_PATH"],
       "env": {
+        "PLATFORM": "cursor",
+        "AUTO_TRIGGER_ENABLED": "true",
+        "IDE_INTEGRATION": "true",
+        "ENVIRONMENT": "development",
+        "MONGODB_URI": "mongodb://localhost:27017",
+        "MONGODB_DATABASE": "mcp_memory_dev",
+        "MONGODB_COLLECTION": "memories",
+        "EMBEDDING_PROVIDER": "sentence_transformers",
+        "EMBEDDING_MODEL": "all-MiniLM-L6-v2",
+        "ML_TRIGGER_MODE": "hybrid",
+        "AUTO_SAVE_ENABLED": "true",
         "ML_MODEL_TYPE": "huggingface",
         "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
-        "AUTO_TRIGGER_ENABLED": "true",
-        "PRELOAD_ML_MODEL": "true",
-        "CURSOR_MODE": "true",
-        "LOG_LEVEL": "INFO",
-        "MEMORY_STORAGE": "file",
-        "SKIP_DATABASE": "true",
         "ML_CONFIDENCE_THRESHOLD": "0.7",
-        "TRIGGER_THRESHOLD": "0.15",
-        "SIMILARITY_THRESHOLD": "0.3",
-        "MEMORY_THRESHOLD": "0.7",
-        "SEMANTIC_THRESHOLD": "0.8",
-        "ML_TRIGGER_MODE": "hybrid",
         "INSTALL_DIR": "$SCRIPT_DIR"
       }
     }
