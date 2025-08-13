@@ -18,7 +18,7 @@ NC='\033[0m' # No Color
 
 # Get the absolute path of the script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SERVER_PATH="$SCRIPT_DIR/windsurf_smart_server.py"
+SERVER_PATH="$SCRIPT_DIR/main.py"
 
 echo -e "${BLUE}📍 Installation directory: $SCRIPT_DIR${NC}"
 
@@ -82,18 +82,34 @@ WINDSURF_CONFIG="$SCRIPT_DIR/windsurf_config.json"
 cat > "$WINDSURF_CONFIG" << EOF
 {
   "mcpServers": {
-    "mcp-memory-windsurf": {
-      "command": "python",
-      "args": ["$SERVER_PATH"],
+    "mcp-memory-sam": {
+      "command": "$SCRIPT_DIR/venv/bin/python",
+      "args": ["$SCRIPT_DIR/main.py"],
       "env": {
         "ML_MODEL_TYPE": "huggingface",
         "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
         "AUTO_TRIGGER_ENABLED": "true",
+        "PRELOAD_ML_MODEL": "true",
         "WINDSURF_MODE": "true",
-        "IDE_INTEGRATION": "true",
         "LOG_LEVEL": "INFO",
+        "ENVIRONMENT": "development",
+        "SERVER_MODE": "universal",
+        "ML_CONFIDENCE_THRESHOLD": "0.7",
+        "TRIGGER_THRESHOLD": "0.15",
+        "SIMILARITY_THRESHOLD": "0.3",
         "MEMORY_THRESHOLD": "0.7",
-        "SEMANTIC_THRESHOLD": "0.8"
+        "SEMANTIC_THRESHOLD": "0.8",
+        "ML_TRIGGER_MODE": "hybrid",
+        "ML_TRAINING_ENABLED": "true",
+        "ML_RETRAIN_INTERVAL": "50",
+        "FEATURE_EXTRACTION_TIMEOUT": "5.0",
+        "MAX_CONVERSATION_HISTORY": "10",
+        "USER_BEHAVIOR_TRACKING": "true",
+        "BEHAVIOR_HISTORY_LIMIT": "1000",
+        "EMBEDDING_PROVIDER": "sentence_transformers",
+        "EMBEDDING_MODEL": "all-MiniLM-L6-v2",
+        "MONGODB_URI": "mongodb://localhost:27017",
+        "MONGODB_DATABASE": "mcp_memory_dev"
       }
     }
   }

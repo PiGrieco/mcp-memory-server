@@ -8,7 +8,7 @@
         "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
         "AUTO_TRIGGER_ENABLED": "true",
         "PRELOAD_ML_MODEL": "true",
-        "WINDSURF_MODE": "true",
+        "CLAUDE_MODE": "true",
         "LOG_LEVEL": "INFO",
         "ENVIRONMENT": "development",
         "SERVER_MODE": "universal",
