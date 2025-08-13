@@ -67,8 +67,26 @@ class MLTriggersConfig(BaseModel):
     """ML Triggers configuration"""
     enabled: bool = True
     model_path: str = "./models/trigger_model.pkl"
-    confidence_threshold: float = 0.8
+    confidence_threshold: float = 0.7  # Main ML confidence threshold (70%)
+    trigger_threshold: float = 0.3    # General trigger threshold (15%)
+    similarity_threshold: float = 0.5  # Similarity threshold for searches
+    memory_threshold: float = 0.7      # Memory importance threshold
+    semantic_threshold: float = 0.8    # Semantic similarity threshold
     retrain_interval_hours: int = 24
+    
+    # ML Model Configuration
+    model_type: str = "huggingface"
+    huggingface_model_name: str = "PiGrieco/mcp-memory-auto-trigger-model"
+    ml_trigger_mode: str = "hybrid"    # hybrid, ml_only, rules_only
+    preload_model: bool = True
+    
+    # Continuous Learning
+    training_enabled: bool = True
+    retrain_interval: int = 50         # Retrain after N samples
+    feature_extraction_timeout: float = 5.0
+    max_conversation_history: int = 10
+    user_behavior_tracking: bool = True
+    behavior_history_limit: int = 1000
 
 
 class SecurityConfig(BaseModel):
@@ -280,6 +298,44 @@ class Settings:
             self.embedding.provider = os.getenv("EMBEDDING_PROVIDER")
         if os.getenv("EMBEDDING_MODEL"):
             self.embedding.model_name = os.getenv("EMBEDDING_MODEL")
+        
+        # ML Triggers settings - Critical for SAM compatibility
+        if os.getenv("ML_MODEL_TYPE"):
+            self.ml_triggers.model_type = os.getenv("ML_MODEL_TYPE")
+        if os.getenv("HUGGINGFACE_MODEL_NAME"):
+            self.ml_triggers.huggingface_model_name = os.getenv("HUGGINGFACE_MODEL_NAME")
+        if os.getenv("AUTO_TRIGGER_ENABLED"):
+            self.ml_triggers.enabled = os.getenv("AUTO_TRIGGER_ENABLED").lower() == "true"
+        if os.getenv("PRELOAD_ML_MODEL"):
+            self.ml_triggers.preload_model = os.getenv("PRELOAD_ML_MODEL").lower() == "true"
+        
+        # ML Thresholds - Critical for proper operation
+        if os.getenv("ML_CONFIDENCE_THRESHOLD"):
+            self.ml_triggers.confidence_threshold = float(os.getenv("ML_CONFIDENCE_THRESHOLD"))
+        if os.getenv("TRIGGER_THRESHOLD"):
+            self.ml_triggers.trigger_threshold = float(os.getenv("TRIGGER_THRESHOLD"))
+        if os.getenv("SIMILARITY_THRESHOLD"):
+            self.ml_triggers.similarity_threshold = float(os.getenv("SIMILARITY_THRESHOLD"))
+        if os.getenv("MEMORY_THRESHOLD"):
+            self.ml_triggers.memory_threshold = float(os.getenv("MEMORY_THRESHOLD"))
+        if os.getenv("SEMANTIC_THRESHOLD"):
+            self.ml_triggers.semantic_threshold = float(os.getenv("SEMANTIC_THRESHOLD"))
+        if os.getenv("ML_TRIGGER_MODE"):
+            self.ml_triggers.ml_trigger_mode = os.getenv("ML_TRIGGER_MODE")
+        
+        # Continuous Learning settings
+        if os.getenv("ML_TRAINING_ENABLED"):
+            self.ml_triggers.training_enabled = os.getenv("ML_TRAINING_ENABLED").lower() == "true"
+        if os.getenv("ML_RETRAIN_INTERVAL"):
+            self.ml_triggers.retrain_interval = int(os.getenv("ML_RETRAIN_INTERVAL"))
+        if os.getenv("FEATURE_EXTRACTION_TIMEOUT"):
+            self.ml_triggers.feature_extraction_timeout = float(os.getenv("FEATURE_EXTRACTION_TIMEOUT"))
+        if os.getenv("MAX_CONVERSATION_HISTORY"):
+            self.ml_triggers.max_conversation_history = int(os.getenv("MAX_CONVERSATION_HISTORY"))
+        if os.getenv("USER_BEHAVIOR_TRACKING"):
+            self.ml_triggers.user_behavior_tracking = os.getenv("USER_BEHAVIOR_TRACKING").lower() == "true"
+        if os.getenv("BEHAVIOR_HISTORY_LIMIT"):
+            self.ml_triggers.behavior_history_limit = int(os.getenv("BEHAVIOR_HISTORY_LIMIT"))
         
         # Cache settings
         if os.getenv("REDIS_ENABLED"):

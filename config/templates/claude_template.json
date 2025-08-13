@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "mcp-memory-claude": {
+    "mcp-memory-sam": {
       "command": "{{INSTALL_DIR}}/venv/bin/python",
-      "args": ["{{INSTALL_DIR}}/claude_mcp_server.py"],
+      "args": ["{{INSTALL_DIR}}/main.py"],
       "env": {
         "ML_MODEL_TYPE": "huggingface",
         "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
@@ -10,12 +10,24 @@
         "PRELOAD_ML_MODEL": "true",
         "CLAUDE_MODE": "true",
         "LOG_LEVEL": "INFO",
+        "ENVIRONMENT": "development",
+        "SERVER_MODE": "universal",
         "ML_CONFIDENCE_THRESHOLD": "0.7",
         "TRIGGER_THRESHOLD": "0.15",
         "SIMILARITY_THRESHOLD": "0.3",
         "MEMORY_THRESHOLD": "0.7",
         "SEMANTIC_THRESHOLD": "0.8",
         "ML_TRIGGER_MODE": "hybrid",
+        "ML_TRAINING_ENABLED": "true",
+        "ML_RETRAIN_INTERVAL": "50",
+        "FEATURE_EXTRACTION_TIMEOUT": "5.0",
+        "MAX_CONVERSATION_HISTORY": "10",
+        "USER_BEHAVIOR_TRACKING": "true",
+        "BEHAVIOR_HISTORY_LIMIT": "1000",
+        "EMBEDDING_PROVIDER": "sentence_transformers",
+        "EMBEDDING_MODEL": "all-MiniLM-L6-v2",
+        "MONGODB_URI": "mongodb://localhost:27017",
+        "MONGODB_DATABASE": "mcp_memory_dev",
         "INSTALL_DIR": "{{INSTALL_DIR}}"
       }
     }

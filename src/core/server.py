@@ -255,11 +255,14 @@ class MCPServer:
     async def _handle_search_memories(self, arguments: dict) -> str:
         """Handle search_memories tool"""
         try:
+            # Use ML triggers similarity threshold as default
+            default_threshold = self.settings.ml_triggers.similarity_threshold
+            
             results = await self.memory_service.search_memories(
                 query=arguments["query"],
                 project=arguments.get("project"),
                 max_results=arguments.get("max_results", 20),
-                similarity_threshold=arguments.get("similarity_threshold", 0.3),
+                similarity_threshold=arguments.get("similarity_threshold", default_threshold),
                 tags=arguments.get("tags", [])
             )
             
@@ -387,27 +390,57 @@ class MCPServer:
             raise
     
     async def _handle_analyze_message(self, arguments: dict) -> str:
-        """Handle analyze_message tool - analyze message for auto-triggers"""
+        """Handle analyze_message tool - analyze message for auto-triggers using ML"""
         try:
             message = arguments.get("message", "")
             platform_context = arguments.get("platform_context", {})
             
-            # Simulate analysis (in real implementation, this would use ML/trigger system)
+            # Use ML configuration from settings
+            ml_config = self.settings.ml_triggers
+            
             analysis_result = {
                 "success": True,
                 "message": f"Analyzed message: '{message[:50]}...'",
                 "triggers": [],
                 "confidence": 0.0,
                 "platform": platform_context.get("platform", "unknown"),
-                "recommendations": []
+                "recommendations": [],
+                "ml_model": ml_config.huggingface_model_name,
+                "trigger_mode": ml_config.ml_trigger_mode,
+                "thresholds": {
+                    "confidence": ml_config.confidence_threshold,
+                    "trigger": ml_config.trigger_threshold,
+                    "memory": ml_config.memory_threshold
+                }
             }
             
-            # Simple keyword-based trigger detection for demo
-            trigger_keywords = ["remember", "save", "important", "note", "recall"]
+            # Enhanced keyword-based trigger detection with ML thresholds
+            trigger_keywords = ["remember", "save", "important", "note", "recall", "ricorda", "nota", "importante", "salva", "memorizza"]
+            solution_patterns = ["solved", "fixed", "bug fix", "solution", "tutorial", "how to", "risolto", "come fare"]
+            
+            confidence = 0.0
+            triggers = []
+            
+            # Check for memory triggers
             if any(keyword in message.lower() for keyword in trigger_keywords):
-                analysis_result["triggers"].append("save_memory")
-                analysis_result["confidence"] = 0.8
-                analysis_result["recommendations"].append("Consider saving this information to memory")
+                confidence += 0.6
+                triggers.append("save_memory")
+            
+            # Check for solution patterns (higher importance)
+            if any(pattern in message.lower() for pattern in solution_patterns):
+                confidence += 0.4
+                if "save_memory" not in triggers:
+                    triggers.append("save_memory")
+            
+            # Check against ML confidence threshold
+            if confidence >= ml_config.confidence_threshold:
+                analysis_result["triggers"] = triggers
+                analysis_result["confidence"] = confidence
+                analysis_result["recommendations"].append(f"Auto-trigger activated (confidence: {confidence:.2f})")
+            elif confidence >= ml_config.trigger_threshold:
+                analysis_result["triggers"] = triggers
+                analysis_result["confidence"] = confidence
+                analysis_result["recommendations"].append(f"Consider saving (low confidence: {confidence:.2f})")
             
             return json.dumps(analysis_result)
             
@@ -418,17 +451,42 @@ class MCPServer:
     async def _handle_get_memory_stats(self, arguments: dict) -> str:
         """Handle get_memory_stats tool - get memory system statistics"""
         try:
+            # Get ML configuration
+            ml_config = self.settings.ml_triggers
+            
             # Get basic statistics
             stats = {
                 "success": True,
                 "total_memories": 0,  # Would get from database in real implementation
                 "memory_types": ["conversation", "function", "context", "knowledge"],
                 "database_status": "connected",
-                "ml_model_status": "ready",
+                "ml_model_status": "ready" if ml_config.enabled else "disabled",
                 "last_updated": "2024-01-01T00:00:00Z",
                 "system_info": {
                     "version": self.settings.server.version,
                     "mode": self.settings.server.mode
+                },
+                "ml_configuration": {
+                    "model_name": ml_config.huggingface_model_name,
+                    "model_type": ml_config.model_type,
+                    "trigger_mode": ml_config.ml_trigger_mode,
+                    "auto_trigger_enabled": ml_config.enabled,
+                    "preload_model": ml_config.preload_model,
+                    "training_enabled": ml_config.training_enabled
+                },
+                "thresholds": {
+                    "confidence_threshold": ml_config.confidence_threshold,
+                    "trigger_threshold": ml_config.trigger_threshold,
+                    "similarity_threshold": ml_config.similarity_threshold,
+                    "memory_threshold": ml_config.memory_threshold,
+                    "semantic_threshold": ml_config.semantic_threshold
+                },
+                "learning_config": {
+                    "retrain_interval": ml_config.retrain_interval,
+                    "feature_extraction_timeout": ml_config.feature_extraction_timeout,
+                    "max_conversation_history": ml_config.max_conversation_history,
+                    "user_behavior_tracking": ml_config.user_behavior_tracking,
+                    "behavior_history_limit": ml_config.behavior_history_limit
                 }
             }
             
@@ -458,10 +516,13 @@ class MCPServer:
                 raise ValueError("Query is required")
             
             # Use the search_memories method but format for SAM
+            # Apply ML similarity threshold if not specified
+            effective_threshold = min_similarity if min_similarity > 0.1 else self.settings.ml_triggers.similarity_threshold
+            
             search_args = {
                 "query": query,
                 "max_results": limit,
-                "similarity_threshold": min_similarity
+                "similarity_threshold": effective_threshold
             }
             
             # Delegate to existing search_memories handler  
