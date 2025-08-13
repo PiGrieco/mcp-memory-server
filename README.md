@@ -17,8 +17,9 @@
 ### ✨ **Key Benefits:**
 - 🧠 **Automatic Memory Management**: No manual commands - SAM decides when to save/search
 - 🎯 **Context-Aware**: Understands conversation flow and retrieves relevant information
-- ⚡ **Universal**: Works with 6 major AI platforms (Cursor, Claude, GPT, Windsurf, Lovable, Replit)
+- ⚡ **Universal**: Works with major AI platforms (Cursor, Claude, Windsurf)
 - 🚀 **One-Command Install**: Simple prompt-based installation for any platform
+- NEXT: **Lovable** and **Replit** version!
 
 ---
 
@@ -71,7 +72,6 @@ Simply tell your AI assistant:
 **Examples:**
 - "Install this: https://github.com/PiGrieco/mcp-memory-server on Cursor"
 - "Install this: https://github.com/PiGrieco/mcp-memory-server on Claude"
-- "Install this: https://github.com/PiGrieco/mcp-memory-server deploying it externally and connecting the app to it"
   
 ### **What Happens During Installation:**
 
@@ -93,8 +93,6 @@ If the prompt method doesn't work, use direct commands:
 | **🎯 Cursor IDE** | `curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_cursor.sh \| bash` |
 | **🔮 Claude Desktop** | `curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_claude.sh \| bash` |
 | **🌪️ Windsurf IDE** | `curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_windsurf.sh \| bash` |
-| **💙 Lovable Platform** | `curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_lovable.sh \| bash` |
-| **⚡ Replit Cloud** | `curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_replit.sh \| bash` |
 
 ---
 
