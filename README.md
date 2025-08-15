@@ -90,9 +90,9 @@ If the prompt method doesn't work, use direct commands:
 
 | Platform | Installation Command |
 |----------|---------------------|
-| **🎯 Cursor IDE** | `curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_cursor.sh \| bash` |
-| **🔮 Claude Desktop** | `curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_claude.sh \| bash` |
-| **🌪️ Windsurf IDE** | `curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/production-ready-v2/install_windsurf.sh \| bash` |
+| **🎯 Cursor IDE** | `curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/complete-architecture-refactor/install_cursor.sh \| bash` |
+| **🔮 Claude Desktop** | `curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/complete-architecture-refactor/install_claude.sh \| bash` |
+| **🌪️ Windsurf IDE** | `curl -sSL https://raw.githubusercontent.com/PiGrieco/mcp-memory-server/complete-architecture-refactor/install_windsurf.sh \| bash` |
 
 ---
 
