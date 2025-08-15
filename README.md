@@ -191,6 +191,89 @@ The model was trained on a comprehensive dataset of **50,000+ annotated conversa
 
 ---
 
+## 🔧 **Configuration Example**
+
+Here's a complete MCP configuration file for Cursor IDE showing all ML parameters:
+
+### **📁 ~/.cursor/mcp_settings.json**
+
+```json
+{
+  "mcpServers": {
+    "mcp-memory-sam": {
+      "command": "/path/to/mcp-memory-server/venv/bin/python",
+      "args": ["/path/to/mcp-memory-server/main.py"],
+      "env": {
+        "ML_MODEL_TYPE": "huggingface",
+        "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
+        "AUTO_TRIGGER_ENABLED": "true",
+        "PRELOAD_ML_MODEL": "true",
+        "CURSOR_MODE": "true",
+        "LOG_LEVEL": "INFO",
+        "ENVIRONMENT": "development",
+        "SERVER_MODE": "universal",
+        "ML_CONFIDENCE_THRESHOLD": "0.7",
+        "TRIGGER_THRESHOLD": "0.15",
+        "SIMILARITY_THRESHOLD": "0.3",
+        "MEMORY_THRESHOLD": "0.7",
+        "SEMANTIC_THRESHOLD": "0.8",
+        "ML_TRIGGER_MODE": "hybrid",
+        "ML_TRAINING_ENABLED": "true",
+        "ML_RETRAIN_INTERVAL": "50",
+        "FEATURE_EXTRACTION_TIMEOUT": "5.0",
+        "MAX_CONVERSATION_HISTORY": "10",
+        "USER_BEHAVIOR_TRACKING": "true",
+        "BEHAVIOR_HISTORY_LIMIT": "1000",
+        "EMBEDDING_PROVIDER": "sentence_transformers",
+        "EMBEDDING_MODEL": "all-MiniLM-L6-v2",
+        "MONGODB_URI": "mongodb://localhost:27017",
+        "MONGODB_DATABASE": "mcp_memory_dev"
+      }
+    }
+  }
+}
+```
+
+### **📚 Parameter Explanation**
+
+#### **🏗️ Core Configuration**
+- **`ML_MODEL_TYPE`**: Type of ML model (`huggingface` for transformer models)
+- **`HUGGINGFACE_MODEL_NAME`**: Specific SAM model with 99.56% accuracy
+- **`AUTO_TRIGGER_ENABLED`**: Enables automatic memory operations without user commands
+- **`PRELOAD_ML_MODEL`**: Loads ML model at startup for faster response times
+- **`CURSOR_MODE`**: Platform-specific optimizations for Cursor IDE
+- **`SERVER_MODE`**: Architecture mode (`universal` for modern unified server)
+
+#### **🎯 ML Thresholds (Critical for 99.56% Accuracy)**
+- **`ML_CONFIDENCE_THRESHOLD: "0.7"`**: Main ML model confidence (70% threshold)
+- **`TRIGGER_THRESHOLD: "0.15"`**: General trigger activation sensitivity (15%)
+- **`SIMILARITY_THRESHOLD: "0.3"`**: Semantic search matching threshold (30%)
+- **`MEMORY_THRESHOLD: "0.7"`**: Memory importance filtering (70%)
+- **`SEMANTIC_THRESHOLD: "0.8"`**: Context similarity matching (80%)
+- **`ML_TRIGGER_MODE: "hybrid"`**: Combines ML model + deterministic rules
+
+#### **📚 Continuous Learning**
+- **`ML_TRAINING_ENABLED: "true"`**: Enables model improvement over time
+- **`ML_RETRAIN_INTERVAL: "50"`**: Retrain model after 50 new samples
+- **`FEATURE_EXTRACTION_TIMEOUT: "5.0"`**: ML processing timeout (5 seconds)
+- **`MAX_CONVERSATION_HISTORY: "10"`**: Context window for analysis
+- **`USER_BEHAVIOR_TRACKING: "true"`**: Learn from user patterns
+- **`BEHAVIOR_HISTORY_LIMIT: "1000"`**: Maximum behavior samples to store
+
+#### **🔍 Embedding Configuration**
+- **`EMBEDDING_PROVIDER: "sentence_transformers"`**: Vector embedding engine
+- **`EMBEDDING_MODEL: "all-MiniLM-L6-v2"`**: Lightweight, fast embedding model
+- **`MONGODB_URI`**: Database connection for persistent memory storage
+- **`MONGODB_DATABASE`**: Database name for memory collections
+
+#### **🛠️ System Settings**
+- **`LOG_LEVEL: "INFO"`**: Logging verbosity level
+- **`ENVIRONMENT: "development"`**: Current environment mode
+
+> **💡 Note**: These parameters are automatically configured during installation. Advanced users can fine-tune thresholds for their specific use cases.
+
+---
+
 ## 📊 **Model Information**
 
 - **Repository**: [PiGrieco/mcp-memory-auto-trigger-model](https://huggingface.co/PiGrieco/mcp-memory-auto-trigger-model)
@@ -198,7 +281,6 @@ The model was trained on a comprehensive dataset of **50,000+ annotated conversa
 - **Framework**: Transformers (PyTorch)
 - **Model Type**: BERT-based classifier
 - **Last Updated**: 2024
-
 
 ---
 
