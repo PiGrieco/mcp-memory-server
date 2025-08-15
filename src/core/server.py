@@ -9,7 +9,6 @@ from typing import Dict, Any, Optional
 from pathlib import Path
 
 from mcp.server import Server
-from mcp.server.models import InitializationOptions
 import mcp.server.stdio
 import mcp.types as types
 
@@ -364,26 +363,45 @@ class MCPServer:
             self.logger.info(f"🎯 Starting MCP server in {self.settings.server.mode} mode")
             
             if self.settings.server.mode in ["universal", "mcp_only"]:
-                # Start MCP server
+                # Start MCP server with proper error handling
+                import mcp.server.stdio
+                from mcp import types
+                
                 try:
                     async with mcp.server.stdio.stdio_server() as (read_stream, write_stream):
+                        self.logger.info("🚀 MCP server ready to accept connections")
+                        
+                        # Create initialization options
+                        from mcp.server.models import InitializationOptions
+                        from mcp.types import ServerCapabilities, ToolsCapability
+                        init_options = InitializationOptions(
+                            server_name=self.settings.server.name,
+                            server_version=self.settings.server.version,
+                            capabilities=ServerCapabilities(
+                                tools=ToolsCapability(listChanged=True)
+                            )
+                        )
+                        
+                        # Run the server with initialization options
                         await self.server.run(
                             read_stream,
                             write_stream,
-                            InitializationOptions(
-                                server_name=self.settings.server.name,
-                                server_version=self.settings.server.version,
-                                capabilities=self.server.get_capabilities(
-                                    experimental_capabilities={},
-                                ),
-                            ),
+                            init_options,
                         )
+                        
                 except asyncio.CancelledError:
                     self.logger.info("🛑 Server cancelled gracefully")
                     raise
+                except KeyboardInterrupt:
+                    self.logger.info("🛑 Server interrupted by user")
+                    raise
                 except Exception as e:
                     self.logger.error(f"❌ Error in server.run: {e}")
-                    raise
+                    import traceback
+                    self.logger.error(f"Full traceback: {traceback.format_exc()}")
+                    raise  # Re-raise the exception so the server fails properly
+            else:
+                self.logger.info(f"✅ Server initialized in {self.settings.server.mode} mode (not starting MCP loop)")
             
         except Exception as e:
             self.logger.error(f"❌ Server failed to start: {e}")

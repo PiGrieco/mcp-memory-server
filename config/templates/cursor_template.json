@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "mcp-memory-sam": {
-      "command": "{{INSTALL_DIR}}/venv/bin/python",
+      "command": "python3",
       "args": ["{{INSTALL_DIR}}/main.py"],
       "env": {
         "ML_MODEL_TYPE": "huggingface",

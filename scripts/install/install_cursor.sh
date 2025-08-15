@@ -35,7 +35,7 @@ else
 fi
 
 SERVER_PATH="$SCRIPT_DIR/main.py"
-CONFIG_PATH="$HOME/.cursor/mcp_settings.json"
+CONFIG_PATH="$HOME/.cursor/mcp.json"
 
 # Step 1: Check prerequisites
 echo -e "\n${BLUE}🔍 Step 1: Checking prerequisites...${NC}"
@@ -180,7 +180,7 @@ echo -e "${GREEN}✅ MongoDB setup completed${NC}"
 echo -e "\n${BLUE}⚙️ Step 5: Configuring Cursor MCP integration...${NC}"
 
 # Create the configuration with proper path replacement
-CURSOR_MCP_CONFIG="$CURSOR_CONFIG_DIR/mcp_settings.json"
+CURSOR_MCP_CONFIG="$CURSOR_CONFIG_DIR/mcp.json"
 
 if [ -f "$CURSOR_MCP_CONFIG" ]; then
     echo -e "${YELLOW}📝 Backing up existing Cursor MCP config...${NC}"
@@ -193,24 +193,34 @@ echo -e "${YELLOW}📝 Installing Cursor MCP configuration...${NC}"
 cat > "$CURSOR_MCP_CONFIG" << EOF
 {
   "mcpServers": {
-    "mcp-memory-cursor": {
+    "mcp-memory-sam": {
       "command": "$PYTHON_CMD",
       "args": ["$SERVER_PATH"],
       "env": {
-        "PLATFORM": "cursor",
-        "AUTO_TRIGGER_ENABLED": "true",
-        "IDE_INTEGRATION": "true",
-        "ENVIRONMENT": "development",
-        "MONGODB_URI": "mongodb://localhost:27017",
-        "MONGODB_DATABASE": "mcp_memory_dev",
-        "MONGODB_COLLECTION": "memories",
-        "EMBEDDING_PROVIDER": "sentence_transformers",
-        "EMBEDDING_MODEL": "all-MiniLM-L6-v2",
-        "ML_TRIGGER_MODE": "hybrid",
-        "AUTO_SAVE_ENABLED": "true",
         "ML_MODEL_TYPE": "huggingface",
         "HUGGINGFACE_MODEL_NAME": "PiGrieco/mcp-memory-auto-trigger-model",
+        "AUTO_TRIGGER_ENABLED": "true",
+        "PRELOAD_ML_MODEL": "true",
+        "CURSOR_MODE": "true",
+        "LOG_LEVEL": "INFO",
+        "ENVIRONMENT": "development",
+        "SERVER_MODE": "universal",
         "ML_CONFIDENCE_THRESHOLD": "0.7",
+        "TRIGGER_THRESHOLD": "0.15",
+        "SIMILARITY_THRESHOLD": "0.3",
+        "MEMORY_THRESHOLD": "0.7",
+        "SEMANTIC_THRESHOLD": "0.8",
+        "ML_TRIGGER_MODE": "hybrid",
+        "ML_TRAINING_ENABLED": "true",
+        "ML_RETRAIN_INTERVAL": "50",
+        "FEATURE_EXTRACTION_TIMEOUT": "5.0",
+        "MAX_CONVERSATION_HISTORY": "10",
+        "USER_BEHAVIOR_TRACKING": "true",
+        "BEHAVIOR_HISTORY_LIMIT": "1000",
+        "EMBEDDING_PROVIDER": "sentence_transformers",
+        "EMBEDDING_MODEL": "all-MiniLM-L6-v2",
+        "MONGODB_URI": "mongodb://localhost:27017",
+        "MONGODB_DATABASE": "mcp_memory_dev",
         "INSTALL_DIR": "$SCRIPT_DIR"
       }
     }
@@ -224,9 +234,11 @@ echo -e "${GREEN}✅ Cursor configuration updated${NC}"
 echo -e "\n${BLUE}🧪 Step 5: Testing MCP server...${NC}"
 
 echo -e "${YELLOW}Testing server initialization...${NC}"
-timeout 30s $PYTHON_CMD "$SERVER_PATH" --test 2>/dev/null || {
-    echo -e "${YELLOW}⚠️ Server test timeout (normal for first ML model download)${NC}"
-}
+if $PYTHON_CMD "$SCRIPT_DIR/scripts/test_mcp_server.py"; then
+    echo -e "${GREEN}✅ MCP server test passed${NC}"
+else
+    echo -e "${YELLOW}⚠️ MCP server test had issues (may work anyway)${NC}"
+fi
 
 # Step 6: Create startup script
 echo -e "\n${BLUE}🚀 Step 6: Creating startup script...${NC}"
@@ -254,7 +266,7 @@ echo "================================"
 
 echo -e "\n${BLUE}📋 CURSOR SETUP INSTRUCTIONS:${NC}"
 echo "1. Open Cursor IDE"
-echo "2. The MCP server is already configured in ~/.cursor/mcp_settings.json"
+echo "2. The MCP server is already configured in ~/.cursor/mcp.json"
 echo "3. Restart Cursor if it was running"
 echo "4. Press Cmd+L (macOS) or Ctrl+L (Windows/Linux) to open AI chat"
 

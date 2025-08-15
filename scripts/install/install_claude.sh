@@ -148,7 +148,7 @@ cat > "$CLAUDE_MCP_CONFIG" << EOF
 {
   "mcpServers": {
     "mcp-memory-sam": {
-      "command": "$SCRIPT_DIR/venv/bin/python",
+      "command": "python3",
       "args": ["$SCRIPT_DIR/main.py"],
       "env": {
         "ML_MODEL_TYPE": "huggingface",
