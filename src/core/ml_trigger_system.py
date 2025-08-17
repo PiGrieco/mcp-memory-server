@@ -36,7 +36,7 @@ except ImportError:
     HAS_TORCH = False
 
 from ..utils.logging import get_logger, log_performance
-from ..config.settings import get_config
+from ..config.settings import get_settings
 from ..services.embedding_service import EmbeddingService
 from ..services.memory_service import MemoryService
 
@@ -99,9 +99,10 @@ class MLPrediction:
 class FeatureExtractor:
     """Extract rich features from conversation context"""
     
-    def __init__(self, embedding_service: EmbeddingService):
+    def __init__(self, embedding_service: EmbeddingService, memory_service: MemoryService = None):
         self.embedding_service = embedding_service
-        self.config = get_config()
+        self.memory_service = memory_service
+        self.config = get_settings()
         
         # Initialize text analysis components
         if HAS_SKLEARN:
@@ -271,6 +272,9 @@ class FeatureExtractor:
     async def _calculate_similarity_to_existing(self, text: str) -> float:
         """Calculate similarity to existing memories"""
         try:
+            if not self.memory_service:
+                return 0.0
+                
             # Search for similar content in existing memories
             memories = await self.memory_service.search_memories(
                 query=text,
@@ -279,9 +283,16 @@ class FeatureExtractor:
             )
             
             if memories:
-                return memories[0].get('similarity', 0.0)
+                # Check if it's a Memory object or dict
+                if hasattr(memories[0], 'similarity_score'):
+                    return memories[0].similarity_score
+                elif isinstance(memories[0], dict):
+                    return memories[0].get('similarity', 0.0)
+                else:
+                    return 0.0
             return 0.0
-        except:
+        except Exception as e:
+            logger.debug(f"Error calculating similarity to existing: {e}")
             return 0.0
     
     def _count_importance_indicators(self, text: str) -> int:
@@ -383,8 +394,20 @@ class HuggingFaceMLTriggerModel:
             # Get predictions with confidence scores
             predictions = self.classifier(text)
             
+            # Handle both single prediction and list of predictions
+            if isinstance(predictions, list) and len(predictions) > 0:
+                if isinstance(predictions[0], list):
+                    # Multiple predictions per input - take first input's predictions
+                    pred_list = predictions[0]
+                else:
+                    # Single input predictions
+                    pred_list = predictions
+            else:
+                # Single prediction
+                pred_list = [predictions] if not isinstance(predictions, list) else predictions
+            
             # Find the prediction with highest score
-            best_prediction = max(predictions, key=lambda x: x['score'])
+            best_prediction = max(pred_list, key=lambda x: x['score'])
             predicted_label = best_prediction['label']
             confidence = best_prediction['score']
             
@@ -744,24 +767,24 @@ class MLAutoTriggerSystem:
     """
     
     def __init__(self, memory_service: MemoryService, embedding_service: EmbeddingService):
-        self.config = get_config()
+        self.config = get_settings()
         self.memory_service = memory_service
         self.embedding_service = embedding_service
         
         # Initialize components
-        self.feature_extractor = FeatureExtractor(embedding_service)
+        self.feature_extractor = FeatureExtractor(embedding_service, memory_service)
         
         # Initialize ML model based on configuration
-        if self.config.ml_trigger.model_type == "huggingface":
+        if self.config.ml_triggers.model_type == "huggingface":
             self.ml_model = HuggingFaceMLTriggerModel(
-                model_name=self.config.ml_trigger.huggingface_model_name
+                model_name=self.config.ml_triggers.huggingface_model_name
             )
-            logger.info(f"Using HuggingFace model: {self.config.ml_trigger.huggingface_model_name}")
+            logger.info(f"Using HuggingFace model: {self.config.ml_triggers.huggingface_model_name}")
         else:
             # Fallback to sklearn model
-            model_dir = Path(self.config.ml_trigger.model_cache_dir)
+            model_dir = Path(self.config.embedding.model_cache_dir)
             self.ml_model = MLTriggerModel(model_dir)
-            logger.info(f"Using sklearn model: {self.config.ml_trigger.model_type}")
+            logger.info(f"Using sklearn model: {self.config.ml_triggers.model_type}")
         
         # User behavior tracking
         self.user_contexts = {}
@@ -782,7 +805,12 @@ class MLAutoTriggerSystem:
     async def initialize(self):
         """Initialize the ML system"""
         # Load pre-trained models if available
-        await self.ml_model.load_models()
+        if hasattr(self.ml_model, 'load_models'):
+            # For sklearn-based models
+            await self.ml_model.load_models()
+        elif hasattr(self.ml_model, 'load_model'):
+            # For HuggingFace models
+            self.ml_model.load_model()
         
         # Initialize user contexts from history
         await self._initialize_user_contexts()
@@ -814,7 +842,29 @@ class MLAutoTriggerSystem:
             )
             
             # Get ML prediction
-            prediction = await self.ml_model.predict(features)
+            if hasattr(self.ml_model, 'predict'):
+                # For HuggingFace models, pass the text directly
+                if isinstance(self.ml_model, HuggingFaceMLTriggerModel):
+                    action, confidence = self.ml_model.predict(message)
+                    prediction = MLPrediction(
+                        action=action,
+                        confidence=confidence,
+                        reasoning=[f"HuggingFace prediction: {action.value}"],
+                        features_used=["message_text"],
+                        should_learn=True
+                    )
+                else:
+                    # For sklearn models, use features
+                    prediction = await self.ml_model.predict(features)
+            else:
+                # Fallback prediction
+                prediction = MLPrediction(
+                    action=ActionType.NO_ACTION,
+                    confidence=0.0,
+                    reasoning=["ML model not available"],
+                    features_used=[],
+                    should_learn=False
+                )
             
             # Update metrics
             self.metrics['predictions_made'] += 1

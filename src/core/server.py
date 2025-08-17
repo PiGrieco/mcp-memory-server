@@ -17,6 +17,7 @@ from ..services.memory_service import MemoryService
 from ..services.embedding_service import EmbeddingService
 from ..services.database_service import DatabaseService
 from ..utils.exceptions import MCPMemoryError
+from .ml_trigger_system import MLAutoTriggerSystem, ActionType, create_ml_auto_trigger_system
 
 
 class MCPServer:
@@ -28,6 +29,14 @@ class MCPServer:
         self.memory_service = MemoryService(settings)
         self.embedding_service = EmbeddingService(settings.embedding)
         self.database_service = DatabaseService(settings.database)
+        
+        # Initialize ML trigger system
+        self.ml_trigger_system = None
+        if settings.ml_triggers.enabled:
+            self.ml_trigger_system = create_ml_auto_trigger_system(
+                self.memory_service, 
+                self.embedding_service
+            )
         
         # Setup logging
         self._setup_logging()
@@ -349,6 +358,12 @@ class MCPServer:
             await self.embedding_service.initialize()
             await self.memory_service.initialize()
             
+            # Initialize ML trigger system
+            if self.ml_trigger_system:
+                self.logger.info("🧠 Initializing ML trigger system...")
+                await self.ml_trigger_system.initialize()
+                self.logger.info("✅ ML trigger system initialized")
+            
             self.logger.info("✅ MCP Memory Server initialized successfully")
             
         except Exception as e:
@@ -413,9 +428,64 @@ class MCPServer:
             message = arguments.get("message", "")
             platform_context = arguments.get("platform_context", {})
             
+            if not message:
+                return json.dumps({
+                    "success": False,
+                    "error": "Message is required",
+                    "confidence": 0.0
+                })
+            
             # Use ML configuration from settings
             ml_config = self.settings.ml_triggers
             
+            # If ML trigger system is available, use it
+            if self.ml_trigger_system:
+                try:
+                    # Create conversation history format expected by ML system
+                    conversation_history = []
+                    
+                    # Get platform info
+                    platform = platform_context.get("platform", "unknown")
+                    user_id = platform_context.get("user_id", "default")
+                    
+                    # Use ML system to analyze and predict
+                    ml_prediction = await self.ml_trigger_system.analyze_and_predict(
+                        message=message,
+                        conversation_history=conversation_history,
+                        platform=platform,
+                        user_id=user_id
+                    )
+                    
+                    # Convert ML prediction to response format
+                    analysis_result = {
+                        "success": True,
+                        "message": f"Analyzed message: '{message[:50]}...'",
+                        "triggers": [],
+                        "confidence": ml_prediction.confidence,
+                        "platform": platform,
+                        "recommendations": ml_prediction.reasoning,
+                        "ml_model": ml_config.huggingface_model_name,
+                        "trigger_mode": ml_config.ml_trigger_mode,
+                        "thresholds": {
+                            "confidence": ml_config.confidence_threshold,
+                            "trigger": ml_config.trigger_threshold,
+                            "memory": ml_config.memory_threshold
+                        }
+                    }
+                    
+                    # Map ML action to trigger
+                    if ml_prediction.action == ActionType.SAVE_MEMORY:
+                        analysis_result["triggers"].append("save_memory")
+                    elif ml_prediction.action == ActionType.SEARCH_MEMORY:
+                        analysis_result["triggers"].append("search_memory")
+                    
+                    return json.dumps(analysis_result)
+                    
+                except Exception as ml_error:
+                    self.logger.error(f"ML analysis failed: {ml_error}")
+                    # Fall back to deterministic analysis
+            
+            # Fallback: Enhanced keyword-based trigger detection
             analysis_result = {
                 "success": True,
                 "message": f"Analyzed message: '{message[:50]}...'",
@@ -424,7 +494,7 @@ class MCPServer:
                 "platform": platform_context.get("platform", "unknown"),
                 "recommendations": [],
                 "ml_model": ml_config.huggingface_model_name,
-                "trigger_mode": ml_config.ml_trigger_mode,
+                "trigger_mode": "fallback_deterministic",
                 "thresholds": {
                     "confidence": ml_config.confidence_threshold,
                     "trigger": ml_config.trigger_threshold,
@@ -432,7 +502,6 @@ class MCPServer:
                 }
             }
             
-            # Enhanced keyword-based trigger detection with ML thresholds
             trigger_keywords = ["remember", "save", "important", "note", "recall", "ricorda", "nota", "importante", "salva", "memorizza"]
             solution_patterns = ["solved", "fixed", "bug fix", "solution", "tutorial", "how to", "risolto", "come fare"]
             
