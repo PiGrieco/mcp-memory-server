@@ -48,12 +48,16 @@ show_server_help() {
     echo -e "${GREEN}Commands:${NC}"
     echo -e "  ${YELLOW}http${NC}     - Start HTTP server (development)"
     echo -e "  ${YELLOW}mcp${NC}      - Start MCP server (integration)"
+    echo -e "  ${YELLOW}proxy${NC}    - Start HTTP Proxy server (auto-intercept)"
+    echo -e "  ${YELLOW}both${NC}     - Start MCP + Proxy servers (full features)"
     echo -e "  ${YELLOW}test${NC}     - Run service tests"
     echo -e "  ${YELLOW}help${NC}     - Show this help"
     echo ""
     echo -e "${GREEN}Examples:${NC}"
     echo -e "  $0 server http    # Start HTTP server at http://localhost:8000"
     echo -e "  $0 server mcp     # Start MCP server for platform integration"
+    echo -e "  $0 server proxy   # Start HTTP Proxy at http://localhost:8080"
+    echo -e "  $0 server both    # Start both MCP + Proxy (recommended)"
     echo -e "  $0 server test    # Run all service tests"
 }
 
@@ -112,6 +116,12 @@ handle_server() {
             ;;
         "mcp")
             "$SCRIPT_DIR/servers/start_mcp_server.sh"
+            ;;
+        "proxy")
+            "$SCRIPT_DIR/servers/start_proxy.sh"
+            ;;
+        "both")
+            "$SCRIPT_DIR/servers/start_universal.sh"
             ;;
         "test")
             "$SCRIPT_DIR/servers/start_server.sh" test

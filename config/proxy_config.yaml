@@ -1,0 +1,62 @@
+# HTTP Proxy Configuration for MCP Memory Server
+proxy:
+  name: "MCP Memory Proxy Server"
+  version: "1.0.0"
+  host: "0.0.0.0"
+  port: 8080
+  debug: false
+  
+  # Auto-trigger settings
+  auto_trigger:
+    enabled: true
+    auto_execute: true
+    timeout_seconds: 30
+    max_retries: 3
+  
+  # Platform configurations
+  platforms:
+    cursor:
+      name: "Cursor AI Platform"
+      enabled: true
+      base_url: "https://api.cursor.sh"
+      timeout: 30
+      headers:
+        Content-Type: "application/json"
+        User-Agent: "MCP-Memory-Proxy/1.0"
+      
+    claude:
+      name: "Claude AI Platform"
+      enabled: true
+      base_url: "https://api.anthropic.com"
+      timeout: 30
+      headers:
+        Content-Type: "application/json"
+        User-Agent: "MCP-Memory-Proxy/1.0"
+        
+    universal:
+      name: "Universal AI Platform"
+      enabled: true
+      timeout: 30
+      headers:
+        Content-Type: "application/json"
+        User-Agent: "MCP-Memory-Proxy/1.0"
+  
+  # Caching settings
+  cache:
+    enabled: true
+    ttl_seconds: 300
+    max_size: 1000
+    
+  # Performance settings
+  performance:
+    max_concurrent_requests: 50
+    request_timeout: 60
+    keep_alive_timeout: 30
+    
+  # Logging settings
+  logging:
+    level: "INFO"
+    format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    file: "logs/proxy.log"
+    max_size_mb: 100
+    backup_count: 5
