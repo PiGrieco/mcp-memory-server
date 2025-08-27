@@ -93,6 +93,51 @@ services:
     # Override command for HTTP mode
     command: ["python", "servers/http_server.py"]
     
+  # MCP Memory Proxy Server
+  mcp-proxy-server:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile
+    container_name: mcp-proxy-server
+    restart: unless-stopped
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+    # Environment variables from .env file
+    env_file:
+      - ../../.env
+
+    # Additional environment variables
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - PYTHONPATH=/app
+      - HOST=${PROXY_HOST:-0.0.0.0}
+      - PORT=${PROXY_PORT:-8080}
+      - MONGODB_URI=mongodb://${MONGODB_USERNAME:-admin}:${MONGODB_PASSWORD:-password123}@mongodb:27017/${MONGODB_DATABASE:-mcp_memory_production}?authSource=admin
+      - REDIS_HOST=redis
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-redis123}
+
+    # Expose Proxy port
+    ports:
+      - "${PROXY_PORT:-8080}:8080"
+
+    # Volumes for persistent data
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+      - ./config:/app/config
+
+    # Network configuration
+    networks:
+      - mcp-network
+
+    # Override command for Proxy mode
+    command: ["python", "servers/proxy_server.py", "--host", "0.0.0.0", "--port", "8080"]
+    
     # Resource limits
     deploy:
       resources:

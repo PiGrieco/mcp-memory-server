@@ -31,6 +31,13 @@ curl http://localhost:8000/health  # HTTP API
 - **Endpoints:** `/health`, `/info`, `/mcp`, `/mcp/capabilities`
 - **Usage:** Remote access, web integrations, monitoring
 
+### **HTTP Proxy Server** (Enhanced Auto-Trigger)
+- **Protocol:** HTTP Proxy with auto-interception
+- **Port:** 8080
+- **Endpoints:** `/proxy/cursor`, `/proxy/claude`, `/proxy/universal`
+- **Features:** Automatic message analysis, context enhancement, seamless UX
+- **Usage:** Route AI platform requests through proxy for auto-trigger
+
 ## 🔧 **IDE Integration Examples**
 
 ### **Cursor Configuration**
@@ -67,6 +74,28 @@ curl http://localhost:8000/health  # HTTP API
 }
 ```
 
+### **HTTP Proxy Configuration** (Enhanced Mode)
+```bash
+# Start HTTP Proxy for auto-interception
+./scripts/main.sh server proxy
+
+# Or start both MCP + Proxy
+./scripts/main.sh server both
+```
+
+**Usage Examples:**
+```bash
+# Route Cursor requests through proxy
+curl -X POST http://localhost:8080/proxy/cursor \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Remember this database config: host=localhost, port=5432"}'
+
+# Route Claude requests through proxy  
+curl -X POST http://localhost:8080/proxy/claude \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "Save this API key configuration"}'
+```
+
 ## 📋 **Environment Configuration**
 
 Key variables in `.env`:
@@ -80,6 +109,10 @@ MONGODB_DATABASE=mcp_memory_production
 ML_MODEL_TYPE=huggingface
 HUGGINGFACE_MODEL_NAME=PiGrieco/mcp-memory-auto-trigger-model
 ML_TRIGGER_MODE=hybrid
+
+# HTTP Proxy
+PROXY_HOST=0.0.0.0
+PROXY_PORT=8080
 
 # Embedding
 EMBEDDING_PROVIDER=sentence_transformers

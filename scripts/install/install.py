@@ -164,6 +164,22 @@ class Installer:
             subprocess.run([str(self.python_exe), "-m", "pip", "install", dep], check=True)
         
         print("✅ ML dependencies installed")
+        
+        # Install HTTP Proxy dependencies
+        print("Installing HTTP Proxy dependencies...")
+        proxy_deps = [
+            "fastapi>=0.100.0",
+            "uvicorn>=0.20.0",
+            "aiohttp>=3.8.0"
+        ]
+        
+        for dep in proxy_deps:
+            try:
+                subprocess.run([str(self.python_exe), "-m", "pip", "install", dep], check=True)
+            except subprocess.CalledProcessError as e:
+                print(f"⚠️ Warning: Failed to install {dep}: {e}")
+        
+        print("✅ HTTP Proxy dependencies installed")
     
     def _setup_mongodb(self):
         """Setup MongoDB for the memory database"""
