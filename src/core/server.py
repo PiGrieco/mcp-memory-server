@@ -130,7 +130,7 @@ class MCPServer:
                 ),
                 types.Tool(
                     name="analyze_message",
-                    description="Analyze message for auto-triggers using ML model",
+                    description="Analyze message for auto-triggers using ML model and optionally execute actions",
                     inputSchema={
                         "type": "object",
                         "properties": {
@@ -144,8 +144,15 @@ class MCPServer:
                                 "properties": {
                                     "platform": {"type": "string"},
                                     "session_id": {"type": "string"},
-                                    "user_id": {"type": "string"}
-                                }
+                                    "user_id": {"type": "string"},
+                                    "project": {"type": "string"}
+                                },
+                                "default": {}
+                            },
+                            "auto_execute": {
+                                "type": "boolean",
+                                "description": "Whether to automatically execute triggered actions",
+                                "default": True
                             }
                         },
                         "required": ["message"]
@@ -427,6 +434,7 @@ class MCPServer:
         try:
             message = arguments.get("message", "")
             platform_context = arguments.get("platform_context", {})
+            auto_execute = arguments.get("auto_execute", True)  # New parameter for auto-execution
             
             if not message:
                 return json.dumps({
@@ -466,6 +474,7 @@ class MCPServer:
                         "recommendations": ml_prediction.reasoning,
                         "ml_model": ml_config.huggingface_model_name,
                         "trigger_mode": ml_config.ml_trigger_mode,
+                        "executed_actions": [],  # New field for executed actions
                         "thresholds": {
                             "confidence": ml_config.confidence_threshold,
                             "trigger": ml_config.trigger_threshold,
@@ -473,11 +482,70 @@ class MCPServer:
                         }
                     }
                     
-                    # Map ML action to trigger
-                    if ml_prediction.action == ActionType.SAVE_MEMORY:
-                        analysis_result["triggers"].append("save_memory")
-                    elif ml_prediction.action == ActionType.SEARCH_MEMORY:
-                        analysis_result["triggers"].append("search_memory")
+                    # Auto-execute actions if confidence is high enough and auto_execute is True
+                    if auto_execute and ml_prediction.confidence >= ml_config.confidence_threshold:
+                        if ml_prediction.action == ActionType.SAVE_MEMORY:
+                            # Execute save_memory automatically
+                            try:
+                                save_result = await self._handle_save_memory({
+                                    "content": message,
+                                    "context": {
+                                        "auto_triggered": True,
+                                        "ml_confidence": ml_prediction.confidence,
+                                        "platform": platform,
+                                        "trigger_reasoning": ml_prediction.reasoning
+                                    },
+                                    "project": platform_context.get("project", "default"),
+                                    "importance": min(0.9, ml_prediction.confidence)
+                                })
+                                
+                                analysis_result["triggers"].append("save_memory")
+                                analysis_result["executed_actions"].append({
+                                    "action": "save_memory",
+                                    "status": "success",
+                                    "result": json.loads(save_result)
+                                })
+                                analysis_result["recommendations"].append("✅ Memory automatically saved")
+                                
+                            except Exception as save_error:
+                                analysis_result["executed_actions"].append({
+                                    "action": "save_memory",
+                                    "status": "error",
+                                    "error": str(save_error)
+                                })
+                                analysis_result["recommendations"].append(f"❌ Auto-save failed: {save_error}")
+                        
+                        elif ml_prediction.action == ActionType.SEARCH_MEMORY:
+                            # Execute search_memories automatically
+                            try:
+                                search_result = await self._handle_search_memories({
+                                    "query": message,
+                                    "max_results": 5,
+                                    "similarity_threshold": ml_config.similarity_threshold
+                                })
+                                
+                                analysis_result["triggers"].append("search_memory")
+                                analysis_result["executed_actions"].append({
+                                    "action": "search_memory",
+                                    "status": "success",
+                                    "result": search_result
+                                })
+                                analysis_result["recommendations"].append("✅ Memory search automatically executed")
+                                
+                            except Exception as search_error:
+                                analysis_result["executed_actions"].append({
+                                    "action": "search_memory",
+                                    "status": "error",
+                                    "error": str(search_error)
+                                })
+                                analysis_result["recommendations"].append(f"❌ Auto-search failed: {search_error}")
+                    
+                    else:
+                        # Just add suggestions without execution
+                        if ml_prediction.action == ActionType.SAVE_MEMORY:
+                            analysis_result["triggers"].append("save_memory")
+                        elif ml_prediction.action == ActionType.SEARCH_MEMORY:
+                            analysis_result["triggers"].append("search_memory")
                     
                     return json.dumps(analysis_result)
                     

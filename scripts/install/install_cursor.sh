@@ -84,8 +84,8 @@ $PYTHON_CMD -m pip install mcp sentence-transformers scikit-learn asyncio python
 
 echo -e "${GREEN}✅ Dependencies installed${NC}"
 
-# Step 3: Test ML model access
-echo -e "\n${BLUE}🧠 Step 3: Testing ML model access...${NC}"
+# Step 3: Download and test ML model
+echo -e "\n${BLUE}🧠 Step 3: Downloading and testing ML model...${NC}"
 
 $PYTHON_CMD -c "
 import sys
@@ -95,16 +95,31 @@ try:
     from transformers import pipeline
     print('✅ Transformers library working')
     
-    # Test Hugging Face model access (without downloading)
-    from huggingface_hub import model_info
+    # Download and test HuggingFace model
     model_name = 'PiGrieco/mcp-memory-auto-trigger-model'
+    print(f'📥 Downloading ML model: {model_name}')
+    
+    # This will download the model to local cache
+    classifier = pipeline(
+        'text-classification',
+        model=model_name,
+        tokenizer=model_name,
+        return_all_scores=True
+    )
+    
+    # Test the model with a sample
+    test_result = classifier('This is an important note to remember')
+    print(f'✅ ML model downloaded and tested successfully')
+    print(f'   Test prediction: {test_result[0][0][\"label\"]} (confidence: {test_result[0][0][\"score\"]:.3f})')
+    
+    from huggingface_hub import model_info
     info = model_info(model_name)
-    print(f'✅ ML model accessible: {model_name}')
     print(f'   Model size: ~{info.safetensors.total // (1024*1024)}MB')
     
 except Exception as e:
-    print(f'⚠️ ML model check warning: {e}')
+    print(f'❌ ML model download failed: {e}')
     print('Model will be downloaded on first use')
+    # Don't fail installation for model issues
 "
 
 # Step 4: Create Cursor configuration

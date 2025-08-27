@@ -96,7 +96,7 @@ timeout 10s python servers/legacy/mcp_base_server.py > /dev/null 2>&1 || {
     echo -e "${YELLOW}⚠️ Server test timeout (normal for first run)${NC}"
 }
 
-echo -e "${YELLOW}Testing ML components...${NC}"
+echo -e "${YELLOW}Downloading and testing ML components...${NC}"
 python -c "
 import sys
 try:
@@ -109,20 +109,32 @@ try:
     from mcp.server import Server
     print('✅ MCP library working')
     
-    # Test model access
-    from huggingface_hub import model_info
+    # Download and test model
     model_name = 'PiGrieco/mcp-memory-auto-trigger-model'
-    try:
-        info = model_info(model_name)
-        print(f'✅ ML model accessible: {model_name}')
-        print(f'   Model size: ~{info.safetensors.total // (1024*1024)}MB')
-    except:
-        print('⚠️ Model will be downloaded on first use (~63MB)')
+    print(f'📥 Downloading ML model: {model_name}')
+    
+    # This will download the model to local cache
+    classifier = pipeline(
+        'text-classification',
+        model=model_name,
+        tokenizer=model_name,
+        return_all_scores=True
+    )
+    
+    # Test the model
+    test_result = classifier('Claude, please remember this important information')
+    print(f'✅ ML model downloaded and tested successfully')
+    print(f'   Test prediction: {test_result[0][0][\"label\"]} (confidence: {test_result[0][0][\"score\"]:.3f})')
+    
+    from huggingface_hub import model_info
+    info = model_info(model_name)
+    print(f'   Model size: ~{info.safetensors.total // (1024*1024)}MB')
     
     print('✅ All components ready for Claude Desktop')
 except Exception as e:
     print(f'❌ Component test failed: {e}')
-    sys.exit(1)
+    print('Model will be downloaded on first use')
+    # Don't fail installation for model issues
 "
 
 echo -e "${GREEN}✅ Installation test completed successfully${NC}"

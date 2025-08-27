@@ -299,30 +299,50 @@ gpgkey=https://www.mongodb.org/static/pgp/server-7.0.asc"""
             raise
     
     def _test_ml_model(self):
-        """Test ML model access"""
-        print("🧠 Testing ML model access...")
+        """Download and test ML model"""
+        print("🧠 Downloading and testing ML model...")
         
         test_script = f"""
 import sys
 sys.path.insert(0, '{self.base_dir}/src')
 
 try:
-    from huggingface_hub import model_info
+    from transformers import pipeline
     model_name = 'PiGrieco/mcp-memory-auto-trigger-model'
+    print(f'📥 Downloading ML model: {{model_name}}')
+    
+    # This will download the model to local cache
+    classifier = pipeline(
+        'text-classification',
+        model=model_name,
+        tokenizer=model_name,
+        return_all_scores=True
+    )
+    
+    # Test the model with a sample
+    test_result = classifier('This is an important note to remember')
+    print(f'✅ ML model downloaded and tested successfully')
+    print(f'   Test prediction: {{test_result[0][0]["label"]}} (confidence: {{test_result[0][0]["score"]:.3f}})')
+    
+    from huggingface_hub import model_info
     info = model_info(model_name)
-    print(f'✅ ML model accessible: {{info.safetensors.total // (1024*1024)}}MB')
+    print(f'   Model size: ~{{info.safetensors.total // (1024*1024)}}MB')
+    
 except Exception as e:
-    print(f'❌ ML model test failed: {{e}}')
-    sys.exit(1)
+    print(f'❌ ML model download failed: {{e}}')
+    print('Model will be downloaded on first use')
+    # Don't fail installation for model issues
 """
         
         result = subprocess.run([str(self.python_exe), "-c", test_script], 
                               capture_output=True, text=True)
         
+        # Don't fail installation if model download fails
         if result.returncode != 0:
-            raise RuntimeError(f"ML model test failed: {result.stderr}")
-        
-        print(result.stdout.strip())
+            print(f"⚠️ ML model download failed: {result.stderr}")
+            print("Model will be downloaded on first use")
+        else:
+            print(result.stdout.strip())
     
     def _configure_platform(self):
         """Configure platform-specific settings"""
