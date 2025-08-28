@@ -3,16 +3,22 @@ Integration tests for full workflow
 """
 
 import pytest
+import sys
+import os
 
-from src.services.memory_service import MemoryService
-from src.services.database_service import DatabaseService
-from src.services.embedding_service import EmbeddingService
-from src.services.cache_service import CacheService
-from src.services.plugin_service import PluginService
-from src.services.backup_service import BackupService
-from src.services.notification_service import NotificationService
-from src.services.export_service import ExportService
-from src.config.settings import get_settings
+# Add project root to path
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+sys.path.insert(0, project_root)
+
+from src.services.memory_service import MemoryService  # noqa: E402
+from src.services.database_service import DatabaseService  # noqa: E402
+from src.services.embedding_service import EmbeddingService  # noqa: E402
+from src.services.cache_service import CacheService  # noqa: E402
+from src.services.plugin_service import PluginService  # noqa: E402
+from src.services.backup_service import BackupService  # noqa: E402
+from src.services.notification_service import NotificationService  # noqa: E402
+from src.services.export_service import ExportService  # noqa: E402
+from src.config.settings import get_settings  # noqa: E402
 
 
 class TestFullWorkflow:

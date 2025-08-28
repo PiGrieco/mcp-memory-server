@@ -1,4 +1,10 @@
 import pytest
+import sys
+import os
+
+# Add project root to path
+project_root = os.path.dirname(os.path.dirname(__file__))
+sys.path.insert(0, project_root)
 
 def test_import_mcp_server():
     """Test that the MCP server module can be imported"""

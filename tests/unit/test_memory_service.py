@@ -3,12 +3,18 @@ Unit tests for Memory Service
 """
 
 import pytest
+import sys
+import os
 from unittest.mock import AsyncMock
 from datetime import datetime
 
-from src.services.memory_service import MemoryService
-from src.config.settings import get_settings
-from src.models.memory import Memory, MemoryCreate, MemoryUpdate
+# Add project root to path
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+sys.path.insert(0, project_root)
+
+from src.services.memory_service import MemoryService  # noqa: E402
+from src.config.settings import get_settings  # noqa: E402
+from src.models.memory import Memory, MemoryCreate, MemoryUpdate  # noqa: E402
 
 
 class TestMemoryService:
