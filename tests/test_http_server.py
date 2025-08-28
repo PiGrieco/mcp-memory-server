@@ -12,12 +12,12 @@ from typing import Dict, Any
 project_root = os.path.dirname(os.path.dirname(__file__))
 sys.path.insert(0, project_root)
 
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
+from fastapi import FastAPI, HTTPException  # noqa: E402
+from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
+import uvicorn  # noqa: E402
 
-from src.config.settings import get_settings
-from src.services.memory_service import MemoryService
+from src.config.settings import get_settings  # noqa: E402
+from src.services.memory_service import MemoryService  # noqa: E402
 
 
 # Create FastAPI app
