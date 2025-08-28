@@ -398,6 +398,11 @@ except Exception as e:
                 "base_url": "https://api.anthropic.com/v1",
                 "enabled": True
             },
+            "windsurf": {
+                "name": "Windsurf AI Platform", 
+                "base_url": "https://api.windsurf.ai/v1",
+                "enabled": True
+            },
             "universal": {
                 "name": "Universal AI Platform",
                 "base_url": "",

@@ -90,6 +90,46 @@ def get_logging_config() -> Dict[str, Any]:
                 "level": "WARNING",
                 "handlers": ["file"],
                 "propagate": False
+            },
+            "pymongo": {
+                "level": "WARNING",
+                "handlers": ["file"],
+                "propagate": False
+            },
+            "pymongo.serverSelection": {
+                "level": "ERROR",
+                "handlers": ["file"],
+                "propagate": False
+            },
+            "pymongo.topology": {
+                "level": "ERROR",
+                "handlers": ["file"],
+                "propagate": False
+            },
+            "pymongo.connection": {
+                "level": "ERROR",
+                "handlers": ["file"],
+                "propagate": False
+            },
+            "pymongo.command": {
+                "level": "ERROR",
+                "handlers": ["file"],
+                "propagate": False
+            },
+            "urllib3.connectionpool": {
+                "level": "WARNING",
+                "handlers": ["file"],
+                "propagate": False
+            },
+            "sentence_transformers": {
+                "level": "WARNING",
+                "handlers": ["file"],
+                "propagate": False
+            },
+            "transformers": {
+                "level": "WARNING",
+                "handlers": ["file"],
+                "propagate": False
             }
         }
     }

@@ -10,9 +10,19 @@ import logging
 import sys
 import os
 import time
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, Tuple, List
 from pathlib import Path
 from datetime import datetime
+
+# Configure logging to reduce noise
+logging.getLogger('pymongo').setLevel(logging.WARNING)
+logging.getLogger('pymongo.serverSelection').setLevel(logging.ERROR)
+logging.getLogger('pymongo.topology').setLevel(logging.ERROR)
+logging.getLogger('pymongo.connection').setLevel(logging.ERROR)
+logging.getLogger('pymongo.command').setLevel(logging.ERROR)
+logging.getLogger('urllib3.connectionpool').setLevel(logging.WARNING)
+logging.getLogger('sentence_transformers').setLevel(logging.WARNING)
+logging.getLogger('transformers').setLevel(logging.WARNING)
 
 # Add project root to path
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -251,19 +261,60 @@ class ProxyServer:
             # Extract message for analysis
             message = self._extract_message(request_data)
             
+            # Initialize analysis data
+            analysis = {}
+            executed_actions = []
+            memory_context = []
+            
             if message and self._should_analyze(platform):
                 # Perform auto-trigger analysis
-                enhanced_request = await self._analyze_and_enhance(message, request_data, platform)
+                enhanced_request, analysis_data = await self._analyze_and_enhance_with_metadata(message, request_data, platform)
+                analysis = analysis_data.get('analysis', {})
+                executed_actions = analysis_data.get('executed_actions', [])
+                memory_context = analysis_data.get('memory_context', [])
             else:
                 enhanced_request = request_data
             
-            # Forward to AI platform
-            if platform in ['cursor', 'claude'] and self.proxy_config.get('proxy', {}).get('platforms', {}).get(platform, {}).get('enabled', False):
+            # Determine if we should forward or return enhanced request
+            platform_config = self.proxy_config.get('proxy', {}).get('platforms', {}).get(platform, {})
+            testing_config = self.proxy_config.get('proxy', {}).get('testing', {})
+            base_url = platform_config.get('base_url')
+            
+            # Check if testing mode is enabled or platform is not properly configured
+            testing_mode = (
+                testing_config.get('enabled', True) or 
+                not platform_config.get('enabled', False) or 
+                not base_url or
+                base_url.startswith('https://api.cursor.sh')  # Default test URLs
+            )
+            
+            if not testing_mode:
+                # Production mode: forward to real platform
+                self.logger.info(f"🚀 Production mode: forwarding to {platform}")
                 response = await self._forward_to_platform(enhanced_request, platform, request)
             else:
-                # For universal or unknown platforms, just return enhanced request
-                self.logger.info(f"⚠️ Platform {platform} not configured, returning enhanced request")
-                response = JSONResponse(content=enhanced_request)
+                # Testing mode: return enhanced request with analysis metadata
+                self.logger.info(f"🧪 Testing mode: returning enhanced request for {platform}")
+                
+                response_data = {
+                    "status": "enhanced",
+                    "original_message": message,
+                    "enhanced_message": enhanced_request,
+                }
+                
+                # Add analysis metadata if requested
+                if testing_config.get('return_analysis_metadata', True):
+                    response_data["analysis_metadata"] = {
+                        "ml_confidence": analysis.get('confidence', 0),
+                        "ml_prediction": analysis.get('ml_prediction', {}),
+                        "auto_execution_count": len(executed_actions),
+                        "memory_context_added": len(memory_context),
+                        "context_memories": len(memory_context),
+                        "timestamp": analysis.get('timestamp'),
+                        "platform": platform
+                    }
+                
+                response = JSONResponse(content=response_data)
             
             return response
             
@@ -308,6 +359,92 @@ class ProxyServer:
         platform_config = self.proxy_config.get('proxy', {}).get('platforms', {}).get(platform, {})
         return platform_config.get('enabled', False)
     
+    async def _analyze_and_enhance_with_metadata(self, message: str, request_data: Dict[str, Any], platform: str) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+        """Analyze message and enhance request with memory context, returning both enhanced request and analysis metadata"""
+        try:
+            self.logger.info(f"🧠 Analyzing message for auto-triggers: {message[:100]}...")
+            
+            # Prepare analyze_message arguments
+            analyze_args = {
+                "message": message,
+                "platform_context": {
+                    "platform": platform,
+                    "user_id": request_data.get("user_id", "unknown"),
+                    "session_id": request_data.get("session_id", "unknown"),
+                    "project": request_data.get("project", "default")
+                },
+                "auto_execute": self.proxy_config.get('proxy', {}).get('auto_trigger', {}).get('auto_execute', True)
+            }
+            
+            # Call MCP analyze_message
+            result = await self.mcp_server._handle_analyze_message(analyze_args)
+            
+            # Parse JSON result if it's a string
+            if isinstance(result, str):
+                analysis = json.loads(result)
+            else:
+                analysis = result
+            
+            self.logger.info(f"📊 Analysis complete: confidence={analysis.get('confidence', 0):.3f}")
+            
+            # Enhance request with analysis results
+            enhanced_request = request_data.copy()
+            
+            # Add memory context if available
+            executed_actions = analysis.get('auto_execution_results', analysis.get('executed_actions', []))
+            memory_context = []
+            
+            for action in executed_actions:
+                # Handle both new and old action formats
+                if action.get('success', action.get('status') == 'success'):
+                    if action.get('action') == 'search_memory':
+                        search_result = action.get('results', action.get('result', {}))
+                        if isinstance(search_result, list):
+                            memory_context.extend(search_result)
+                        elif isinstance(search_result, dict) and 'memories' in search_result:
+                            memory_context.extend(search_result['memories'])
+            
+            # Enhance the original message with memory context
+            if memory_context:
+                context_text = "\n\nRelevant context from memory:\n"
+                for memory in memory_context[:3]:  # Limit to top 3 memories
+                    if isinstance(memory, dict) and 'content' in memory:
+                        context_text += f"- {memory['content']}\n"
+                
+                # Enhance the message field
+                original_message = self._extract_message(enhanced_request)
+                if original_message:
+                    enhanced_message = original_message + context_text
+                    # Update the message in the request
+                    for field in ['message', 'prompt', 'input', 'text', 'content', 'query']:
+                        if field in enhanced_request:
+                            enhanced_request[field] = enhanced_message
+                            break
+                    
+                    self.logger.info(f"✅ Enhanced message with {len(memory_context)} memory contexts")
+            
+            # Add analysis metadata
+            enhanced_request['_mcp_analysis'] = {
+                "confidence": analysis.get('confidence', 0),
+                "triggers": analysis.get('triggers', []),
+                "executed_actions": len(executed_actions),
+                "timestamp": datetime.utcnow().isoformat()
+            }
+            
+            # Return both enhanced request and metadata
+            metadata = {
+                "analysis": analysis,
+                "executed_actions": executed_actions,
+                "memory_context": memory_context
+            }
+            
+            return enhanced_request, metadata
+            
+        except Exception as e:
+            self.logger.error(f"❌ Analysis error: {e}")
+            # Return original request and empty metadata if analysis fails
+            return request_data, {"analysis": {}, "executed_actions": [], "memory_context": []}
+
     async def _analyze_and_enhance(self, message: str, request_data: Dict[str, Any], platform: str) -> Dict[str, Any]:
         """Analyze message and enhance request with memory context"""
         try:
@@ -327,7 +464,12 @@ class ProxyServer:
             
             # Call MCP analyze_message
             result = await self.mcp_server._handle_analyze_message(analyze_args)
-            analysis = json.loads(result)
+            
+            # Parse JSON result if it's a string
+            if isinstance(result, str):
+                analysis = json.loads(result)
+            else:
+                analysis = result
             
             self.logger.info(f"📊 Analysis complete: confidence={analysis.get('confidence', 0):.3f}")
             
@@ -335,16 +477,18 @@ class ProxyServer:
             enhanced_request = request_data.copy()
             
             # Add memory context if available
-            executed_actions = analysis.get('executed_actions', [])
+            executed_actions = analysis.get('auto_execution_results', analysis.get('executed_actions', []))
             memory_context = []
             
             for action in executed_actions:
-                if action.get('status') == 'success' and action.get('action') == 'search_memory':
-                    search_result = action.get('result', {})
-                    if isinstance(search_result, list):
-                        memory_context.extend(search_result)
-                    elif isinstance(search_result, dict) and 'memories' in search_result:
-                        memory_context.extend(search_result['memories'])
+                # Handle both new and old action formats
+                if action.get('success', action.get('status') == 'success'):
+                    if action.get('action') == 'search_memory':
+                        search_result = action.get('results', action.get('result', {}))
+                        if isinstance(search_result, list):
+                            memory_context.extend(search_result)
+                        elif isinstance(search_result, dict) and 'memories' in search_result:
+                            memory_context.extend(search_result['memories'])
             
             # Enhance the original message with memory context
             if memory_context:
@@ -419,13 +563,13 @@ class ProxyServer:
                     status_code=response.status
                 )
                 
-        except aiohttp.ClientTimeout:
-            self.logger.error(f"⏰ Timeout forwarding to {platform}")
-            raise HTTPException(status_code=504, detail="Platform request timeout")
-        
         except Exception as e:
-            self.logger.error(f"❌ Forward error: {e}")
-            raise HTTPException(status_code=502, detail=f"Platform forward error: {str(e)}")
+            if 'timeout' in str(e).lower():
+                self.logger.error(f"⏰ Timeout forwarding to {platform}")
+                raise HTTPException(status_code=504, detail="Platform request timeout")
+            else:
+                self.logger.error(f"❌ Forward error: {e}")
+                raise HTTPException(status_code=502, detail=f"Platform forward error: {str(e)}")
     
     async def run(self, host: str = None, port: int = None):
         """Run the proxy server"""
