@@ -72,7 +72,10 @@ class Installer:
             # Step 6: Configure platform
             self._configure_platform()
             
-            # Step 7: Test complete installation
+            # Step 7: Configure HTTP Proxy
+            self._configure_proxy()
+            
+            # Step 8: Test complete installation
             self._test_complete_installation()
             
             print("\n✅ Installation completed successfully!")
@@ -376,6 +379,130 @@ except Exception as e:
             json.dump(config, f, indent=2)
         
         print(f"✅ Configuration saved to: {config_file}")
+    
+    def _configure_proxy(self):
+        """Configure HTTP Proxy for auto-interception"""
+        print("🌐 Configuring HTTP Proxy for Auto-Interception...")
+        
+        proxy_config_file = self.config_dir / "proxy_config.yaml"
+        
+        # Platform-specific proxy configuration
+        platform_configs = {
+            "cursor": {
+                "name": "Cursor AI Platform",
+                "base_url": "https://api.cursor.sh/v1",
+                "enabled": True
+            },
+            "claude": {
+                "name": "Claude AI Platform", 
+                "base_url": "https://api.anthropic.com/v1",
+                "enabled": True
+            },
+            "universal": {
+                "name": "Universal AI Platform",
+                "base_url": "",
+                "enabled": False
+            }
+        }
+        
+        # Create proxy configuration
+        proxy_config = f"""proxy:
+  name: "MCP Memory Proxy Server"
+  version: "1.0.0"
+  host: "127.0.0.1"
+  port: 8080
+  debug: false
+  
+  # Auto-trigger settings
+  auto_trigger:
+    enabled: true
+    auto_execute: true
+    timeout_seconds: 30
+    max_retries: 3
+    
+  # Production mode configuration
+  testing:
+    enabled: false  # Production mode: forward to real platforms
+    return_analysis_metadata: false
+  
+  # Platform configurations
+  platforms:"""
+        
+        # Add platform configurations
+        for platform, config in platform_configs.items():
+            if platform == self.platform:
+                config['enabled'] = True
+            else:
+                config['enabled'] = False
+                
+            proxy_config += f"""
+    {platform}:
+      name: "{config['name']}"
+      enabled: {str(config['enabled']).lower()}
+      base_url: "{config['base_url']}"
+      timeout: 30
+      headers:
+        Content-Type: "application/json"
+        User-Agent: "MCP-Memory-Proxy/1.0"
+      """
+        
+        proxy_config += """
+  
+  # Caching settings
+  cache:
+    enabled: true
+    ttl_seconds: 300
+    max_size: 1000
+  
+  # Performance settings
+  performance:
+    max_concurrent_requests: 10
+    request_timeout: 30
+    max_memory_contexts: 5
+"""
+        
+        # Write proxy configuration
+        with open(proxy_config_file, 'w') as f:
+            f.write(proxy_config)
+        
+        print(f"✅ HTTP Proxy configuration saved to: {proxy_config_file}")
+        
+        # Create proxy startup script
+        self._create_proxy_startup_script()
+    
+    def _create_proxy_startup_script(self):
+        """Create platform-specific proxy startup script"""
+        script_name = f"start_{self.platform}_proxy.sh"
+        script_path = self.scripts_dir / "servers" / script_name
+        
+        script_content = f"""#!/bin/bash
+# Auto-generated {self.config['name']} MCP Memory Proxy startup script
+
+SCRIPT_DIR="$(cd "$(dirname "${{BASH_SOURCE[0]}}")" && pwd)/../.."
+cd "$SCRIPT_DIR"
+
+echo "🌐 Starting MCP Memory Proxy Server for {self.config['name']}..."
+echo "📊 Monitor: http://127.0.0.1:8080/health"
+echo "🔗 Proxy: http://127.0.0.1:8080/proxy/{self.platform}"
+echo ""
+
+# Activate virtual environment if it exists
+if [ -f "venv/bin/activate" ]; then
+    source venv/bin/activate
+fi
+
+# Start proxy server
+{self.python_exe} servers/proxy_server.py --host 127.0.0.1 --port 8080 --config config/proxy_config.yaml
+"""
+        
+        # Write startup script
+        with open(script_path, 'w') as f:
+            f.write(script_content)
+        
+        # Make executable
+        script_path.chmod(0o755)
+        
+        print(f"✅ Proxy startup script created: {script_path}")
     
     def _generate_platform_config(self) -> Dict[str, Any]:
         """Generate platform-specific configuration"""

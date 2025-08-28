@@ -195,8 +195,110 @@ EOF
 
 echo -e "${GREEN}✅ Claude Desktop configuration created${NC}"
 
-# Step 6: Create startup and convenience scripts
-echo -e "\n${BLUE}🚀 Step 6: Creating convenience scripts...${NC}"
+# Step 6: Configuring HTTP Proxy for Auto-Interception
+echo -e "\n${BLUE}🌐 Step 6: Configuring HTTP Proxy for Auto-Interception...${NC}"
+
+PROXY_CONFIG_FILE="$SCRIPT_DIR/config/proxy_config.yaml"
+
+if [ -f "$PROXY_CONFIG_FILE" ]; then
+    echo -e "${YELLOW}📝 Configuring proxy for production mode...${NC}"
+    
+    # Create production proxy configuration for Claude
+    cat > "$PROXY_CONFIG_FILE" << 'EOF'
+proxy:
+  name: "MCP Memory Proxy Server"
+  version: "1.0.0"
+  host: "127.0.0.1"
+  port: 8080
+  debug: false
+  
+  # Auto-trigger settings
+  auto_trigger:
+    enabled: true
+    auto_execute: true
+    timeout_seconds: 30
+    max_retries: 3
+    
+  # Production mode configuration
+  testing:
+    enabled: false  # Production mode: forward to real platforms
+    return_analysis_metadata: false
+  
+  # Platform configurations
+  platforms:
+    claude:
+      name: "Claude AI Platform"
+      enabled: true
+      base_url: "https://api.anthropic.com/v1"  # Real Claude API endpoint
+      timeout: 30
+      headers:
+        Content-Type: "application/json"
+        User-Agent: "MCP-Memory-Proxy/1.0"
+      
+    cursor:
+      name: "Cursor AI Platform" 
+      enabled: false
+      base_url: "https://api.cursor.sh/v1"
+      timeout: 30
+      headers:
+        Content-Type: "application/json"
+        User-Agent: "MCP-Memory-Proxy/1.0"
+        
+    universal:
+      name: "Universal AI Platform"
+      enabled: false
+      timeout: 30
+      headers:
+        Content-Type: "application/json"
+        User-Agent: "MCP-Memory-Proxy/1.0"
+  
+  # Caching settings
+  cache:
+    enabled: true
+    ttl_seconds: 300
+    max_size: 1000
+  
+  # Performance settings
+  performance:
+    max_concurrent_requests: 10
+    request_timeout: 30
+    max_memory_contexts: 5
+EOF
+    
+    echo -e "${GREEN}✅ HTTP Proxy configured for production mode${NC}"
+    
+    # Create proxy startup script for Claude
+    PROXY_STARTUP_SCRIPT="$SCRIPT_DIR/scripts/servers/start_claude_proxy.sh"
+    
+    cat > "$PROXY_STARTUP_SCRIPT" << 'EOF'
+#!/bin/bash
+# Auto-generated Claude MCP Memory Proxy startup script
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../.."
+cd "$SCRIPT_DIR"
+
+echo "🌐 Starting MCP Memory Proxy Server for Claude..."
+echo "📊 Monitor: http://127.0.0.1:8080/health"
+echo "🔗 Proxy: http://127.0.0.1:8080/proxy/claude"
+echo ""
+
+# Activate virtual environment if it exists
+if [ -f "venv/bin/activate" ]; then
+    source venv/bin/activate
+fi
+
+# Start proxy server
+python servers/proxy_server.py --host 127.0.0.1 --port 8080 --config config/proxy_config.yaml
+EOF
+    
+    chmod +x "$PROXY_STARTUP_SCRIPT"
+    echo -e "${GREEN}✅ Proxy startup script created: $PROXY_STARTUP_SCRIPT${NC}"
+else
+    echo -e "${YELLOW}⚠️ Proxy config template not found, skipping proxy configuration${NC}"
+fi
+
+# Step 7: Create startup and convenience scripts
+echo -e "\n${BLUE}🚀 Step 7: Creating convenience scripts...${NC}"
 
 # Create start script
 cat > "$SCRIPT_DIR/scripts/servers/start_claude_server.sh" << 'EOF'

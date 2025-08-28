@@ -245,8 +245,105 @@ EOF
 
 echo -e "${GREEN}✅ Cursor configuration updated${NC}"
 
-# Step 5: Test the server
-echo -e "\n${BLUE}🧪 Step 5: Testing MCP server...${NC}"
+# Step 5: Configuring HTTP Proxy for Auto-Interception
+echo -e "\n${BLUE}🌐 Step 5: Configuring HTTP Proxy for Auto-Interception...${NC}"
+
+PROXY_CONFIG_FILE="$SCRIPT_DIR/config/proxy_config.yaml"
+
+if [ -f "$PROXY_CONFIG_FILE" ]; then
+    echo -e "${YELLOW}📝 Configuring proxy for production mode...${NC}"
+    
+    # Create production proxy configuration
+    cat > "$PROXY_CONFIG_FILE" << 'EOF'
+proxy:
+  name: "MCP Memory Proxy Server"
+  version: "1.0.0"
+  host: "127.0.0.1"
+  port: 8080
+  debug: false
+  
+  # Auto-trigger settings
+  auto_trigger:
+    enabled: true
+    auto_execute: true
+    timeout_seconds: 30
+    max_retries: 3
+    
+  # Production mode configuration
+  testing:
+    enabled: false  # Production mode: forward to real platforms
+    return_analysis_metadata: false
+  
+  # Platform configurations
+  platforms:
+    cursor:
+      name: "Cursor AI Platform"
+      enabled: true
+      base_url: "https://api.cursor.sh/v1"  # Real Cursor API endpoint
+      timeout: 30
+      headers:
+        Content-Type: "application/json"
+        User-Agent: "MCP-Memory-Proxy/1.0"
+      
+    claude:
+      name: "Claude AI Platform" 
+      enabled: false
+      base_url: "https://api.anthropic.com/v1"
+      timeout: 30
+      headers:
+        Content-Type: "application/json"
+        User-Agent: "MCP-Memory-Proxy/1.0"
+        
+    universal:
+      name: "Universal AI Platform"
+      enabled: false
+      timeout: 30
+      headers:
+        Content-Type: "application/json"
+        User-Agent: "MCP-Memory-Proxy/1.0"
+  
+  # Caching settings
+  cache:
+    enabled: true
+    ttl_seconds: 300
+    max_size: 1000
+  
+  # Performance settings
+  performance:
+    max_concurrent_requests: 10
+    request_timeout: 30
+    max_memory_contexts: 5
+EOF
+    
+    echo -e "${GREEN}✅ HTTP Proxy configured for production mode${NC}"
+    
+    # Create proxy startup script
+    PROXY_STARTUP_SCRIPT="$SCRIPT_DIR/scripts/servers/start_cursor_proxy.sh"
+    
+    cat > "$PROXY_STARTUP_SCRIPT" << EOF
+#!/bin/bash
+# Auto-generated Cursor MCP Memory Proxy startup script
+
+SCRIPT_DIR="\$(cd "\$(dirname "\${BASH_SOURCE[0]}")" && pwd)/../.."
+cd "\$SCRIPT_DIR"
+
+echo "🌐 Starting MCP Memory Proxy Server for Cursor..."
+echo "📊 Monitor: http://127.0.0.1:8080/health"
+echo "🔗 Proxy: http://127.0.0.1:8080/proxy/cursor"
+echo ""
+
+# Start proxy server
+$PYTHON_CMD servers/proxy_server.py --host 127.0.0.1 --port 8080 --config config/proxy_config.yaml
+EOF
+    
+    chmod +x "$PROXY_STARTUP_SCRIPT"
+    echo -e "${GREEN}✅ Proxy startup script created: $PROXY_STARTUP_SCRIPT${NC}"
+else
+    echo -e "${YELLOW}⚠️ Proxy config template not found, skipping proxy configuration${NC}"
+fi
+
+# Step 6: Test the server
+echo -e "\n${BLUE}🧪 Step 6: Testing MCP server...${NC}"
 
 echo -e "${YELLOW}Testing server initialization...${NC}"
 cd "$SCRIPT_DIR"
@@ -298,6 +395,17 @@ echo "• The ML model will download automatically on first use (~50MB)"
 echo "• Real-time conversation analysis active"
 echo "• Keywords: ricorda, nota, importante, salva, memorizza"
 echo "• Patterns: risolto, solved, fixed, bug fix, solution"
+
+echo -e "\n${BLUE}🌐 HTTP PROXY (Production Mode):${NC}"
+if [ -f "$PROXY_CONFIG_FILE" ]; then
+echo "• Production mode configured automatically"
+echo "• Auto-interception enabled for seamless integration"
+echo "• Real platform forwarding: DISABLED (configure base_url for real forwarding)"
+echo "• Health check: http://127.0.0.1:8080/health"
+echo "• Proxy endpoint: http://127.0.0.1:8080/proxy/cursor"
+else
+echo "• Proxy configuration not available"
+fi
 echo ""
 echo -e "${BLUE}🎯 ML THRESHOLDS:${NC}"
 echo "• ML Confidence: 70% (high precision)"
@@ -306,12 +414,21 @@ echo "• Memory Threshold: 70% (important content only)"
 echo "• Similarity: 30% (relevant searches)"
 echo "• Mode: Hybrid (ML + deterministic rules)"
 
-echo -e "\n${BLUE}🔧 MANUAL START (if needed):${NC}"
-echo "  $STARTUP_SCRIPT"
+echo -e "\n${BLUE}🔧 MANUAL START OPTIONS:${NC}"
+echo "  • MCP Server: $STARTUP_SCRIPT"
+if [ -f "$PROXY_STARTUP_SCRIPT" ]; then
+echo "  • HTTP Proxy: $PROXY_STARTUP_SCRIPT"
+fi
 
 echo -e "\n${BLUE}📁 FILES CREATED:${NC}"
 echo "  • Server: $SERVER_PATH"
 echo "  • Config: $CURSOR_MCP_CONFIG"
 echo "  • Startup: $STARTUP_SCRIPT"
+if [ -f "$PROXY_CONFIG_FILE" ]; then
+echo "  • Proxy Config: $PROXY_CONFIG_FILE"
+fi
+if [ -f "$PROXY_STARTUP_SCRIPT" ]; then
+echo "  • Proxy Startup: $PROXY_STARTUP_SCRIPT"
+fi
 
 echo -e "\n${GREEN}✅ Your Cursor IDE now has infinite AI memory! 🧠✨${NC}"
