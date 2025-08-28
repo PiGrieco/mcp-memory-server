@@ -233,7 +233,7 @@ class SimpleCursorMCPServer:
                     # Save memory
                     memory = await self.db.save_memory(content, importance, memory_type, metadata)
                     
-                    result = {
+                    {
                         "success": True,
                         "memory_id": memory["id"],
                         "content": content,

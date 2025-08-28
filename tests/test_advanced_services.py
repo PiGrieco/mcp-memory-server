@@ -90,7 +90,7 @@ async def test_cache_service():
             "importance": 0.8
         }
         
-        cache_key = await cache_service.get_memory_cache_key("test_memory_123")
+        await cache_service.get_memory_cache_key("test_memory_123")
         await cache_service.cache_memory(memory_data)
         cached_memory = await cache_service.get_cached_memory("test_memory_123")
         print(f"✅ Memory cache: {cached_memory is not None}")

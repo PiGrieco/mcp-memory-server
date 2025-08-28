@@ -37,7 +37,7 @@ class HealthService:
     async def get_health_status(self) -> HealthCheckResponse:
         """Get comprehensive health status"""
         try:
-            start_time = time.time()
+            time.time()
             
             # Check individual services
             db_health = await database_service.health_check()

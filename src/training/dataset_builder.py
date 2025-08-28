@@ -15,7 +15,7 @@ from datetime import datetime
 # ML imports
 try:
     from datasets import Dataset, DatasetDict, load_dataset
-    from transformers import AutoTokenizer
+
     from sklearn.model_selection import train_test_split
     HAS_DATASETS = True
 except ImportError:

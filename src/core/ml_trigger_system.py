@@ -15,20 +15,17 @@ from enum import Enum
 
 # ML imports
 try:
-    from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+    from sklearn.ensemble import GradientBoostingClassifier
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.metrics.pairwise import cosine_similarity
     from sklearn.preprocessing import StandardScaler
-    from sklearn.neural_network import MLPClassifier
+
     HAS_SKLEARN = True
 except ImportError:
     HAS_SKLEARN = False
 
 try:
-    import torch
-    import torch.nn as nn
-    import torch.optim as optim
-    from transformers import AutoTokenizer, AutoModel, AutoModelForSequenceClassification, pipeline
+    from transformers import pipeline
     HAS_TORCH = True
 except ImportError:
     HAS_TORCH = False

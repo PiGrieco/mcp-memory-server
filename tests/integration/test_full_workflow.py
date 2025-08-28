@@ -143,7 +143,7 @@ class TestFullWorkflow:
         """Test auto-save workflow"""
         # Arrange
         memory_service = services["memory"]
-        embedding_service = services["embedding"]
+        services["embedding"]
         
         # Test content that should trigger auto-save
         test_content = """

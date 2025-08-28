@@ -141,24 +141,18 @@ class MemoryService:
             importance = await self.embedding_service.analyze_memory_importance(content, context)
             
             # Determine memory type from context
-            memory_type = MemoryType.CONVERSATION
             trigger_type = "ml_trigger"
             
             if context:
                 if context.get("type") == "function_result":
-                    memory_type = MemoryType.FUNCTION
                     trigger_type = "function_result"
                 elif context.get("level") == "error":
-                    memory_type = MemoryType.ERROR
                     trigger_type = "error"
                 elif context.get("level") == "warning":
-                    memory_type = MemoryType.WARNING
                     trigger_type = "warning"
                 elif "decision" in content.lower():
-                    memory_type = MemoryType.DECISION
                     trigger_type = "decision"
                 elif any(keyword in content.lower() for keyword in ["knowledge", "fact", "information"]):
-                    memory_type = MemoryType.KNOWLEDGE
                     trigger_type = "knowledge"
             
             # Create memory
