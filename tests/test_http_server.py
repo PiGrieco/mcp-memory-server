@@ -4,7 +4,6 @@ Simple HTTP server for testing MCP Memory Server functionality
 """
 
 import asyncio
-import json
 import sys
 import os
 from typing import Dict, Any

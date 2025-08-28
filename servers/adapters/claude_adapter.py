@@ -140,7 +140,7 @@ class ClaudeAdapter(BaseAdapter):
             
             return False
             
-        except Exception as e:
+        except Exception:
             # Default to not saving if there's an error
             return False
     
@@ -192,7 +192,7 @@ class ClaudeAdapter(BaseAdapter):
             
             return formatted_memories
             
-        except Exception as e:
+        except Exception:
             return []
     
     def _analyze_claude_content(self, content: str, context: PlatformContext) -> Dict[str, Any]:

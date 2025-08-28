@@ -4,7 +4,7 @@ Cursor IDE adapter for MCP Memory Server
 
 import re
 from typing import Dict, Any, List
-from pathlib import Path
+
 
 from .base_adapter import BaseAdapter, PlatformContext
 
@@ -126,7 +126,7 @@ class CursorAdapter(BaseAdapter):
             
             return False
             
-        except Exception as e:
+        except Exception:
             # Default to not saving if there's an error
             return False
     
@@ -178,7 +178,7 @@ class CursorAdapter(BaseAdapter):
             
             return formatted_memories
             
-        except Exception as e:
+        except Exception:
             return []
     
     def _analyze_cursor_content(self, content: str, context: PlatformContext) -> Dict[str, Any]:

@@ -3,10 +3,8 @@ Unit tests for Embedding Service
 """
 
 import pytest
-import asyncio
-from unittest.mock import Mock, AsyncMock, patch, MagicMock
+from unittest.mock import Mock, patch
 import numpy as np
-from typing import List
 
 from src.services.embedding_service import EmbeddingService
 from src.config.settings import get_settings

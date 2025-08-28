@@ -1,0 +1,2 @@
+[console_scripts]
+mcp-memory-server = main:main

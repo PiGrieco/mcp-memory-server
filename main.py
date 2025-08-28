@@ -5,11 +5,18 @@ Unified server for all platforms with intelligent memory management
 """
 
 import sys
-import os
 import asyncio
 import signal
 import logging
 from pathlib import Path
+
+# Add src to path first
+src_path = Path(__file__).parent / "src"
+sys.path.insert(0, str(src_path))
+
+# Now import our modules
+from src.core.server import MCPServer  # noqa: E402
+from src.config.settings import get_settings  # noqa: E402
 
 # Configure logging to reduce noise
 logging.getLogger('pymongo').setLevel(logging.WARNING)
@@ -20,13 +27,6 @@ logging.getLogger('pymongo.command').setLevel(logging.ERROR)
 logging.getLogger('urllib3.connectionpool').setLevel(logging.WARNING)
 logging.getLogger('sentence_transformers').setLevel(logging.WARNING)
 logging.getLogger('transformers').setLevel(logging.WARNING)
-
-# Add src to path
-src_path = Path(__file__).parent / "src"
-sys.path.insert(0, str(src_path))
-
-from src.core.server import MCPServer
-from src.config.settings import get_settings
 
 # Global server instance for graceful shutdown
 server_instance = None

@@ -9,7 +9,7 @@ import sys
 import subprocess
 import json
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
 
 class Installer:
@@ -411,7 +411,7 @@ except Exception as e:
         }
         
         # Create proxy configuration
-        proxy_config = f"""proxy:
+        proxy_config = """proxy:
   name: "MCP Memory Proxy Server"
   version: "1.0.0"
   host: "127.0.0.1"
@@ -633,7 +633,7 @@ sys.exit(0 if success else 1)
             print("❌ Complete installation test failed!")
             print(f"Error: {result.stderr}")
             print(f"Output: {result.stdout}")
-            raise RuntimeError(f"Complete installation test failed")
+            raise RuntimeError("Complete installation test failed")
         
         print(result.stdout.strip())
     
