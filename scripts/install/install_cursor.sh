@@ -250,8 +250,7 @@ echo -e "\n${BLUE}🌐 Step 5: Configuring HTTP Proxy for Auto-Interception...${
 
 PROXY_CONFIG_FILE="$SCRIPT_DIR/config/proxy_config.yaml"
 
-if [ -f "$PROXY_CONFIG_FILE" ]; then
-    echo -e "${YELLOW}📝 Configuring proxy for production mode...${NC}"
+echo -e "${YELLOW}📝 Configuring proxy for production mode...${NC}"
     
     # Create production proxy configuration
     cat > "$PROXY_CONFIG_FILE" << 'EOF'
@@ -338,9 +337,6 @@ EOF
     
     chmod +x "$PROXY_STARTUP_SCRIPT"
     echo -e "${GREEN}✅ Proxy startup script created: $PROXY_STARTUP_SCRIPT${NC}"
-else
-    echo -e "${YELLOW}⚠️ Proxy config template not found, skipping proxy configuration${NC}"
-fi
 
 # Step 6: Test the server
 echo -e "\n${BLUE}🧪 Step 6: Testing MCP server...${NC}"

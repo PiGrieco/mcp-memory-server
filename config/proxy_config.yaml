@@ -1,8 +1,7 @@
-# HTTP Proxy Configuration for MCP Memory Server
 proxy:
   name: "MCP Memory Proxy Server"
   version: "1.0.0"
-  host: "0.0.0.0"
+  host: "127.0.0.1"
   port: 8080
   debug: false
   
@@ -12,22 +11,27 @@ proxy:
     auto_execute: true
     timeout_seconds: 30
     max_retries: 3
+    
+  # Production mode configuration
+  testing:
+    enabled: false  # Production mode: forward to real platforms
+    return_analysis_metadata: false
   
   # Platform configurations
   platforms:
     cursor:
       name: "Cursor AI Platform"
       enabled: true
-      base_url: "https://api.cursor.sh"
+      base_url: "https://api.cursor.sh/v1"  # Real Cursor API endpoint
       timeout: 30
       headers:
         Content-Type: "application/json"
         User-Agent: "MCP-Memory-Proxy/1.0"
       
     claude:
-      name: "Claude AI Platform"
-      enabled: true
-      base_url: "https://api.anthropic.com"
+      name: "Claude AI Platform" 
+      enabled: false
+      base_url: "https://api.anthropic.com/v1"
       timeout: 30
       headers:
         Content-Type: "application/json"
@@ -35,7 +39,7 @@ proxy:
         
     universal:
       name: "Universal AI Platform"
-      enabled: true
+      enabled: false
       timeout: 30
       headers:
         Content-Type: "application/json"
@@ -46,17 +50,9 @@ proxy:
     enabled: true
     ttl_seconds: 300
     max_size: 1000
-    
+  
   # Performance settings
   performance:
-    max_concurrent_requests: 50
-    request_timeout: 60
-    keep_alive_timeout: 30
-    
-  # Logging settings
-  logging:
-    level: "INFO"
-    format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    file: "logs/proxy.log"
-    max_size_mb: 100
-    backup_count: 5
+    max_concurrent_requests: 10
+    request_timeout: 30
+    max_memory_contexts: 5
