@@ -10,7 +10,13 @@ from datetime import datetime, timedelta
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass, asdict
 
-import redis.asyncio as redis
+# Optional Redis import - gracefully handle missing dependency
+try:
+    import redis.asyncio as redis
+    REDIS_AVAILABLE = True
+except ImportError:
+    redis = None
+    REDIS_AVAILABLE = False
 
 from ..config.settings import Settings
 from ..utils.exceptions import CacheServiceError
@@ -43,7 +49,7 @@ class CacheService:
     
     def __init__(self, settings: Settings):
         self.settings = settings
-        self.redis_client: Optional[redis.Redis] = None
+        self.redis_client: Optional[Any] = None  # Can be redis.Redis or None
         self.local_cache: Dict[str, CacheEntry] = {}
         self._initialized = False
         
@@ -71,6 +77,11 @@ class CacheService:
     
     async def _initialize_redis(self) -> None:
         """Initialize Redis connection"""
+        if not REDIS_AVAILABLE:
+            self.logger.warning("Redis not available - using local cache only")
+            self.redis_client = None
+            return
+            
         try:
             self.redis_client = redis.Redis(
                 host=self.settings.cache.redis["host"],

@@ -106,3 +106,9 @@ datasets>=2.12.0
 # HTTP Server Dependencies (for enhanced minimal kit)
 aiohttp>=3.8.0
 aiohttp-cors>=0.7.0
+
+# Optional Cache Dependencies (install if using Redis caching)
+# redis>=4.5.0
+
+# Optional Scheduler Dependencies (install if using automatic backups)
+# schedule>=1.2.0
