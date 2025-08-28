@@ -9,10 +9,17 @@ import shutil
 from datetime import datetime, timedelta
 from typing import Dict, Any, List
 from pathlib import Path
-import schedule
 import threading
 import tarfile
 import time
+
+# Optional schedule import - gracefully handle missing dependency
+try:
+    import schedule
+    SCHEDULE_AVAILABLE = True
+except ImportError:
+    schedule = None
+    SCHEDULE_AVAILABLE = False
 
 from ..config.settings import Settings
 from ..utils.exceptions import BackupServiceError
@@ -52,6 +59,10 @@ class BackupService:
     
     async def _start_backup_scheduler(self) -> None:
         """Start backup scheduler"""
+        if not SCHEDULE_AVAILABLE:
+            self.logger.warning("Schedule library not available - automatic backups disabled")
+            return
+            
         try:
             # Parse cron schedule
             schedule_str = self.settings.backup.schedule
@@ -79,6 +90,9 @@ class BackupService:
     
     def _scheduler_loop(self) -> None:
         """Scheduler loop"""
+        if not SCHEDULE_AVAILABLE:
+            return
+            
         while not self._stop_scheduler:
             try:
                 schedule.run_pending()
