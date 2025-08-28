@@ -8,7 +8,18 @@ import sys
 import os
 import asyncio
 import signal
+import logging
 from pathlib import Path
+
+# Configure logging to reduce noise
+logging.getLogger('pymongo').setLevel(logging.WARNING)
+logging.getLogger('pymongo.serverSelection').setLevel(logging.ERROR)
+logging.getLogger('pymongo.topology').setLevel(logging.ERROR)
+logging.getLogger('pymongo.connection').setLevel(logging.ERROR)
+logging.getLogger('pymongo.command').setLevel(logging.ERROR)
+logging.getLogger('urllib3.connectionpool').setLevel(logging.WARNING)
+logging.getLogger('sentence_transformers').setLevel(logging.WARNING)
+logging.getLogger('transformers').setLevel(logging.WARNING)
 
 # Add src to path
 src_path = Path(__file__).parent / "src"
