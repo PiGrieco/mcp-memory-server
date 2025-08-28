@@ -2,7 +2,6 @@
 Embedding service for MCP Memory Server
 """
 
-import asyncio
 import logging
 import numpy as np
 from typing import List, Optional, Dict, Any

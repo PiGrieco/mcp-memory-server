@@ -5,7 +5,6 @@ Plugin service for MCP Memory Server
 import asyncio
 import logging
 import importlib
-import inspect
 from typing import Dict, Any, List, Optional, Callable
 from pathlib import Path
 from dataclasses import dataclass

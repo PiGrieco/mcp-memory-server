@@ -45,8 +45,8 @@ os.environ["USER_BEHAVIOR_TRACKING"] = "true"  # Track user patterns
 os.environ["BEHAVIOR_HISTORY_LIMIT"] = "1000"  # Behavior history limit
 
 # Import base MCP server
-from mcp_base_server import MCPMemoryServer, run_mcp_server
-from mcp.types import Tool, TextContent
+from mcp_base_server import MCPMemoryServer, run_mcp_server  # noqa: E402
+from mcp.types import Tool, TextContent  # noqa: E402
 
 
 class ClaudeMCPServer(MCPMemoryServer):
@@ -72,13 +72,13 @@ class ClaudeMCPServer(MCPMemoryServer):
         
         print("🔮 Claude MCP Server initialized with Auto-Trigger ML")
         print(f"📁 Installation Path: {SCRIPT_DIR}")
-        print(f"🧠 ML Auto-Trigger: ENABLED")
+        print("🧠 ML Auto-Trigger: ENABLED")
     
     def _add_claude_tools(self):
         """Add Claude-specific MCP tools"""
         
         @self.server.list_tools()
-        async def handle_claude_tools() -> List[Tool]:
+        async def list_claude_tools() -> List[Tool]:
             """Extended tool list for Claude Desktop"""
             base_tools = await super(ClaudeMCPServer, self).server._list_tools_handler()
             
@@ -236,7 +236,7 @@ class ClaudeMCPServer(MCPMemoryServer):
             "context": context
         })
         
-        result = f"🔮 Claude explanation saved!\n"
+        result = "🔮 Claude explanation saved!\n"
         result += f"   Topic: {topic}\n"
         result += f"   Complexity: {complexity_level}\n"
         result += f"   Related topics: {len(related_topics)}\n"
@@ -262,19 +262,19 @@ class ClaudeMCPServer(MCPMemoryServer):
         content += f"**Status:** {'Long conversation' if messages_count > 10 else 'Standard conversation'}\n\n"
         
         if key_insights:
-            content += f"**Key Insights:**\n"
+            content += "**Key Insights:**\n"
             for insight in key_insights:
                 content += f"  • {insight}\n"
             content += "\n"
         
         if unresolved_questions:
-            content += f"**Unresolved Questions:**\n"
+            content += "**Unresolved Questions:**\n"
             for question in unresolved_questions:
                 content += f"  ❓ {question}\n"
             content += "\n"
         
         if action_items:
-            content += f"**Action Items:**\n"
+            content += "**Action Items:**\n"
             for item in action_items:
                 content += f"  📋 {item}\n"
         
@@ -295,7 +295,7 @@ class ClaudeMCPServer(MCPMemoryServer):
             "context": context
         })
         
-        result = f"🔮 Conversation thread tracked!\n"
+        result = "🔮 Conversation thread tracked!\n"
         result += f"   Topic: {thread_topic}\n"
         result += f"   Messages: {messages_count}\n"
         result += f"   Insights: {len(key_insights)}\n"
@@ -317,7 +317,7 @@ class ClaudeMCPServer(MCPMemoryServer):
         content += f"**Insight:**\n{insight}\n"
         
         if potential_applications:
-            content += f"\n**Potential Applications:**\n"
+            content += "\n**Potential Applications:**\n"
             for app in potential_applications:
                 content += f"  • {app}\n"
         
@@ -337,7 +337,7 @@ class ClaudeMCPServer(MCPMemoryServer):
             "context": context
         })
         
-        result = f"🔮 Claude insight saved!\n"
+        result = "🔮 Claude insight saved!\n"
         result += f"   Type: {insight_type}\n"
         result += f"   Applications: {len(potential_applications)}\n"
         result += f"   Context: {context_info[:50]}{'...' if len(context_info) > 50 else ''}\n"

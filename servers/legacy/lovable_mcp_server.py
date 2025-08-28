@@ -8,7 +8,6 @@ import asyncio
 import os
 import sys
 from pathlib import Path
-import time
 from typing import Dict, List, Any
 
 # Dynamic path resolution - works from any installation location
@@ -45,8 +44,8 @@ os.environ["USER_BEHAVIOR_TRACKING"] = "true"  # Track user patterns
 os.environ["BEHAVIOR_HISTORY_LIMIT"] = "1000"  # Behavior history limit
 
 # Import base MCP server
-from mcp_base_server import MCPMemoryServer, run_mcp_server
-from mcp.types import Tool, TextContent
+from mcp_base_server import MCPMemoryServer, run_mcp_server  # noqa: E402
+from mcp.types import Tool, TextContent  # noqa: E402
 
 
 class LovableMCPServer(MCPMemoryServer):
@@ -77,7 +76,7 @@ class LovableMCPServer(MCPMemoryServer):
         """Add Lovable-specific MCP tools"""
         
         @self.server.list_tools()
-        async def handle_lovable_tools() -> List[Tool]:
+        async def list_lovable_tools() -> List[Tool]:
             """Extended tool list for Lovable Platform"""
             base_tools = await super(LovableMCPServer, self).server._list_tools_handler()
             
@@ -259,7 +258,7 @@ class LovableMCPServer(MCPMemoryServer):
             content += f"**Technology Stack:** {', '.join(technology_stack)}\n\n"
         
         if use_cases:
-            content += f"**Use Cases:**\n"
+            content += "**Use Cases:**\n"
             for use_case in use_cases:
                 content += f"  • {use_case}\n"
             content += "\n"
@@ -288,7 +287,7 @@ class LovableMCPServer(MCPMemoryServer):
         
         self.lovable_stats['designs_saved'] += 1
         
-        result = f"💙 Design pattern saved to Lovable memory!\n"
+        result = "💙 Design pattern saved to Lovable memory!\n"
         result += f"   Pattern: {pattern_name}\n"
         result += f"   Technologies: {', '.join(technology_stack)}\n"
         result += f"   Use cases: {len(use_cases)}\n"
@@ -321,13 +320,13 @@ class LovableMCPServer(MCPMemoryServer):
             content += f"**Tech Stack:** {', '.join(tech_stack)}\n\n"
         
         if features_completed:
-            content += f"**Completed Features:**\n"
+            content += "**Completed Features:**\n"
             for feature in features_completed:
                 content += f"  ✅ {feature}\n"
             content += "\n"
         
         if next_steps:
-            content += f"**Next Steps:**\n"
+            content += "**Next Steps:**\n"
             for step in next_steps:
                 content += f"  📋 {step}\n"
         
@@ -347,7 +346,7 @@ class LovableMCPServer(MCPMemoryServer):
             "context": context
         })
         
-        result = f"💙 Project progress tracked!\n"
+        result = "💙 Project progress tracked!\n"
         result += f"   Project: {project_name} ({project_type})\n"
         result += f"   Features completed: {len(features_completed)}\n"
         result += f"   Next steps: {len(next_steps)}\n"
@@ -376,7 +375,7 @@ class LovableMCPServer(MCPMemoryServer):
         content += f"**Description:** {description}\n\n"
         
         if props:
-            content += f"**Props:**\n"
+            content += "**Props:**\n"
             for prop in props:
                 content += f"  • {prop}\n"
             content += "\n"
@@ -406,7 +405,7 @@ class LovableMCPServer(MCPMemoryServer):
             "context": context
         })
         
-        result = f"💙 UI component saved!\n"
+        result = "💙 UI component saved!\n"
         result += f"   Component: {component_name} ({component_type})\n"
         result += f"   Props: {len(props)}\n"
         result += f"   Has code: {'✅' if code else '❌'}\n"

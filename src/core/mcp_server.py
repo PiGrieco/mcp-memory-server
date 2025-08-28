@@ -2,10 +2,9 @@
 Production MCP Server implementation with enhanced features
 """
 
-import asyncio
 import json
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 import time
 
 from mcp.server import Server, NotificationOptions
@@ -16,10 +15,10 @@ import mcp.types as types
 from ..config import get_config
 from ..models import (
     MemoryCreate, MemoryUpdate, MemorySearchQuery, MemoryContext,
-    MemoryType, MemoryImportance, SuccessResponse, ErrorResponse
+    MemoryType, SuccessResponse, ErrorResponse
 )
 from ..services import memory_service, database_service, embedding_service
-from ..utils.exceptions import MCPMemoryError, ValidationError
+from ..utils.exceptions import MCPMemoryError
 
 logger = logging.getLogger(__name__)
 

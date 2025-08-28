@@ -11,10 +11,10 @@ from pathlib import Path
 src_path = Path(__file__).parent / "src"
 sys.path.insert(0, str(src_path))
 
-from src.config.settings import get_settings
-from src.services.plugin_service import PluginService
-from src.services.cache_service import CacheService
-from src.services.memory_service import MemoryService
+from src.config.settings import get_settings  # noqa: E402
+from src.services.plugin_service import PluginService  # noqa: E402
+from src.services.cache_service import CacheService  # noqa: E402
+from src.services.memory_service import MemoryService  # noqa: E402
 
 
 async def test_plugin_service():

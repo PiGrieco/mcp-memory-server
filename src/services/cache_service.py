@@ -7,11 +7,10 @@ import logging
 import json
 import hashlib
 from datetime import datetime, timedelta
-from typing import Dict, Any, Optional, List, Union
+from typing import Dict, Any, Optional, List
 from dataclasses import dataclass, asdict
 
 import redis.asyncio as redis
-from pydantic import BaseModel
 
 from ..config.settings import Settings
 from ..utils.exceptions import CacheServiceError
@@ -418,7 +417,7 @@ class CacheService:
                 try:
                     await self.redis_client.ping()
                     redis_ok = True
-                except Exception as e:
+                except Exception:
                     redis_ok = False
             
             overall_status = "healthy" if local_cache_ok else "unhealthy"

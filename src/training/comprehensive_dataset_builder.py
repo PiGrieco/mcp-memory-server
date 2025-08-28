@@ -5,15 +5,9 @@ Builds 100K+ training examples from multiple sources
 """
 
 import asyncio
-import json
 import pandas as pd
-import numpy as np
-import random
-from pathlib import Path
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Any
 from dataclasses import dataclass
-from datetime import datetime
-import logging
 
 # ML imports
 try:
@@ -295,7 +289,7 @@ class ComprehensiveDatasetBuilder:
                 source.status = "error"
         
         # Summary
-        logger.info(f"\n📊 Dataset Processing Summary:")
+        logger.info("\n📊 Dataset Processing Summary:")
         logger.info(f"   Successful sources: {len(successful_sources)}")
         logger.info(f"   Failed sources: {len(failed_sources)}")
         logger.info(f"   Total examples collected: {len(all_examples):,}")
@@ -723,7 +717,7 @@ class ComprehensiveDatasetBuilder:
             'test': Dataset.from_pandas(test_df)
         })
         
-        logger.info(f"Final dataset created:")
+        logger.info("Final dataset created:")
         logger.info(f"  Train: {len(train_df):,} examples")
         logger.info(f"  Validation: {len(val_df):,} examples")
         logger.info(f"  Test: {len(test_df):,} examples")

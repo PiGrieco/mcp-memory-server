@@ -7,11 +7,9 @@ Generates comprehensive training data from multiple sources
 import random
 import json
 import pandas as pd
-import numpy as np
 from pathlib import Path
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
-import asyncio
 from datetime import datetime
 
 # ML imports
@@ -569,7 +567,7 @@ class AutoTriggerDatasetBuilder:
         # Split into train/val/test
         dataset_dict = self._create_dataset_splits(df)
         
-        logger.info(f"Dataset built successfully:")
+        logger.info("Dataset built successfully:")
         logger.info(f"  Total examples: {len(df)}")
         logger.info(f"  Train: {len(dataset_dict['train'])}")
         logger.info(f"  Validation: {len(dataset_dict['validation'])}")

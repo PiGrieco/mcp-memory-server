@@ -4,14 +4,12 @@ ML-Based Auto-Trigger System for MCP Memory Server
 Intelligent triggering using machine learning instead of deterministic rules
 """
 
-import asyncio
 import json
 import numpy as np
 import pickle
-import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List, Optional, Any, Tuple, Union
+from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass, asdict
 from enum import Enum
 
@@ -35,7 +33,7 @@ try:
 except ImportError:
     HAS_TORCH = False
 
-from ..utils.logging import get_logger, log_performance
+from ..utils.logging import get_logger
 from ..config.settings import get_settings
 from ..services.embedding_service import EmbeddingService
 from ..services.memory_service import MemoryService
@@ -211,7 +209,7 @@ class FeatureExtractor:
             
             # Normalize to 0-1 range
             return min(max(density, 0.0), 1.0)
-        except:
+        except Exception:
             # Fallback: use word diversity
             words = set(text.lower().split())
             total_words = len(text.split())
@@ -251,7 +249,7 @@ class FeatureExtractor:
                 now = datetime.now(timezone.utc)
                 delta = (now - last_time).total_seconds() / 60.0  # Convert to minutes
                 return min(delta, 1440.0)  # Cap at 24 hours
-        except:
+        except Exception:
             pass
         
         return 0.0
@@ -325,7 +323,7 @@ class FeatureExtractor:
             )[0][0]
             
             return float(similarity)
-        except:
+        except Exception:
             return 0.5
 
 
@@ -362,7 +360,7 @@ class HuggingFaceMLTriggerModel:
                     import torch
                     if torch.cuda.is_available():
                         device = 0  # Use GPU if available
-                except:
+                except Exception:
                     pass  # Keep CPU device
                 
             self.classifier = pipeline(

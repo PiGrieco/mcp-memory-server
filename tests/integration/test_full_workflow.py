@@ -3,8 +3,6 @@ Integration tests for full workflow
 """
 
 import pytest
-import asyncio
-from datetime import datetime
 
 from src.services.memory_service import MemoryService
 from src.services.database_service import DatabaseService
@@ -331,7 +329,7 @@ class TestFullWorkflow:
         assert export_result["success"] is True
         assert backup_result["success"] is True
         
-        print(f"✅ Complete integration workflow completed:")
+        print("✅ Complete integration workflow completed:")
         print(f"  - Created {len(memories)} memories")
         print(f"  - Found {len(search_results)} search results")
         print(f"  - Exported to {export_result['filename']}")

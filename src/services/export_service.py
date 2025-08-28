@@ -2,10 +2,8 @@
 Export service for MCP Memory Server
 """
 
-import asyncio
 import logging
 import json
-import csv
 import gzip
 from datetime import datetime
 from typing import Dict, Any, List, Optional

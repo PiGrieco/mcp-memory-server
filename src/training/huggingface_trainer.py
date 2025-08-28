@@ -5,7 +5,6 @@ Train and deploy the model to Hugging Face Hub
 """
 
 import os
-import json
 import numpy as np
 from pathlib import Path
 from typing import Dict, List, Optional, Any, Tuple
@@ -28,7 +27,7 @@ try:
 except ImportError:
     HAS_TRANSFORMERS = False
 
-from .dataset_builder import build_auto_trigger_dataset, DatasetConfig
+from .dataset_builder import build_auto_trigger_dataset
 from ..utils.logging import get_logger
 
 

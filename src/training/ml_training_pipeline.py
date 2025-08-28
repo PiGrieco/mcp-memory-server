@@ -4,14 +4,12 @@ ML Training Pipeline for Auto-Trigger System
 Generates training data and trains initial models
 """
 
-import asyncio
 import json
 import random
 import numpy as np
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional, Any, Tuple
-from dataclasses import asdict
+from typing import Dict, List, Any, Tuple
 
 # ML imports
 try:
@@ -25,7 +23,7 @@ except ImportError:
     HAS_SKLEARN = False
 
 from ..core.ml_trigger_system import (
-    MLFeatures, ActionType, MLTriggerModel, FeatureExtractor
+    MLFeatures, ActionType, FeatureExtractor
 )
 from ..services.embedding_service import EmbeddingService
 from ..services.memory_service import MemoryService

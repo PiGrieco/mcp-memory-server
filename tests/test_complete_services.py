@@ -11,15 +11,15 @@ from pathlib import Path
 src_path = Path(__file__).parent / "src"
 sys.path.insert(0, str(src_path))
 
-from src.config.settings import get_settings
-from src.services.memory_service import MemoryService
-from src.services.database_service import DatabaseService
-from src.services.embedding_service import EmbeddingService
-from src.services.plugin_service import PluginService
-from src.services.cache_service import CacheService
-from src.services.backup_service import BackupService
-from src.services.notification_service import NotificationService
-from src.services.export_service import ExportService
+from src.config.settings import get_settings  # noqa: E402
+from src.services.memory_service import MemoryService  # noqa: E402
+from src.services.database_service import DatabaseService  # noqa: E402
+from src.services.embedding_service import EmbeddingService  # noqa: E402
+from src.services.plugin_service import PluginService  # noqa: E402
+from src.services.cache_service import CacheService  # noqa: E402
+from src.services.backup_service import BackupService  # noqa: E402
+from src.services.notification_service import NotificationService  # noqa: E402
+from src.services.export_service import ExportService  # noqa: E402
 
 
 async def test_all_services():

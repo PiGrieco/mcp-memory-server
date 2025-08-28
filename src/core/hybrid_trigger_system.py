@@ -4,17 +4,15 @@ Hybrid Auto-Trigger System
 Combines deterministic rules with ML predictions for optimal performance
 """
 
-import asyncio
 import json
-import time
-from datetime import datetime, timezone
-from typing import Dict, List, Optional, Any, Tuple, Union
+from datetime import datetime
+from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
 from enum import Enum
 
-from .auto_trigger_system import AutoTriggerSystem, TriggerType
-from .ml_trigger_system import MLAutoTriggerSystem, ActionType, MLPrediction, create_ml_auto_trigger_system
-from ..utils.logging import get_logger, log_performance
+from .auto_trigger_system import AutoTriggerSystem
+from .ml_trigger_system import ActionType, MLPrediction, create_ml_auto_trigger_system
+from ..utils.logging import get_logger
 from ..config.settings import get_config
 from ..services.embedding_service import EmbeddingService
 from ..services.memory_service import MemoryService

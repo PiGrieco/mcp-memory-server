@@ -2,7 +2,6 @@
 Production memory service with auto-triggers and advanced features
 """
 
-import asyncio
 import logging
 import time
 from datetime import datetime
@@ -10,11 +9,9 @@ from typing import List, Optional, Dict, Any
 
 from ..config.settings import Settings
 from ..models.memory import (
-    Memory, MemoryCreate, MemoryUpdate, MemorySearchQuery, 
-    MemorySearchResult, MemoryContext, MemoryContextResult,
-    MemoryType, MemoryImportance
+    Memory, MemoryCreate, MemoryUpdate, MemoryType
 )
-from ..utils.exceptions import MemoryServiceError, ValidationError
+from ..utils.exceptions import MemoryServiceError
 from .database_service import DatabaseService
 from .embedding_service import EmbeddingService
 

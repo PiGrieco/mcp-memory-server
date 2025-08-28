@@ -6,9 +6,8 @@ Adds intelligent auto-triggering capabilities to the standard MCP server
 
 import asyncio
 import json
-import logging
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 from datetime import datetime, timezone
 
 from mcp.server import Server, NotificationOptions
@@ -20,9 +19,8 @@ from ..config import get_config
 from ..services.memory_service import MemoryService
 from ..services.database_service import DatabaseService
 from ..services.embedding_service import EmbeddingService
-from .auto_trigger_system import AutoTriggerSystem, create_auto_trigger_system
-from ..utils.logging import get_logger, log_performance
-from ..utils.exceptions import MCPMemoryError
+from .auto_trigger_system import create_auto_trigger_system
+from ..utils.logging import get_logger
 
 
 logger = get_logger(__name__)

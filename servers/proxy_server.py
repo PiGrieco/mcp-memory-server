@@ -10,7 +10,7 @@ import logging
 import sys
 import os
 import time
-from typing import Dict, Any, Optional, Tuple, List
+from typing import Dict, Any, Optional, Tuple
 from pathlib import Path
 from datetime import datetime
 
@@ -29,16 +29,15 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(current_dir)
 sys.path.insert(0, project_root)
 
-import aiohttp
-import yaml
-from fastapi import FastAPI, HTTPException, Request, Response
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-import uvicorn
+import aiohttp  # noqa: E402
+import yaml  # noqa: E402
+from fastapi import FastAPI, HTTPException, Request, Response  # noqa: E402
+from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
+from fastapi.responses import JSONResponse  # noqa: E402
+import uvicorn  # noqa: E402
 
-from src.config.settings import get_settings
-from src.core.server import MCPServer
-from src.utils.exceptions import MCPMemoryError
+from src.config.settings import get_settings  # noqa: E402
+from src.core.server import MCPServer  # noqa: E402
 
 
 class ProxyServer:

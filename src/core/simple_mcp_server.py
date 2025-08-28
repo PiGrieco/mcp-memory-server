@@ -5,11 +5,9 @@ Funziona in memoria senza database esterno
 """
 
 import asyncio
-import json
-import logging
 import sys
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, List
 import time
 from datetime import datetime
 
