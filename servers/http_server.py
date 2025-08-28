@@ -4,22 +4,21 @@ Simple HTTP server for testing MCP Memory Server functionality
 """
 
 import asyncio
-import json
 import sys
 import os
 from typing import Dict, Any
+
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
 # Add project root to path
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(current_dir)
 sys.path.insert(0, project_root)
 
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
-
-from src.config.settings import get_settings
-from src.services.memory_service import MemoryService
+from src.config.settings import get_settings  # noqa: E402
+from src.services.memory_service import MemoryService  # noqa: E402
 
 
 # Create FastAPI app

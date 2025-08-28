@@ -6,7 +6,6 @@ Verifies that the server can start and respond correctly
 
 import sys
 import asyncio
-import json
 from pathlib import Path
 
 # Add project root to path so we can import from src

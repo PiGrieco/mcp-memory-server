@@ -3,8 +3,7 @@ Unit tests for Memory Service
 """
 
 import pytest
-import asyncio
-from unittest.mock import Mock, AsyncMock, patch
+from unittest.mock import AsyncMock
 from datetime import datetime
 
 from src.services.memory_service import MemoryService
@@ -272,7 +271,7 @@ class TestMemoryService:
     async def test_get_status_success(self, memory_service):
         """Test successful status retrieval"""
         # Arrange
-        mock_status = {
+        _mock_status = {
             "status": "healthy",
             "total_memories": 100,
             "database_connected": True,

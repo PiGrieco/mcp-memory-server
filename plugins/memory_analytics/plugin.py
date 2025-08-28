@@ -5,7 +5,7 @@ Memory Analytics Plugin for MCP Memory Server
 import asyncio
 import logging
 from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any
 from collections import defaultdict, Counter
 import json
 from pathlib import Path
