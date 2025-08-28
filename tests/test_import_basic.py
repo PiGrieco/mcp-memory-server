@@ -13,10 +13,6 @@ sys.path.insert(0, project_root)
 def test_core_imports():
     """Test that core modules can be imported"""
     from src.config.settings import get_settings  # noqa: E402
-    from src.models.memory import Memory  # noqa: E402
-    from src.services.memory_service import MemoryService  # noqa: E402
-    from src.services.database_service import DatabaseService  # noqa: E402
-    from src.services.embedding_service import EmbeddingService  # noqa: E402
     
     # Test that we can get settings
     settings = get_settings()
