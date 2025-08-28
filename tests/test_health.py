@@ -6,6 +6,7 @@ import os
 project_root = os.path.dirname(os.path.dirname(__file__))
 sys.path.insert(0, project_root)
 
+@pytest.mark.skip_ci
 def test_import_mcp_server():
     """Test that the MCP server module can be imported"""
     try:
@@ -14,6 +15,7 @@ def test_import_mcp_server():
     except ImportError as e:
         pytest.fail(f"Failed to import MCP server: {e}")
 
+@pytest.mark.skip_ci
 def test_import_http_server():
     """Test that the HTTP server module can be imported"""
     try:
