@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 from ..utils.logging import get_logger, log_performance
-from ..config.settings import get_config
+from ..config.settings import get_settings
 from ..services.embedding_service import EmbeddingService
 from ..services.memory_service import MemoryService
 
@@ -62,7 +62,7 @@ class AutoTriggerSystem:
     """
     
     def __init__(self, memory_service: MemoryService, embedding_service: EmbeddingService):
-        self.config = get_config()
+        self.config = get_settings()
         self.memory_service = memory_service
         self.embedding_service = embedding_service
         
