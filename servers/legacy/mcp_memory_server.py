@@ -12,7 +12,6 @@ import logging
 import traceback
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any, List, Optional
 
 # Load environment variables first
 try:
@@ -102,7 +101,7 @@ async def async_main():
     if not has_full_server:
         print("❌ CRITICAL ERROR: Full server initialization failed. Cannot continue.", file=sys.stderr)
         sys.exit(1)
-    print(f"✅ Full server initialized successfully", file=sys.stderr)
+    print("✅ Full server initialized successfully", file=sys.stderr)
 
     # Initialize memory service if using full server
     if has_full_server:
@@ -126,7 +125,7 @@ async def async_main():
                 logger.debug(f"📨 Received MCP request: {method} (ID: {request_id})")
 
                 if method == "initialize":
-                    logger.info(f"🚀 INITIALIZE request received")
+                    logger.info("🚀 INITIALIZE request received")
                     logger.info(f"   Request ID: {request_id}")
                     logger.info(f"   Full server available: {has_full_server}")
                     response = {
@@ -233,7 +232,7 @@ async def async_main():
                     arguments = params.get("arguments", {})
 
                     # Log tool call start
-                    logger.info(f"🔧 MCP TOOL CALL START")
+                    logger.info("🔧 MCP TOOL CALL START")
                     logger.info(f"   Tool: {tool_name}")
                     logger.info(f"   Arguments: {json.dumps(arguments, indent=2)}")
                     logger.info(f"   Request ID: {request_id}")
@@ -246,7 +245,7 @@ async def async_main():
                         project = arguments.get("project", PROJECT_NAME)
                         importance = arguments.get("importance", 0.7)
 
-                        logger.info(f"💾 SAVE_MEMORY Processing")
+                        logger.info("💾 SAVE_MEMORY Processing")
                         logger.info(f"   Content length: {len(content)} chars")
                         logger.info(f"   Content preview: {content[:100]}{'...' if len(content) > 100 else ''}")
                         logger.info(f"   Project: {project}")
@@ -257,7 +256,7 @@ async def async_main():
                             # Use full server (required)
                             result = await full_server._handle_save_memory(arguments)
                             result_text = result[0].text if result else "Memory saved with full server"
-                            logger.info(f"   ✅ Full server SUCCESS")
+                            logger.info("   ✅ Full server SUCCESS")
                             logger.info(f"   Result: {result_text[:200]}{'...' if len(result_text) > 200 else ''}")
                         except Exception as e:
                             # No fallback - full server is required
@@ -271,7 +270,7 @@ async def async_main():
                         similarity_threshold = arguments.get("similarity_threshold", 0.3)
                         project = arguments.get("project", PROJECT_NAME)
 
-                        logger.info(f"🔍 SEARCH_MEMORIES Processing")
+                        logger.info("🔍 SEARCH_MEMORIES Processing")
                         logger.info(f"   Query: '{query}'")
                         logger.info(f"   Max results: {max_results}")
                         logger.info(f"   Similarity threshold: {similarity_threshold}")
@@ -282,7 +281,7 @@ async def async_main():
                             # Use full server (required)
                             result = await full_server._handle_search_memories(arguments)
                             result_text = result[0].text if result else "Search completed with full server"
-                            logger.info(f"   ✅ Full server SUCCESS")
+                            logger.info("   ✅ Full server SUCCESS")
                             logger.info(f"   Result: {result_text[:300]}{'...' if len(result_text) > 300 else ''}")
                         except Exception as e:
                             # No fallback - full server is required
@@ -291,7 +290,7 @@ async def async_main():
                             result_text = f"❌ Error searching memories: {str(e)}"
                         
                     elif tool_name == "list_memories":
-                        logger.info(f"📚 LIST_MEMORIES Processing")
+                        logger.info("📚 LIST_MEMORIES Processing")
 
                         try:
                             logger.info("   Using FULL SERVER mode")
@@ -327,14 +326,14 @@ async def async_main():
                             logger.error(f"   Traceback: {traceback.format_exc()}")
                         
                     elif tool_name == "memory_status":
-                        logger.info(f"🧠 MEMORY_STATUS Processing")
+                        logger.info("🧠 MEMORY_STATUS Processing")
                         try:
                             from src.services.database_service import database_service
                             memory_count = await database_service.get_memory_count(project=PROJECT_NAME)
                             result_text = f"🧠 Memory System Status:\n- Mode: Full Server\n- Project: {PROJECT_NAME}\n- Database: {DATABASE_NAME}\n- Memories stored: {memory_count}\n- Working directory: {os.getcwd()}"
                         except Exception as e:
                             result_text = f"🧠 Memory System Status:\n- Mode: Full Server\n- Project: {PROJECT_NAME}\n- Database: {DATABASE_NAME}\n- Error getting count: {str(e)}\n- Working directory: {os.getcwd()}"
-                        logger.info(f"   ✅ Status retrieved successfully")
+                        logger.info("   ✅ Status retrieved successfully")
 
                     else:
                         logger.warning(f"❓ UNKNOWN TOOL: {tool_name}")
@@ -345,7 +344,7 @@ async def async_main():
                     execution_time = (end_time - start_time).total_seconds() * 1000  # ms
 
                     # Log completion
-                    logger.info(f"🏁 MCP TOOL CALL COMPLETE")
+                    logger.info("🏁 MCP TOOL CALL COMPLETE")
                     logger.info(f"   Tool: {tool_name}")
                     logger.info(f"   Execution time: {execution_time:.2f}ms")
                     logger.info(f"   Response length: {len(result_text)} chars")
@@ -395,7 +394,7 @@ async def async_main():
                     logger.debug(f"📭 No response needed for {method}")
                     
             except Exception as e:
-                logger.error(f"💥 REQUEST PROCESSING ERROR")
+                logger.error("💥 REQUEST PROCESSING ERROR")
                 logger.error(f"   Error: {str(e)}")
                 logger.error(f"   Request: {request if 'request' in locals() else 'Unknown'}")
                 logger.error(f"   Traceback: {traceback.format_exc()}")
@@ -419,7 +418,7 @@ async def async_main():
         # Handle broken pipe when Cursor disconnects
         pass
     except Exception as e:
-        logger.critical(f"💀 FATAL SERVER ERROR")
+        logger.critical("💀 FATAL SERVER ERROR")
         logger.critical(f"   Error: {str(e)}")
         logger.critical(f"   Traceback: {traceback.format_exc()}")
 

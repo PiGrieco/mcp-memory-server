@@ -3,10 +3,7 @@
 Simple MCP Server for immediate testing with Cursor
 """
 
-import asyncio
-import json
-import logging
-from typing import Any, Dict, List
+from typing import Dict, List
 import time
 from datetime import datetime
 

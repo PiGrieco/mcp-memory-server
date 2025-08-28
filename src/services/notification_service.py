@@ -4,11 +4,10 @@ Notification service for MCP Memory Server
 
 import asyncio
 import logging
-import json
 import smtplib
 import aiohttp
 from datetime import datetime
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from dataclasses import dataclass
@@ -386,7 +385,7 @@ class NotificationService:
                     with smtplib.SMTP(email_config["smtp_host"], email_config["smtp_port"]) as server:
                         server.starttls()
                         server.login(email_config["username"], email_config["password"])
-                except Exception as e:
+                except Exception:
                     email_ok = False
             
             if self.settings.notifications.providers["webhook"]["enabled"]:

@@ -45,8 +45,8 @@ os.environ["USER_BEHAVIOR_TRACKING"] = "true"  # Track user patterns
 os.environ["BEHAVIOR_HISTORY_LIMIT"] = "1000"  # Behavior history limit
 
 # Import base MCP server
-from mcp_base_server import MCPMemoryServer, run_mcp_server
-from mcp.types import Tool, TextContent
+from mcp_base_server import MCPMemoryServer, run_mcp_server  # noqa: E402
+from mcp.types import Tool, TextContent  # noqa: E402
 
 
 class WindsurfMCPServer(MCPMemoryServer):
@@ -76,7 +76,7 @@ class WindsurfMCPServer(MCPMemoryServer):
         """Add Windsurf-specific MCP tools"""
         
         @self.server.list_tools()
-        async def handle_windsurf_tools() -> List[Tool]:
+        async def list_windsurf_tools() -> List[Tool]:
             """Extended tool list for Windsurf"""
             base_tools = await super(WindsurfMCPServer, self).server._list_tools_handler()
             
@@ -207,7 +207,7 @@ class WindsurfMCPServer(MCPMemoryServer):
         
         self.windsurf_stats['code_snippets_saved'] += 1
         
-        result = f"🌪️ Code snippet saved to Windsurf memory!\n"
+        result = "🌪️ Code snippet saved to Windsurf memory!\n"
         result += f"   Language: {language}\n"
         result += f"   Description: {description}\n"
         result += f"   Lines: {len(code.split())}\n"
@@ -233,7 +233,7 @@ class WindsurfMCPServer(MCPMemoryServer):
         })
         
         # Add Windsurf-specific context
-        result = f"🌪️ Windsurf Code Explanation Search:\n"
+        result = "🌪️ Windsurf Code Explanation Search:\n"
         result += f"Query: {code_query}\n"
         if language:
             result += f"Language: {language}\n"
@@ -269,7 +269,7 @@ class WindsurfMCPServer(MCPMemoryServer):
             "context": context
         })
         
-        result = f"🌪️ Cascade interaction logged!\n"
+        result = "🌪️ Cascade interaction logged!\n"
         result += f"   Type: {interaction_type}\n"
         result += f"   Content length: {len(content)} chars\n"
         result += f"   Total Cascade interactions: {self.windsurf_stats['cascade_interactions']}\n"

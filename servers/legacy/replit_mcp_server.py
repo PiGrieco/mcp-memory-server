@@ -45,8 +45,8 @@ os.environ["USER_BEHAVIOR_TRACKING"] = "true"  # Track user patterns
 os.environ["BEHAVIOR_HISTORY_LIMIT"] = "1000"  # Behavior history limit
 
 # Import base MCP server
-from mcp_base_server import MCPMemoryServer, run_mcp_server
-from mcp.types import Tool, TextContent
+from mcp_base_server import MCPMemoryServer, run_mcp_server  # noqa: E402
+from mcp.types import Tool, TextContent  # noqa: E402
 
 
 class ReplitMCPServer(MCPMemoryServer):
@@ -75,7 +75,7 @@ class ReplitMCPServer(MCPMemoryServer):
         """Add Replit-specific MCP tools"""
         
         @self.server.list_tools()
-        async def handle_replit_tools() -> List[Tool]:
+        async def list_replit_tools() -> List[Tool]:
             """Extended tool list for Replit Cloud IDE"""
             base_tools = await super(ReplitMCPServer, self).server._list_tools_handler()
             
@@ -307,7 +307,7 @@ class ReplitMCPServer(MCPMemoryServer):
             content += f"**Collaborators:** {', '.join(collaborators)}\n\n"
         
         if packages_used:
-            content += f"**Packages/Dependencies:**\n"
+            content += "**Packages/Dependencies:**\n"
             for package in packages_used:
                 content += f"  • {package}\n"
             content += "\n"
@@ -332,7 +332,7 @@ class ReplitMCPServer(MCPMemoryServer):
             "context": context
         })
         
-        result = f"⚡ Repl project tracked!\n"
+        result = "⚡ Repl project tracked!\n"
         result += f"   Name: {repl_name} ({language})\n"
         result += f"   Collaborators: {len(collaborators)}\n"
         result += f"   Packages: {len(packages_used)}\n"
@@ -383,7 +383,7 @@ class ReplitMCPServer(MCPMemoryServer):
             "context": context
         })
         
-        result = f"⚡ Collaboration activity logged!\n"
+        result = "⚡ Collaboration activity logged!\n"
         result += f"   Repl: {repl_name}\n"
         result += f"   Collaborator: {collaborator}\n"
         result += f"   Action: {action}\n"
@@ -438,7 +438,7 @@ class ReplitMCPServer(MCPMemoryServer):
             "context": context
         })
         
-        result = f"⚡ Code execution logged!\n"
+        result = "⚡ Code execution logged!\n"
         result += f"   Repl: {repl_name}\n"
         result += f"   Language: {language}\n"
         result += f"   Status: {'✅ Success' if success else '❌ Failed'}\n"
@@ -471,7 +471,7 @@ class ReplitMCPServer(MCPMemoryServer):
             content += f"**Custom Domain:** {custom_domain}\n\n"
         
         if environment_vars:
-            content += f"**Environment Variables:**\n"
+            content += "**Environment Variables:**\n"
             for var in environment_vars:
                 content += f"  • {var}\n"
             content += "\n"
@@ -496,7 +496,7 @@ class ReplitMCPServer(MCPMemoryServer):
             "context": context
         })
         
-        result = f"⚡ Deployment documented!\n"
+        result = "⚡ Deployment documented!\n"
         result += f"   Repl: {repl_name}\n"
         result += f"   URL: {deployment_url}\n"
         result += f"   Type: {deployment_type}\n"

@@ -5,7 +5,6 @@ Serves the MCP Memory Server over HTTP for remote access
 """
 
 import asyncio
-import json
 import logging
 import os
 import sys
@@ -15,12 +14,12 @@ from typing import Any, Dict
 # Add the src directory to the path
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
-from aiohttp import web, web_request
+from aiohttp import web
 from aiohttp.web import middleware
 # import aiohttp_cors  # Not needed since we're using custom CORS middleware
 
 # Import the original MCP server functionality
-from mcp_memory_server import async_main as mcp_main, initialize_full_memory_server
+from mcp_memory_server import initialize_full_memory_server
 
 # Setup logging
 logging.basicConfig(

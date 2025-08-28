@@ -5,10 +5,9 @@ Backup service for MCP Memory Server
 import asyncio
 import logging
 import json
-import gzip
 import shutil
 from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 from pathlib import Path
 import schedule
 import threading

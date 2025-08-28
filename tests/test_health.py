@@ -1,6 +1,4 @@
 import pytest
-import sys
-import os
 
 def test_import_mcp_server():
     """Test that the MCP server module can be imported"""

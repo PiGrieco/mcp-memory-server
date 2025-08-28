@@ -4,11 +4,9 @@ Auto-Trigger System for MCP Memory Server
 Intelligent automatic triggering of memory tools based on conversation analysis
 """
 
-import asyncio
 import re
 import time
-from datetime import datetime, timezone
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Any, Tuple
 from dataclasses import dataclass
 from enum import Enum
 

@@ -5,11 +5,8 @@ Unified MCP Server for all platforms
 import asyncio
 import json
 import logging
-from typing import Dict, Any, Optional
-from pathlib import Path
 
 from mcp.server import Server
-import mcp.server.stdio
 import mcp.types as types
 
 from ..config.settings import Settings
@@ -17,7 +14,7 @@ from ..services.memory_service import MemoryService
 from ..services.embedding_service import EmbeddingService
 from ..services.database_service import DatabaseService
 from ..utils.exceptions import MCPMemoryError
-from .ml_trigger_system import MLAutoTriggerSystem, ActionType, create_ml_auto_trigger_system
+from .ml_trigger_system import ActionType, create_ml_auto_trigger_system
 
 
 class MCPServer:
@@ -387,7 +384,6 @@ class MCPServer:
             if self.settings.server.mode in ["universal", "mcp_only"]:
                 # Start MCP server with proper error handling
                 import mcp.server.stdio
-                from mcp import types
                 
                 try:
                     async with mcp.server.stdio.stdio_server() as (read_stream, write_stream):

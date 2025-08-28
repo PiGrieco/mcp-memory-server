@@ -44,8 +44,8 @@ os.environ["USER_BEHAVIOR_TRACKING"] = "true"  # Track user patterns
 os.environ["BEHAVIOR_HISTORY_LIMIT"] = "1000"  # Behavior history limit
 
 # Import base MCP server
-from mcp_base_server import MCPMemoryServer, run_mcp_server
-from mcp.types import Tool, TextContent
+from mcp_base_server import MCPMemoryServer, run_mcp_server  # noqa: E402
+from mcp.types import Tool, TextContent  # noqa: E402
 
 
 class CursorMCPServer(MCPMemoryServer):
@@ -71,7 +71,7 @@ class CursorMCPServer(MCPMemoryServer):
         
         print("🎯 Cursor MCP Server initialized with Auto-Trigger ML")
         print(f"📁 Installation Path: {SCRIPT_DIR}")
-        print(f"🧠 ML Auto-Trigger: ENABLED")
+        print("🧠 ML Auto-Trigger: ENABLED")
     
     def _add_cursor_tools(self):
         """Add Cursor-specific MCP tools"""
@@ -338,12 +338,12 @@ class CursorMCPServer(MCPMemoryServer):
                     auto_triggered=True
                 )
                 memory_saved = True
-            except Exception as e:
+            except Exception:
                 memory_saved = False
         else:
             memory_saved = False
         
-        result = f"📝 Code Assistance Logged\n"
+        result = "📝 Code Assistance Logged\n"
         result += f"   File: {file_path}\n"
         result += f"   Action: {action_taken}\n"
         result += f"   Auto-Memory: {'✅ Saved' if memory_saved else '❌ Skipped'}\n"
@@ -361,7 +361,7 @@ class CursorMCPServer(MCPMemoryServer):
         
         # Track completion patterns for learning
         if accepted and len(completion_text) > 20:
-            pattern_content = f"Cursor Tab Completion Pattern\n"
+            pattern_content = "Cursor Tab Completion Pattern\n"
             pattern_content += f"Context: {context}\n"
             pattern_content += f"Completion: {completion_text}\n"
             pattern_content += "User found this helpful - save for future reference"
@@ -374,12 +374,12 @@ class CursorMCPServer(MCPMemoryServer):
                     auto_triggered=True
                 )
                 pattern_saved = True
-            except Exception as e:
+            except Exception:
                 pattern_saved = False
         else:
             pattern_saved = False
         
-        result = f"⚡ Tab Completion Tracked\n"
+        result = "⚡ Tab Completion Tracked\n"
         result += f"   Accepted: {'✅' if accepted else '❌'}\n"
         result += f"   Pattern Saved: {'✅' if pattern_saved else '❌'}\n"
         result += f"   Total Completions: {self.cursor_stats['tab_completions']}\n"
@@ -397,11 +397,11 @@ class CursorMCPServer(MCPMemoryServer):
         summary_content = f"Cursor IDE Session Summary - {duration} minutes\n"
         summary_content += f"Files Modified: {', '.join(files)}\n"
         summary_content += f"Technologies: {', '.join(technologies)}\n"
-        summary_content += f"Key Achievements:\n"
+        summary_content += "Key Achievements:\n"
         for achievement in achievements:
             summary_content += f"  • {achievement}\n"
         
-        summary_content += f"\nSession Stats:\n"
+        summary_content += "\nSession Stats:\n"
         summary_content += f"  • Code Assists: {self.cursor_stats['code_assists']}\n"
         summary_content += f"  • Tab Completions: {self.cursor_stats['tab_completions']}\n"
         summary_content += f"  • AI Interactions: {self.cursor_stats['ai_interactions']}\n"
@@ -415,10 +415,10 @@ class CursorMCPServer(MCPMemoryServer):
                 auto_triggered=True
             )
             summary_saved = True
-        except Exception as e:
+        except Exception:
             summary_saved = False
         
-        result = f"📊 Session Summary Generated\n"
+        result = "📊 Session Summary Generated\n"
         result += f"   Duration: {duration} minutes\n"
         result += f"   Files: {len(files)}\n"
         result += f"   Achievements: {len(achievements)}\n"
@@ -436,11 +436,11 @@ class CursorMCPServer(MCPMemoryServer):
         # Create project context memory
         context_content = f"Cursor Project Context - {project_name}\n"
         context_content += f"Type: {project_type}\n"
-        context_content += f"Key Patterns Learned:\n"
+        context_content += "Key Patterns Learned:\n"
         for pattern in patterns:
             context_content += f"  • {pattern}\n"
         
-        context_content += f"Common Issues Encountered:\n"
+        context_content += "Common Issues Encountered:\n"
         for issue in issues:
             context_content += f"  • {issue}\n"
         
@@ -453,10 +453,10 @@ class CursorMCPServer(MCPMemoryServer):
                 auto_triggered=True
             )
             context_saved = True
-        except Exception as e:
+        except Exception:
             context_saved = False
         
-        result = f"🏗️ Project Context Updated\n"
+        result = "🏗️ Project Context Updated\n"
         result += f"   Project: {project_name}\n"
         result += f"   Type: {project_type}\n"
         result += f"   Patterns: {len(patterns)}\n"
@@ -504,6 +504,7 @@ class CursorMCPServer(MCPMemoryServer):
     async def auto_save_memory(self, content: str, importance: float = 0.7, memory_type: str = "cursor_session", auto_triggered: bool = True) -> Dict:
         """Auto-save memory with Cursor-specific handling"""
         try:
+            import time
             memory_id = f"cursor_mem_{int(time.time())}"
             
             result = {

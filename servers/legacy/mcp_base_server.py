@@ -5,12 +5,10 @@ Implements the standard MCP protocol for all integrations
 """
 
 import asyncio
-import json
-import logging
 import os
 import sys
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 from pathlib import Path
 
 # Add src to path
@@ -27,7 +25,7 @@ except ImportError:
     import subprocess
     subprocess.run([sys.executable, "-m", "pip", "install", "mcp"], check=True)
     from mcp.server import Server
-    from mcp.types import Tool, TextContent, ImageContent, EmbeddedResource
+    from mcp.types import Tool, TextContent
     from mcp.server.stdio import stdio_server
     from mcp.server.models import InitializationOptions
 
@@ -268,8 +266,8 @@ class MCPMemoryServer:
             progress.update()
             print(f"\n✅ [{self.platform_name.upper()}] Modello ML caricato e testato!")
             print(f"   🎯 Ottimizzato per: {self.platform_name}")
-            print(f"   ⚡ Device: CPU (compatibility)")
-            print(f"   📡 MCP Protocol: Ready")
+            print("   ⚡ Device: CPU (compatibility)")
+            print("   📡 MCP Protocol: Ready")
             
             self._model_loading = False
             return True
@@ -306,7 +304,7 @@ class MCPMemoryServer:
         
         self.stats['saves'] += 1
         
-        result = f"💾 Memory saved successfully!\n"
+        result = "💾 Memory saved successfully!\n"
         result += f"   ID: {memory_id}\n"
         result += f"   Content: {content[:100]}{'...' if len(content) > 100 else ''}\n"
         result += f"   Platform: {self.platform_name}\n"
@@ -420,7 +418,7 @@ class MCPMemoryServer:
             pred = ml_result['prediction']
             result += f"   Prediction: {pred['label']} ({pred['score']:.3f})\n"
         
-        result += f"\n**Recommended Actions:**\n"
+        result += "\n**Recommended Actions:**\n"
         result += f"   💾 Save: {'✅ Yes' if should_save else '❌ No'}\n"
         result += f"   🔍 Search: {'✅ Yes' if should_search else '❌ No'}\n"
         
@@ -429,13 +427,13 @@ class MCPMemoryServer:
     async def _handle_get_stats(self, arguments: Dict[str, Any]) -> List[TextContent]:
         """Handle get_memory_stats tool call"""
         result = f"📊 MCP Memory Server Stats - {self.platform_name}\n\n"
-        result += f"**API Statistics:**\n"
+        result += "**API Statistics:**\n"
         result += f"   📡 Total requests: {self.stats['requests']}\n"
         result += f"   💾 Memories saved: {self.stats['saves']}\n"
         result += f"   🔍 Searches performed: {self.stats['searches']}\n"
         result += f"   🤖 ML predictions: {self.stats['ml_predictions']}\n\n"
         
-        result += f"**Memory Database:**\n"
+        result += "**Memory Database:**\n"
         result += f"   📚 Total memories: {len(self.memories)}\n"
         result += f"   🎯 Platform: {self.platform_name}\n"
         result += f"   🤖 ML Model loaded: {'✅ Yes' if self.ml_model else '❌ No'}\n\n"
@@ -447,7 +445,7 @@ class MCPMemoryServer:
             categories[cat] = categories.get(cat, 0) + 1
         
         if categories:
-            result += f"**Categories:**\n"
+            result += "**Categories:**\n"
             for cat, count in categories.items():
                 result += f"   {cat}: {count} memories\n"
         

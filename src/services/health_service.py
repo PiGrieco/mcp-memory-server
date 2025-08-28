@@ -6,7 +6,6 @@ import asyncio
 import logging
 import time
 from typing import Dict, Any, List
-from datetime import datetime
 
 from ..config import get_config
 from ..models import HealthCheckResponse

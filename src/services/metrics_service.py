@@ -72,8 +72,6 @@ class MetricsService:
         try:
             # Get service metrics
             from .memory_service import memory_service
-            from .database_service import database_service
-            from .embedding_service import embedding_service
             
             memory_metrics = await memory_service.get_metrics()
             db_metrics = memory_metrics.get("database_metrics", {})
