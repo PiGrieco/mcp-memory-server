@@ -16,8 +16,7 @@ try:
     from sklearn.model_selection import train_test_split, cross_val_score
     from sklearn.metrics import classification_report, confusion_matrix
     from sklearn.ensemble import RandomForestClassifier
-    import matplotlib.pyplot as plt
-    import pandas as pd
+
     HAS_SKLEARN = True
 except ImportError:
     HAS_SKLEARN = False

@@ -329,7 +329,7 @@ class EnhancedMCPServer:
         try:
             messages = arguments.get("messages", [])
             platform = arguments.get("platform", "unknown")
-            context = arguments.get("context", {})
+            arguments.get("context", {})
             
             # Store conversation in buffer
             self.conversation_buffer[platform] = messages

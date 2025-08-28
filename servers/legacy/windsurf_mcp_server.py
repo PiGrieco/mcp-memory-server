@@ -200,7 +200,7 @@ class WindsurfMCPServer(MCPMemoryServer):
         }
         
         # Save using base functionality
-        save_result = await self._handle_save_memory({
+        await self._handle_save_memory({
             "content": content,
             "context": context
         })

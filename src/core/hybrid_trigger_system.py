@@ -203,7 +203,6 @@ class HybridAutoTriggerSystem:
     ) -> HybridPrediction:
         """Combine predictions from both systems"""
         
-        reasoning = []
         
         # Mode-specific logic
         if self.mode == TriggerMode.DETERMINISTIC:

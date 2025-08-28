@@ -17,7 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 # MCP Protocol imports
 try:
     from mcp.server import Server
-    from mcp.types import Tool, TextContent, ImageContent, EmbeddedResource
+    from mcp.types import Tool, TextContent
     from mcp.server.stdio import stdio_server
     from mcp.server.models import InitializationOptions
 except ImportError:
@@ -261,7 +261,7 @@ class MCPMemoryServer:
             
             # Step 4: Test prediction
             progress.update()
-            test_result = self.ml_model(f"Test message for {self.platform_name} initialization")
+            self.ml_model(f"Test message for {self.platform_name} initialization")
             
             progress.update()
             print(f"\n✅ [{self.platform_name.upper()}] Modello ML caricato e testato!")
@@ -371,7 +371,7 @@ class MCPMemoryServer:
     async def _handle_analyze_message(self, arguments: Dict[str, Any]) -> List[TextContent]:
         """Handle analyze_message tool call"""
         message = arguments.get("message", "")
-        platform_context = arguments.get("platform_context", {})
+        arguments.get("platform_context", {})
         
         if not message.strip():
             return [TextContent(type="text", text="❌ Cannot analyze empty message")]
