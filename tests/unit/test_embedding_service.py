@@ -3,11 +3,17 @@ Unit tests for Embedding Service
 """
 
 import pytest
+import sys
+import os
 from unittest.mock import Mock, patch
 import numpy as np
 
-from src.services.embedding_service import EmbeddingService
-from src.config.settings import get_settings
+# Add project root to path
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+sys.path.insert(0, project_root)
+
+from src.services.embedding_service import EmbeddingService  # noqa: E402
+from src.config.settings import get_settings  # noqa: E402
 
 
 class TestEmbeddingService:
