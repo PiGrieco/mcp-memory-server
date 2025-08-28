@@ -249,7 +249,8 @@ echo -e "${GREEN}✅ Cursor configuration updated${NC}"
 echo -e "\n${BLUE}🧪 Step 5: Testing MCP server...${NC}"
 
 echo -e "${YELLOW}Testing server initialization...${NC}"
-if $PYTHON_CMD "$SCRIPT_DIR/scripts/test_mcp_server.py"; then
+cd "$SCRIPT_DIR"
+if $PYTHON_CMD "scripts/test_mcp_server.py"; then
     echo -e "${GREEN}✅ MCP server test passed${NC}"
 else
     echo -e "${YELLOW}⚠️ MCP server test had issues (may work anyway)${NC}"

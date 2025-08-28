@@ -9,9 +9,9 @@ import asyncio
 import json
 from pathlib import Path
 
-# Add src to path
-src_path = Path(__file__).parent.parent / "src"
-sys.path.insert(0, str(src_path))
+# Add project root to path so we can import from src
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
 
 async def test_mcp_server():
     """Test MCP server initialization and tool registration"""
